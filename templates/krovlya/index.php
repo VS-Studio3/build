@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * @version    $Id: index.php 20196 2011-01-09 02:40:25Z ian $
  * @package    Joomla.Site
@@ -29,6 +29,7 @@ $task = $_GET['task'];
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 <jdoc:include type="head" />
+    <meta charset="utf-8" />
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/system/css/system.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/system/css/general.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/style.css" type="text/css" />
@@ -44,6 +45,23 @@ $task = $_GET['task'];
 <body  id="<?php echo $pageclass ? htmlspecialchars($pageclass) : 'default'; ?>" class="<?php echo $option.' '.$task. ' '. $view ; ?>">
 <div id="wrapper">
 	<div id="header" class="header">
+
+        <div class="logotype">
+            <a href="#"><img src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/images/logotype.png"></a>
+        </div>
+        <div class="search">
+            <div>
+                <a href="#"><span class="twitter"></span></a>
+                <a href="#"><span class="facebook"></span></a>
+                <a href="#"><span class="vk"></span></a>
+            </div>
+        </div>
+        <div class="contact">
+            <p class="number">+7 (000) 000 00 00</p>
+            <p class="online"><a class="btn"><span class="icon"></span>On-line заявка</a></p>
+            <p><a class="btn"><span class="icon_two"></span>заказать звонок</a></p>
+        </div>
+
 		<div class="logos-area">
 			<a href="<?php echo $this->baseurl ?>" class="logo">
                 <jdoc:include type="modules" name="logo_module" style="xhtml"/>
@@ -56,7 +74,9 @@ $task = $_GET['task'];
 	<div id="middle">
 		<div id="container">
             <jdoc:include type="modules" name="slider_module" style="xhtml"/>
+            <div class="newss">
             <jdoc:include type="modules" name="all_news_module" style="xhtml"/>
+            </div>
 			<div id="content" class="content">
 					<jdoc:include type="modules" name="top-content" style="xhtml"/>
 					<jdoc:include type="message" />
@@ -70,7 +90,10 @@ $task = $_GET['task'];
 </div><!-- #wrapper -->
 <div id="footer" class="footer">
     <jdoc:include type="modules" name="footer_menu_module" style="xhtml"/>
+    <a href="#"><img src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template
+        ?>/images/footer_logotype.png"></a>
 		<jdoc:include type="modules" name="footer" style="xhtml"/>
+
 </div>
 
 <div style="display:none;">
