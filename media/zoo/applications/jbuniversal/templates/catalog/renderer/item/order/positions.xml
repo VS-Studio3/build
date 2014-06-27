@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<renderer>
+
+    <positions layout="order">
+        <position name="billing">Billing information</position>
+        <position name="shipping">Shipping information</position>
+        <position name="payment">Payment information</position>
+        <position name="other">Other information</position>
+    </positions>
+
+    <positions layout="orderemail">
+        <position name="items">Items</position>
+        <position name="billing">Billing information</position>
+        <position name="shipping">Shipping information</position>
+        <position name="payment">Payment information</position>
+        <position name="other">Other information</position>
+    </positions>
+
+    <positions layout="teaser">
+        <position name="name">Order name</position>
+        <position name="date">Date</position>
+        <position name="price">Price</position>
+        <position name="payment-type">Payment type</position>
+        <position name="payment-status">Payment status</position>
+    </positions>
+
+    <positions layout="full">
+        <position name="items">Items</position>
+        <position name="billing">Billing information</position>
+        <position name="shipping">Shipping information</position>
+        <position name="payment">Payment information</position>
+        <position name="other">Other information</position>
+    </positions>
+
+</renderer>

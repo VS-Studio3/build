@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout name="default">
+        <name>Default</name>
+        <description>This is the default layout to render filter module themes</description>
+    </layout>
+
+    <layout name="accordion">
+        <name>Accordion</name>
+        <description>jQuery Accordion</description>
+    </layout>
+
+</metadata>

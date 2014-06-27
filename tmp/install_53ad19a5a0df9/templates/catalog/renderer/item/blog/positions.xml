@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<renderer>
+    <positions layout="feed">
+        <position name="description">Description</position>
+    </positions>
+
+	<positions layout="full">
+        <position name="title">Title</position>
+        <position name="subtitle">Subtitle</position>
+        <position name="date">Date</position>
+        <position name="social">Social</position>
+        <position name="image">Image</position>
+        <position name="text">Text</position>
+        <position name="media">Media</position>
+        <position name="links">Links</position>
+        <position name="meta">Meta</position>
+        <position name="author">Author</position>
+        <position name="related">Related</position>
+	</positions>
+
+    <positions layout="teaser">
+        <position name="title">Title</position>
+        <position name="subtitle">Subtitle</position>
+        <position name="meta">Meta</position>
+        <position name="image">Image</position>
+        <position name="text">Text</position>
+        <position name="links">Links</position>
+    </positions>
+
+	<positions layout="related">
+        <position name="title">Title</position>
+        <position name="image">Image</position>
+        <position name="properties">Properties</position>
+        <position name="text">Text</position>
+        <position name="meta">Meta</position>
+	</positions>
+
+	<positions layout="subcategory_item">
+        <position name="title">Title</position>
+        <position name="date">Date</position>
+        <position name="image">Image</position>
+	</positions>	
+
+    <positions layout="submission">
+        <position name="content">Content</position>
+        <position name="media">Media</position>
+        <position name="meta">Meta</position>
+        <position name="administration">Administration</position>
+    </positions>
+
+</renderer>
