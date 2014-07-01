@@ -28,27 +28,8 @@ $task = $_GET['task'];
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" >
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(function(){
-            //Текущее подменю
-            var subMenu = $('.krovlya + ul');
-            var currentHtmlOfSubMenu = $(subMenu).html();
-            currentHtmlOfSubMenu = currentHtmlOfSubMenu.replace(/<\/ul><\/li>/g,'').replace(/<ul>/g, '</li>');
-            $(subMenu).remove();
 
-            var reformatedList = '<ul>';
-            var count = 0;
-            $($('<ul>' + currentHtmlOfSubMenu + '</ul>')).find('li').each(function(){
-                if(count == 10 || count == 20){
-                    reformatedList += '</ul><ul>';
-                }
-                reformatedList += '<li>' + $(this).html() + '</li>';
-                count++;
-            });
-            reformatedList += '</ul>';
-            $('.krovlya').parent().append('<div>' + reformatedList + '</div>');
-        });
-    </script>
+
 <jdoc:include type="head" />
     <meta charset="utf-8" />
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/system/css/system.css" type="text/css" />
@@ -59,9 +40,11 @@ $task = $_GET['task'];
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
     $j(document).ready(function(){
-        $j('.fancybox').fancybox();
+
     });
 </script>
+    <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template
+    ?>/js/custom.js"></script>
 </head>
 <body  id="<?php echo $pageclass ? htmlspecialchars($pageclass) : 'default'; ?>" class="<?php echo $option.' '.$task. ' '. $view ; ?>">
 <div id="wrapper">
