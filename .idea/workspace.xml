@@ -23,37 +23,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/krovlya/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="57" selection-start="3017" selection-end="3035" vertical-scroll-proportion="0.6252189" vertical-offset="765" max-vertical-offset="1445">
+            <state line="47" column="7" selection-start="1978" selection-end="1978" vertical-scroll-proportion="-16.384615" vertical-offset="288" max-vertical-offset="1904">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.less" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/krovlya/less/style.less">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="501" column="14" selection-start="11062" selection-end="11062" vertical-scroll-proportion="0.6612184" vertical-offset="7664" max-vertical-offset="9129">
               <folding>
-                <element signature="n#style#0;n#jdoc:include#0;n#a#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#jdoc:include#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#jdoc:include#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#jdoc:include#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#jdoc:include#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#jdoc:include#3;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#jdoc:include#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#2791#2868#0" expanded="false" />
+                <element signature="e#2883#2913#0" expanded="false" />
+                <element signature="e#6170#6602#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="news.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="22" selection-start="707" selection-end="707" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="408">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="news.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="55" column="84" selection-start="1790" selection-end="1790" vertical-scroll-proportion="-18.538462" vertical-offset="351" max-vertical-offset="1020">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -71,15 +58,24 @@
         <option value="$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml" />
         <option value="$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php" />
         <option value="$PROJECT_DIR$/templates/krovlya/index.php" />
+        <option value="$PROJECT_DIR$/templates/krovlya/js/custom.js" />
+        <option value="$PROJECT_DIR$/templates/krovlya/css/style.css" />
+        <option value="$PROJECT_DIR$/../dnkom2/templates/dnkom/index.php" />
+        <option value="$PROJECT_DIR$/../dnkom2/configuration.php" />
+        <option value="$PROJECT_DIR$/../dnkom2/templates/dnkom/css/style.css" />
+        <option value="$PROJECT_DIR$/../dnkom3/configuration.php" />
+        <option value="$PROJECT_DIR$/../dnkom3/templates/dnkom/html/com_content/category/blog_item.php" />
+        <option value="$PROJECT_DIR$/../dnkom3/templates/dnkom/css/style.css" />
+        <option value="$PROJECT_DIR$/templates/krovlya/less/style.less" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-5" />
-    <option name="y" value="-5" />
-    <option name="width" value="1376" />
-    <option name="height" value="738" />
+    <option name="x" value="-4" />
+    <option name="y" value="-4" />
+    <option name="width" value="1448" />
+    <option name="height" value="878" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -107,16 +103,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="build" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -170,95 +156,27 @@
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="modules">
+            <PATH_ELEMENT USER_OBJECT="templates">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="krovlya">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="less">
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
           <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="build">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="modules">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="mod_junewsultra">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="build">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="modules">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="mod_junewsultra">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="tmpl">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="build">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="cache">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="build">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="administrator">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="build">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="administrator">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="components">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
+            <PATH_ELEMENT>
+              <option name="myItemId" value="build" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -271,8 +189,22 @@
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager">
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
     <list size="0" />
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
@@ -285,24 +217,24 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-5" y="-5" width="1376" height="738" extended-state="1" />
+    <frame x="-4" y="-4" width="1448" height="878" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24963397" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24930556" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32933334" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -325,31 +257,124 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml">
+    <entry file="file://$PROJECT_DIR$/../dnkom3/templates/dnkom/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="22" selection-start="707" selection-end="707" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="408">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4029">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php">
+    <entry file="file://$PROJECT_DIR$/../dnkom3/templates/dnkom/html/com_content/category/blog_item.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="84" selection-start="1790" selection-end="1790" vertical-scroll-proportion="-18.538462" vertical-offset="351" max-vertical-offset="1020">
+        <state line="51" column="19" selection-start="2316" selection-end="2316" vertical-scroll-proportion="0.0" vertical-offset="867" max-vertical-offset="3196">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../dnkom3/templates/dnkom/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="212" column="20" selection-start="4061" selection-end="4061" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="20162">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/krovlya/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="57" selection-start="3017" selection-end="3035" vertical-scroll-proportion="0.6252189" vertical-offset="765" max-vertical-offset="1445">
+        <state line="71" column="25" selection-start="3017" selection-end="3035" vertical-scroll-proportion="0.0" vertical-offset="1207" max-vertical-offset="1836">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="22" selection-start="707" selection-end="707" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="408" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="84" selection-start="1790" selection-end="1790" vertical-scroll-proportion="0.0" vertical-offset="935" max-vertical-offset="1122" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="84" selection-start="1790" selection-end="1790" vertical-scroll-proportion="0.0" vertical-offset="935" max-vertical-offset="1122" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../dnkom2/templates/dnkom/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="180" column="14" selection-start="7604" selection-end="7604" vertical-scroll-proportion="4.3430657" vertical-offset="0" max-vertical-offset="3638" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../dnkom2/configuration.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="29" selection-start="953" selection-end="953" vertical-scroll-proportion="-3.3076923" vertical-offset="407" max-vertical-offset="1105" />
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Рабочий стол/dnkom (1).sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="67" selection-start="386" selection-end="386" vertical-scroll-proportion="-6.7203126" vertical-offset="4539" max-vertical-offset="30617" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../dnkom2/templates/dnkom/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="831" column="26" selection-start="18838" selection-end="18838" vertical-scroll-proportion="0.0" vertical-offset="13858" max-vertical-offset="15198" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../dnkom3/configuration.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="24" selection-start="527" selection-end="527" vertical-scroll-proportion="0.41404012" vertical-offset="0" max-vertical-offset="1105" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="178" column="17" selection-start="3081" selection-end="3081" vertical-scroll-proportion="-14.08" vertical-offset="2674" max-vertical-offset="8925" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../dnkom3/templates/dnkom/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4029">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="22" selection-start="707" selection-end="707" vertical-scroll-proportion="0.35220996" vertical-offset="0" max-vertical-offset="724" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/js/custom.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="72" selection-start="699" selection-end="699" vertical-scroll-proportion="0.4461326" vertical-offset="0" max-vertical-offset="724" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../dnkom3/templates/dnkom/html/com_content/category/blog_item.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="19" selection-start="2316" selection-end="2316" vertical-scroll-proportion="0.0" vertical-offset="867" max-vertical-offset="3196">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../dnkom3/templates/dnkom/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="212" column="20" selection-start="4061" selection-end="4061" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="20162">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="7" selection-start="1978" selection-end="1978" vertical-scroll-proportion="-16.384615" vertical-offset="288" max-vertical-offset="1904">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/less/style.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="501" column="14" selection-start="11062" selection-end="11062" vertical-scroll-proportion="0.6612184" vertical-offset="7664" max-vertical-offset="9129">
           <folding>
-            <element signature="n#style#0;n#jdoc:include#0;n#a#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#jdoc:include#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#jdoc:include#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#jdoc:include#1;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#jdoc:include#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#jdoc:include#3;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#jdoc:include#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#2791#2868#0" expanded="false" />
+            <element signature="e#2883#2913#0" expanded="false" />
+            <element signature="e#6170#6602#0" expanded="false" />
           </folding>
         </state>
       </provider>
