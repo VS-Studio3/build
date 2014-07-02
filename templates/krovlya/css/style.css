@@ -504,7 +504,7 @@ fieldset {
   margin: 0px;
   text-align: center;
   background-color: #383085;
-  height: 48px;
+  height: 42px;
   display: table;
 }
 .rborder.column.width100 .subcategory-title a {
@@ -514,6 +514,7 @@ fieldset {
   font-size: 20px;
   vertical-align: middle;
   display: table-cell;
+  line-height: 20px;
 }
 .subcategories.subcategory-col-1 {
   width: 1000px;
