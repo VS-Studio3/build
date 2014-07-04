@@ -10,7 +10,7 @@ defined('_JEXEC') or die;
 
 /* The following line gets the application object for things like displaying the site name */
 $app = JFactory::getApplication();
-$config = & JFactory::getConfig();
+$config = JFactory::getConfig();
 $menu = $app->getMenu();
 $lang = JFactory::getLanguage();
 $option = $_GET['option'];
@@ -28,8 +28,6 @@ $task = $_GET['task'];
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" >
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-
-
 <jdoc:include type="head" />
     <meta charset="utf-8" />
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/system/css/system.css" type="text/css" />
