@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6df49ce3-85c1-4a49-a6fa-0d21c93a0856" name="Default" comment="" />
-    <ignored path="build.iws" />
+    <list default="true" id="95b7003d-ccc6-4b07-984d-68b65b1c7f25" name="Default" comment="">
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\.idea\build.iml" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\images\dom.jpg" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\images\fasad.jpg" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\images\kontakty.jpg" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\images\krovlya.jpg" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\images\stena.jpg" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\images\uslugi.jpg" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\images\zabor.jpg" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\templates\krovlya\images\first_menu.png" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\templates\krovlya\images\five_menu.png" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\templates\krovlya\images\four_menu.png" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\templates\krovlya\images\second_menu.png" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\templates\krovlya\images\seven_menu.png" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\templates\krovlya\images\six_menu.png" afterPath="" />
+      <change type="DELETED" beforePath="N:\home\localhost\www\bulid\templates\krovlya\images\third_menu.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/krovlya/js/custom.js" afterPath="$PROJECT_DIR$/templates/krovlya/js/custom.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/krovlya/index.php" afterPath="$PROJECT_DIR$/templates/krovlya/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/krovlya/css/style.css" afterPath="$PROJECT_DIR$/templates/krovlya/css/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/krovlya/less/style.less" afterPath="$PROJECT_DIR$/templates/krovlya/less/style.less" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cache/jbzoo/update" afterPath="$PROJECT_DIR$/cache/jbzoo/update" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
+    <ignored path="bulid.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,32 +44,74 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
-    <favorites_list name="build" />
+    <favorites_list name="bulid" />
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="style.css" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/krovlya/css/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="549" column="20" selection-start="11179" selection-end="11179" vertical-scroll-proportion="0.0" vertical-offset="9086" max-vertical-offset="9673">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/krovlya/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="10" selection-start="437" selection-end="437" vertical-scroll-proportion="0.2084063" vertical-offset="0" max-vertical-offset="1870">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2023">
+              <folding>
+                <marker date="1404475816263" expanded="true" signature="920:4426" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="928:1973" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="1743:1828" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="1809:1817" placeholder="{...}" />
+                <marker date="1404475816263" expanded="true" signature="2109:4418" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="2128:3921" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="2162:3209" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="2194:2338" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="2367:2601" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="2385:2586" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="2631:2877" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="2905:3140" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="2961:3049" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="3034:3039" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="3124:3129" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="3194:3199" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="3244:3899" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="3267:3872" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="3338:3343" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="3447:3546" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="3520:3525" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="3613:3847" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="3675:3680" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="3825:3830" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="3971:4251" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="4039:4044" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="4063:4182" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="4236:4241" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="4266:4279" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="4280:4409" placeholder="..." />
+                <marker date="1404475816263" expanded="true" signature="4306:4402" placeholder="..." />
+                <marker date="1404475816263" expanded="false" signature="4387:4392" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="custom.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/krovlya/js/custom.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2" column="14" selection-start="41" selection-end="41" vertical-scroll-proportion="0.057724956" vertical-offset="0" max-vertical-offset="833">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="news.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml">
+      <file leaf-file-name="jbprice.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/media/zoo/applications/jbuniversal/elements/jbprice/jbprice.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="22" selection-start="707" selection-end="707" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="408">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="news.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="55" column="84" selection-start="1790" selection-end="1790" vertical-scroll-proportion="0.0" vertical-offset="935" max-vertical-offset="1122">
+            <state line="77" column="33" selection-start="2047" selection-end="2047" vertical-scroll-proportion="0.0" vertical-offset="867" max-vertical-offset="7327">
               <folding />
             </state>
           </provider>
@@ -57,12 +124,13 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml" />
-        <option value="$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php" />
-        <option value="$PROJECT_DIR$/templates/krovlya/index.php" />
+        <option value="$PROJECT_DIR$/templates/krovlya/js/custom.js" />
       </list>
     </option>
   </component>
@@ -99,22 +167,170 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="build" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
             <PATH_ELEMENT USER_OBJECT="Root">
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="bulid">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="bulid">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="media">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="bulid">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="media">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="zoo">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="bulid">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="media">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="zoo">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="applications">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="bulid">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="media">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="zoo">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="applications">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="jbuniversal">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="bulid">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="media">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="zoo">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="applications">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="jbuniversal">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="elements">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="bulid">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="media">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="zoo">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="applications">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="jbuniversal">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="elements">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="jbprice">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bulid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -135,9 +351,9 @@
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="6df49ce3-85c1-4a49-a6fa-0d21c93a0856" name="Default" comment="" />
-      <created>1403853762231</created>
-      <updated>1403853762231</updated>
+      <changelist id="95b7003d-ccc6-4b07-984d-68b65b1c7f25" name="Default" comment="" />
+      <created>1404711630327</created>
+      <updated>1404711630327</updated>
     </task>
     <servers />
   </component>
@@ -150,7 +366,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24963397" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25377643" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -182,44 +398,124 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/templates/krovlya/index.php">
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="16" selection-start="3017" selection-end="3035" vertical-scroll-proportion="0.0" vertical-offset="1207" max-vertical-offset="1904">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="22" selection-start="707" selection-end="707" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="408">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="84" selection-start="1790" selection-end="1790" vertical-scroll-proportion="0.0" vertical-offset="935" max-vertical-offset="1122">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="22" selection-start="707" selection-end="707" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="408">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/mod_junewsultra/tmpl/news.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="84" selection-start="1790" selection-end="1790" vertical-scroll-proportion="0.0" vertical-offset="935" max-vertical-offset="1122">
+        <state line="549" column="20" selection-start="11179" selection-end="11179" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="9673">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/krovlya/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="10" selection-start="437" selection-end="437" vertical-scroll-proportion="0.2084063" vertical-offset="0" max-vertical-offset="1870">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2023">
+          <folding>
+            <marker date="1404475816263" expanded="true" signature="920:4426" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="928:1973" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="1743:1828" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="1809:1817" placeholder="{...}" />
+            <marker date="1404475816263" expanded="true" signature="2109:4418" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2128:3921" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2162:3209" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2194:2338" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2367:2601" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2385:2586" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2631:2877" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2905:3140" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2961:3049" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3034:3039" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3124:3129" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3194:3199" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3244:3899" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3267:3872" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3338:3343" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3447:3546" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3520:3525" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3613:3847" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3675:3680" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3825:3830" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3971:4251" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="4039:4044" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="4063:4182" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="4236:4241" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="4266:4279" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="4280:4409" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="4306:4402" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="4387:4392" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/js/custom.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="72" selection-start="774" selection-end="774" vertical-scroll-proportion="0.0" vertical-offset="357" max-vertical-offset="476">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/zoo/applications/jbuniversal/elements/jbprice/jbprice.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="77" column="33" selection-start="2047" selection-end="2047" vertical-scroll-proportion="0.0" vertical-offset="867" max-vertical-offset="7327">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="549" column="20" selection-start="11179" selection-end="11179" vertical-scroll-proportion="0.0" vertical-offset="9086" max-vertical-offset="9673">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2023">
+          <folding>
+            <marker date="1404475816263" expanded="true" signature="920:4426" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="928:1973" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="1743:1828" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="1809:1817" placeholder="{...}" />
+            <marker date="1404475816263" expanded="true" signature="2109:4418" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2128:3921" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2162:3209" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2194:2338" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2367:2601" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2385:2586" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2631:2877" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2905:3140" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="2961:3049" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3034:3039" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3124:3129" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3194:3199" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3244:3899" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3267:3872" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3338:3343" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3447:3546" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3520:3525" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3613:3847" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3675:3680" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="3825:3830" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="3971:4251" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="4039:4044" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="4063:4182" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="4236:4241" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="4266:4279" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="4280:4409" placeholder="..." />
+            <marker date="1404475816263" expanded="true" signature="4306:4402" placeholder="..." />
+            <marker date="1404475816263" expanded="false" signature="4387:4392" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/media/zoo/applications/jbuniversal/elements/jbprice/jbprice.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="77" column="33" selection-start="2047" selection-end="2047" vertical-scroll-proportion="0.0" vertical-offset="867" max-vertical-offset="7327">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/krovlya/js/custom.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="14" selection-start="41" selection-end="41" vertical-scroll-proportion="0.057724956" vertical-offset="0" max-vertical-offset="833">
           <folding />
         </state>
       </provider>

@@ -76,9 +76,13 @@ $task = $_GET['task'];
 	<div id="middle">
 		<div id="container">
             <jdoc:include type="modules" name="slider_module" style="xhtml"/>
+
+            <?php if ($this->countModules( 'all_news_module' )) : ?>
             <div class="newss">
             <jdoc:include type="modules" name="all_news_module" style="xhtml"/>
             </div>
+            <?php endif; ?>
+
 			<div id="content" class="content">
 					<jdoc:include type="modules" name="top-content" style="xhtml"/>
 					<jdoc:include type="message" />
