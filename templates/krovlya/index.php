@@ -49,7 +49,8 @@ $task = $_GET['task'];
 	<div id="header" class="header">
 
         <div class="logotype">
-            <a href="#"><img src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/images/logotype.png"></a>
+            <a href="#"><img src="<?php
+                echo $this->baseurl ?>/templates/<?php echo $this->template ?>/images/logotype.png"></a>
         </div>
         <div class="search">
             <div>

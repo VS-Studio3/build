@@ -213,7 +213,7 @@ fieldset {
   z-index: 25;
   vertical-align: bottom;
   position: relative;
-  float: left;
+  display: table-cell;
   min-width: 123px;
   padding: 0px 0px;
   text-align: center;
@@ -250,7 +250,7 @@ fieldset {
   top: 0px;
 }
 .header .moduletable .menu li div ul {
-  margin-top: 5px;
+  margin-top: 0px;
   padding: 20px 20px 20px 30px ;
   display: none;
   left: 250px;
@@ -320,7 +320,7 @@ fieldset {
 }
 .header .moduletable .menu li:hover > ul {
   z-index: 15;
-  margin-top: 5px;
+  margin-top: 0px;
   width: 220px;
   background-color: #ffffff;
   padding: 15px 0px 15px 10px;
@@ -487,10 +487,10 @@ fieldset {
   margin-left: -25px;
   margin-bottom: 5px;
 }
-.rborder.column.width100:hover .subcategory-title a {
+.rborder.column:hover .subcategory-title a {
   color: #b2b2b2;
 }
-.rborder.column.width100 {
+.rborder.column {
   width: 320px;
   height: 190px;
   margin-left: 10px;
@@ -498,10 +498,10 @@ fieldset {
   margin-bottom: 47px;
   display: inline-block;
 }
-.rborder.column.width100 .subcategory {
+.rborder.column .subcategory {
   margin: 0px;
 }
-.rborder.column.width100 .subcategory-title {
+.rborder.column .subcategory-title {
   position: absolute;
   width: 100%;
   bottom: 0px;
@@ -511,7 +511,7 @@ fieldset {
   height: 42px;
   display: table;
 }
-.rborder.column.width100 .subcategory-title a {
+.rborder.column .subcategory-title a {
   font-weight: normal;
   text-decoration: none;
   color: #ffffff;
@@ -520,7 +520,7 @@ fieldset {
   display: table-cell;
   line-height: 20px;
 }
-.subcategories.subcategory-col-1 {
+.subcategories {
   width: 1000px;
   position: relative;
   left: -45px;
@@ -529,7 +529,7 @@ fieldset {
 -----------------------------------------------------------------------------*/
 .footer {
   width: 1000px;
-  margin: -100px auto 0;
+  margin: 0px auto 0;
   height: 100px;
   background: #b2b2b2;
   -webkit-box-shadow: 0px -2px 8px 0px rgba(50, 50, 50, 0.75);
