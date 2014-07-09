@@ -49,10 +49,12 @@ $tabsId = uniqid('jbzoo-tabs-');
             <div class="others">
                 <?php echo $this->renderPosition('related'); ?>
             </div>
-
+        <?php if ($this->checkPosition('description')) : ?>
+            <div class="description">
+            <div>Описание и технические характеристики:</div>
+            <div class="text_about"> <?php echo $this->renderPosition('description'); ?></div>
+                </div>
         <?php endif; ?>
-
-    </div>
 </div>
 <script type="text/javascript">
     $j = jQuery.noConflict();
