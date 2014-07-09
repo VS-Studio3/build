@@ -60,7 +60,7 @@ $tabsId = uniqid('jbzoo-tabs-');
     <div class="description">
         <?php if ($this->checkPosition('description')) : ?>
             <div>Описание и технические характеристики:</div>
-            <div class="text_about"> <?php echo $this->renderPosition('description'); ?></div>
+<?php echo $this->renderPosition('description'); ?>
         <?php endif; ?>
     </div>
 

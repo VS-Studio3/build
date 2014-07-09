@@ -592,15 +592,13 @@ fieldset {
 }
 .jbzoo-view-item .description {
   margin-top: 15px;
-}
-.jbzoo-view-item .description .text_about {
   font-size: 16px;
   color: #000000;
   text-decoration: none!important;
   font-weight: normal!important;
   font-style: normal!important;
 }
-.jbzoo-view-item .description div:first-child {
+.jbzoo-view-item .description div {
   padding: 10px 0px;
   font-size: 31px;
   font-style: italic;
