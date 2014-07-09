@@ -34,28 +34,26 @@ $tabsId = uniqid('jbzoo-tabs-');
             <div class="item-color-position">
                 <?php echo $this->renderPosition('color'); ?>
             </div>
-
-
         <?php endif; ?>
+    </div>
 
+    <?php if ($this->checkPosition('description')) : ?>
         <div class="description">
-            <?php if ($this->checkPosition('description')) : ?>
-                <div>Описание и технические характеристики:</div>
-                <?php echo $this->renderPosition('description'); ?>
-            <?php endif; ?>
-        </div>
-
-        <?php if ($this->checkPosition('related')) : ?>
-            <div class="others">
-                <?php echo $this->renderPosition('related'); ?>
-            </div>
-        <?php if ($this->checkPosition('description')) : ?>
-            <div class="description">
             <div>Описание и технические характеристики:</div>
-            <div class="text_about"> <?php echo $this->renderPosition('description'); ?></div>
-                </div>
-        <?php endif; ?>
+            <div class="text_about">
+                <?php echo $this->renderPosition('description'); ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($this->checkPosition('related')) : ?>
+        <div class="others">
+            <?php echo $this->renderPosition('related'); ?>
+        </div>
+    <?php endif; ?>
+
 </div>
+
 <script type="text/javascript">
     $j = jQuery.noConflict();
 
