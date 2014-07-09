@@ -27,7 +27,7 @@ $task = $_GET['task'];
 <!DOCTYPE html >
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" >
 <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <jdoc:include type="head" />
     <meta charset="utf-8" />
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/system/css/system.css" type="text/css" />
@@ -35,10 +35,29 @@ $task = $_GET['task'];
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/style.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/jquery.fancybox.css" type="text/css" />
 <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/js/jquery.fancybox.pack.js"></script>
+
+    <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/jquery.fancybox.css" type="text/css" />
+    <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/js/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/js/fancyBox/source/jquery.fancybox.pack.js"></script>
+
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
     $j(document).ready(function(){
+        $j('a.btn_zayavka').fancybox({
+            width: 630,
+            height: 695,
+            autoSize : false,
+            fitToView : false,
+            maxWidth : '100%'
+        });
 
+        $j('a.btn_zvonok').fancybox({
+            width: 630,
+            height: 430,
+            autoSize : false,
+            fitToView : false,
+            maxWidth : '100%'
+        });
     });
 </script>
     <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template
@@ -61,8 +80,8 @@ $task = $_GET['task'];
         </div>
         <div class="contact">
             <p class="number">+7 (000) 000 00 00</p>
-            <p class="online"><a class="btn"><span class="icon"></span>On-line заявка</a></p>
-            <p><a class="btn"><span class="icon_two"></span>заказать звонок</a></p>
+            <p class="online"><a class="btn btn_zayavka" href="#zayavka"><span class="icon"></span>On-line заявка</a></p>
+            <p><a class="btn btn_zvonok" href="#zvonok"><span class="icon_two"></span>заказать звонок</a></p>
         </div>
 
 		<div class="logos-area">
@@ -75,6 +94,14 @@ $task = $_GET['task'];
 	</div><!-- #header-->
 
 	<div id="middle">
+        <div id="zayavka">
+            <jdoc:include type="modules" name="zayavka_module" style="xhtml"/>
+        </div>
+
+        <div id="zvonok">
+            <jdoc:include type="modules" name="zvonok_module" style="xhtml"/>
+        </div>
+
 		<div id="container">
             <jdoc:include type="modules" name="slider_module" style="xhtml"/>
 

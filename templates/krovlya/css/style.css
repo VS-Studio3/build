@@ -674,3 +674,12 @@ fieldset {
   padding-top: 10px;
   padding-right: 44px;
 }
+
+.fox-copyright{
+    display: none;
+}
+
+/**Онлайн заявка и заказать звонок**/
+#zayavka, #zvonok{
+    display: none;
+}
