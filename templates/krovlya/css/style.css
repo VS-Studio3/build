@@ -203,13 +203,16 @@ fieldset {
 .header .moduletable .menu {
   background-color: #4d4b4b;
   margin: 0px;
-  padding: 5px 10px 0px;
+  -webkit-box-shadow: 0px 1px 4px #0f0808;
+  -moz-box-shadow: 0px 1px 4px #0f0808;
+  box-shadow: 0px 1px 4px #0f0808;
+  padding: 0px 5px 0px;
   clear: both;
   width: 100%;
   display: table;
 }
 .header .moduletable .menu li {
-  height: 83px;
+  height: 87px;
   z-index: 25;
   vertical-align: bottom;
   position: relative;
@@ -260,6 +263,9 @@ fieldset {
   background-color: #ffffff;
   position: absolute;
   height: 410px;
+  -webkit-box-shadow: 3px 0px 5px rgba(196, 196, 196, 0.95);
+  -moz-box-shadow: 3px 0px 5px rgba(196, 196, 196, 0.95);
+  box-shadow: 3px 0px 5px rgba(196, 196, 196, 0.95);
 }
 .header .moduletable .menu li div ul li {
   height: auto;
@@ -282,17 +288,26 @@ fieldset {
   border-left: none;
 }
 .header .moduletable .menu li div ul:last-child {
+  -webkit-box-shadow: 2px 0px 5px rgba(196, 196, 196, 0.95);
+  -moz-box-shadow: 2px 0px 5px rgba(196, 196, 196, 0.95);
+  box-shadow: 2px 0px 5px rgba(196, 196, 196, 0.95);
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
   left: 500px;
 }
 .header .moduletable .menu li div ul:first-child {
+  -webkit-box-shadow: -1px 0px 5px rgba(196, 196, 196, 0.95);
+  -moz-box-shadow: -1px 0px 5px rgba(196, 196, 196, 0.95);
+  box-shadow: -1px 0px 5px rgba(196, 196, 196, 0.95);
   border-bottom-left-radius: 5px;
   border-top-left-radius: 5px;
   border-left: none;
   left: 0px;
 }
 .header .moduletable .menu li ul {
+  -webkit-box-shadow: 0px 0px 5px rgba(196, 196, 196, 0.95);
+  -moz-box-shadow: 0px 0px 5px rgba(196, 196, 196, 0.95);
+  box-shadow: 0px 0px 5px rgba(196, 196, 196, 0.95);
   padding: 20px;
   position: absolute;
   border-radius: 5px;
@@ -520,6 +535,9 @@ fieldset {
   vertical-align: middle;
   display: table-cell;
   line-height: 20px;
+}
+.item-111 {
+  width: 200px;
 }
 .subcategories {
   width: 1000px;
