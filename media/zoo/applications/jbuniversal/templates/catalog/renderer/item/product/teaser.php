@@ -28,3 +28,5 @@ $align = $this->app->jbitem->getMediaAlign($item, $layout);
         <?php echo $this->renderPosition('price'); ?>
     </div>
 <?php endif; ?>
+
+<?php echo $this->renderPosition('description'); ?>
