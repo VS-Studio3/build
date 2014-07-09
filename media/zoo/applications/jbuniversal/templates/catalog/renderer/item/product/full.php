@@ -11,9 +11,6 @@ defined('_JEXEC') or die('Restricted access');
 
 $align = $this->app->jbitem->getMediaAlign($item, $layout);
 $tabsId = uniqid('jbzoo-tabs-');
-
-
-
 ?>
 
 <?php if ($this->checkPosition('image')) : ?>

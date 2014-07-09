@@ -42,5 +42,3 @@ $align = $this->app->jbitem->getMediaAlign($item, $layout);
         <?php echo $this->renderPosition('meta', array('style' => 'list'));?>
     </ul>
 <?php endif; ?>
-
-<div class="clear clr"></div>
