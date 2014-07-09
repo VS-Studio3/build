@@ -10,11 +10,17 @@
         <position name="price">Цена</position>
         <position name="color">Цвет</position>
         <position name="description">Характеристики</position>
+        <position name="related">Похожие</position>
     </positions>
 
     <positions layout="teaser">
         <position name="title">Название</position>
         <position name="image">Изображение</position>
         <position name="price">Цена</position>
+    </positions>
+
+    <positions layout="related">
+        <position name="title">Название</position>
+        <position name="image">Изображение</position>
     </positions>
 </renderer>

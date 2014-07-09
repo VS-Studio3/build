@@ -22,12 +22,4 @@ $align = $this->app->jbitem->getMediaAlign($item, $layout);
 <?php if ($this->checkPosition('title')) : ?>
     <h4 class="item-title"><?php echo $this->renderPosition('title'); ?></h4>
 <?php endif; ?>
-<div class="clear clr"></div>
 
-<?php echo $this->renderPosition('rating', array('style' => 'block')); ?>
-
-<ul><?php echo $this->renderPosition('properties', array('style' => 'list')); ?></ul>
-
-<p><?php echo $this->renderPosition('links', array('style' => 'pipe')); ?></p>
-
-<div class="clear clr"></div>

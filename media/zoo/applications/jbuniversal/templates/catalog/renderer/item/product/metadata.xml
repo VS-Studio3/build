@@ -9,4 +9,9 @@
         <name>Teaser</name>
         <description>Layout for element teaser</description>
     </layout>
+
+    <layout name="related" type="related">
+        <name>Related</name>
+        <description>Layout for element teaser</description>
+    </layout>
 </metadata>
