@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBDatabaseQueryElement
+ */
 class JBDatabaseQueryElement
 {
     /**
@@ -29,9 +36,9 @@ class JBDatabaseQueryElement
 
     /**
      * Constructor
-     * @param   string  $name      The name of the element.
-     * @param   mixed   $elements  String or array.
-     * @param   string  $glue      The glue for elements.
+     * @param   string $name      The name of the element.
+     * @param   mixed $elements  String or array.
+     * @param   string $glue      The glue for elements.
      * @return  JBDatabaseQueryElement
      */
     public function __construct($name, $elements, $glue = ", \n\t")
@@ -50,8 +57,7 @@ class JBDatabaseQueryElement
     {
         if (substr($this->name, -2) == '()') {
             return PHP_EOL . substr($this->name, 0, -2) . '(' . implode($this->glue, $this->elements) . ')';
-        }
-        else {
+        } else {
             return PHP_EOL . $this->name . ' ' . implode($this->glue, $this->elements);
         }
     }

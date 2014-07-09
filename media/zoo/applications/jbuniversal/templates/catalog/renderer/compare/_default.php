@@ -1,30 +1,35 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 $this->app->jbdebug->mark('layout::compare::start');
 
 // get render
-$view   = $this->getView();
+$view = $this->getView();
 $render = $view->renderer;
 
 // render table cells items
 $renderedItems = $render->renderFields($view->itemType, $view->appId, $vars['objects']);
-$elementList   = $render->getElementList($renderedItems);
+$elementList = $render->getElementList($renderedItems);
 
 $this->app->jbdebug->mark('layout::compare::renerItems');
 
 // render top compare links
 $horizontalUrl = $this->app->jbrouter->compare($view->itemId, 'h', $view->itemType, $view->appId);
-$verticalUrl   = $this->app->jbrouter->compare($view->itemId, 'v', $view->itemType, $view->appId);
-$clearUrl      = $this->app->jbrouter->compareClear($view->itemId, $view->itemType, $view->appId);
+$verticalUrl = $this->app->jbrouter->compare($view->itemId, 'v', $view->itemType, $view->appId);
+$clearUrl = $this->app->jbrouter->compareClear($view->itemId, $view->itemType, $view->appId);
 
 // add links
 echo '<div class="jbzoo-compare-links">';
@@ -63,9 +68,9 @@ if ($view->layoutType == 'v') {
 
             $label = $render->renderElementLabel($elementId, $view->itemType, $view->appId);
 
-            echo '<tr><th>' . $label . '</th>';
+            echo '<tr class="compare-row"><th>' . $label . '</th>';
             foreach ($renderedItems as $itemId => $itemElements) {
-                echo '<td>' . $itemElements[$elementId] . '</td>' . "\n";
+                echo '<td class="compare-cell">' . $itemElements[$elementId] . '</td>' . "\n";
             }
             echo '</tr>';
         }
@@ -73,6 +78,33 @@ if ($view->layoutType == 'v') {
     }
 
     echo '</tbody></table>';
+    ?>
+    <script type="text/javascript">
+        (function ($) {
+            $('.jbcompare-table .compare-row').each(function (n, obj) {
+
+                var $obj = $(obj), data = undefined, isEqual = true;
+                var $cells = $('.compare-cell', $obj);
+
+                if ($cells.length > 1) {
+                    $cells.each(function (k, cell) {
+                        var cellData = $.trim($(cell).text()).toLowerCase();
+
+                        if (data === undefined) {
+                            data = cellData;
+                        } else {
+                            isEqual = data == cellData;
+                        }
+
+                        if (!isEqual) {
+                            $obj.addClass('compare-not-equal');
+                        }
+                    });
+                }
+            });
+        })(jQuery);
+    </script>
+<?php
 
 } else if ($view->layoutType == 'h') {
 
@@ -89,7 +121,7 @@ if ($view->layoutType == 'v') {
     echo '<tbody>';
     foreach ($renderedItems as $itemId => $itemElements) {
 
-        echo '<tr>';
+        echo '<tr class="compare-row">';
         foreach ($itemElements as $elementId => $elementHtml) {
 
             if ($elementId == 'itemname') {
@@ -98,13 +130,48 @@ if ($view->layoutType == 'v') {
                 echo '<th><a href="' . $link . '" title="' . $title . '">' . $title . '</a></th>' . "\n";
 
             } else {
-                echo '<td>' . $elementHtml . '</td>' . "\n";
+                echo '<td class="compare-cell ' . $elementId . '" data-elementid="' . $elementId . '">' . $elementHtml . '</td>' . "\n";
             }
         }
         echo '</tr>';
     }
 
     echo '</tbody></table>';
+    ?>
+    <script type="text/javascript">
+        (function ($) {
+
+            var $cols = $('.jbcompare-table .compare-row:first .compare-cell');
+
+            $cols.each(function (n, mainCell) {
+
+                var $mainCell = $(mainCell),
+                    elementid = $mainCell.data('elementid'),
+                    $cells = $('.jbcompare-table .compare-cell.' + elementid),
+                    data = undefined,
+                    isEqual = true;
+
+                if ($cells.length > 1) {
+                    $cells.each(function (k, cell) {
+
+                        var $cell = $(cell), cellData = $.trim($cell.text()).toLowerCase();
+
+                        if (data === undefined) {
+                            data = cellData;
+                        } else {
+                            isEqual = data == cellData;
+                        }
+
+                        if (!isEqual) {
+                            $cells.addClass('compare-not-equal');
+                        }
+                    });
+                }
+
+            });
+        })(jQuery);
+    </script>
+<?php
 
 } else {
     throw new AppException($view->layoutType . ' - Unknow layout!');

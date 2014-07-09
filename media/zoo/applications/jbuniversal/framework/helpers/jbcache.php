@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBCacheHelper
+ */
 class JBCacheHelper extends AppHelper
 {
     /**
@@ -19,12 +26,14 @@ class JBCacheHelper extends AppHelper
 
     /**
      * Start cache process
-     * @param mixed  $params
+     * @deprecated
+     * @param mixed $params
      * @param string $type
      * @return mixed
      */
     public function start($params = null, $type = null)
     {
+        return null; // disibled
         !$type && $type = $this->app->jbrequest->get('view');
         !$type && $type = $this->app->jbrequest->get('task');
 
@@ -44,15 +53,17 @@ class JBCacheHelper extends AppHelper
 
     /**
      * Stop cache
+     * @deprecated
      */
     public function stop()
     {
-        $this->_cache->end();
+        return null; // disibled
+        return $this->_cache->end();
     }
 
     /**
      * Create uniq cache key
-     * @param array       $params
+     * @param array $params
      * @return string
      */
     public function _getKey($params = null)
@@ -80,44 +91,40 @@ class JBCacheHelper extends AppHelper
     /**
      * Set data to cache storage by key
      * @param string $key
-     * @param mixed  $data
+     * @param mixed $data
      * @param string $group
-     * @param bool   $isForce
+     * @param bool $isForce
      * @return bool
      */
     public function set($key, $data, $group = 'default', $isForce = false)
     {
-        if ($this->isEnabled() || $isForce) {
-
-            $cache = $this->app->cache->create(JPATH_SITE . '/cache/jbzoo/' . $group, true);
-            $key   = $this->_simpleHash($key);
-
-            $cache->set($key, $data);
-            $cache->save();
-            return true;
+        $group = str_replace('-', '_', $group);
+        $cache = JFactory::getCache('jbzoo_' . $group, 'output');
+        $key   = $this->_simpleHash($key);
+        if ($isForce) {
+            $cache->setCaching(true);
         }
 
-        return false;
+        return $cache->store($data, $key);
     }
 
     /**
      * Get cache data by key
      * @param string $key
      * @param string $group
-     * @param bool   $isForce
+     * @param bool $isForce
      * @return null
      */
     public function get($key, $group = 'default', $isForce = false)
     {
-        if ($this->isEnabled() || $isForce) {
-
-            $cache = $this->app->cache->create(JPATH_SITE . '/cache/jbzoo/' . $group, true);
-
-            $key = $this->_simpleHash($key);
-            return $cache->get($key);
+        $group = str_replace('-', '_', $group);
+        $cache = JFactory::getCache('jbzoo_' . $group, 'output');
+        $key   = $this->_simpleHash($key);
+        if ($isForce) {
+            $cache->setCaching(true);
         }
 
-        return null;
+        return $cache->get($key);
     }
 
     /**

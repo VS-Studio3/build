@@ -1,24 +1,31 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBRouterHelper
+ */
 class JBRouterHelper extends AppHelper
 {
 
     /**
      * Filter link
-     * @param string     $identifier
-     * @param string     $value
-     * @param JParameter $moduleParams
-     * @param int        $mode
+     * @param string $identifier
+     * @param string $value
+     * @param JRegistry $moduleParams
+     * @param int $mode
      * @return string
      */
     public function filter($identifier, $value, $moduleParams, $mode = 0)
@@ -32,6 +39,7 @@ class JBRouterHelper extends AppHelper
             'type'       => $moduleParams->get('type'),
             'limit'      => $moduleParams->get('limit', 10),
             'exact'      => 1,
+            'order'      => $moduleParams->get('order'),
         );
 
         if ($mode == 0) {
@@ -65,15 +73,15 @@ class JBRouterHelper extends AppHelper
 
         $urlParams = array_merge($urlParams, $params);
 
-        return 'index.php?' . http_build_query($urlParams);
+        return 'index.php?' . $this->query($urlParams);
     }
 
     /**
      * Element ajax call
      * @param string $identifier
-     * @param int    $itemId
+     * @param int $itemId
      * @param string $method
-     * @param array  $params
+     * @param array $params
      * @return string
      */
     public function element($identifier = null, $itemId = null, $method = 'ajax', array $params = array())
@@ -84,6 +92,35 @@ class JBRouterHelper extends AppHelper
             'task'       => 'callelement',
             'format'     => 'raw',
             'element'    => $identifier,
+            'elm_id'     => $identifier,
+            'method'     => $method,
+            'item_id'    => $itemId,
+        );
+
+        if (!empty($params)) {
+            $linkParams['args'] = $params;
+        }
+
+        return $this->_url($linkParams, true);
+    }
+
+    /**
+     * Element ajax call (for admin)
+     * @param string $identifier
+     * @param int $itemId
+     * @param string $method
+     * @param array $params
+     * @return string
+     */
+    public function elementAdmin($identifier = null, $itemId = null, $method = 'ajax', array $params = array())
+    {
+        $linkParams = array(
+            'option'     => 'com_zoo',
+            'controller' => 'item',
+            'task'       => 'callelement',
+            'format'     => 'raw',
+            'element'    => $identifier,
+            'elm_id'     => $identifier,
             'method'     => $method,
             'item_id'    => $itemId,
         );
@@ -97,10 +134,10 @@ class JBRouterHelper extends AppHelper
 
     /**
      * Compare link
-     * @param int    $menuItemid
+     * @param int $menuItemid
      * @param string $layout
      * @param string $itemType
-     * @param int    $appId
+     * @param int $appId
      * @return string
      */
     public function compare($menuItemid, $layout = 'v', $itemType = null, $appId = null)
@@ -123,8 +160,8 @@ class JBRouterHelper extends AppHelper
 
     /**
      * Favorite link
-     * @param int    $menuItemid
-     * @param int    $appId
+     * @param int $menuItemid
+     * @param int $appId
      * @return string
      */
     public function favorite($menuItemid, $appId = null)
@@ -190,7 +227,7 @@ class JBRouterHelper extends AppHelper
 
     /**
      * Get url to basket
-     * @param int  $menuItemid
+     * @param int $menuItemid
      * @param null $appId
      * @return string
      */
@@ -210,8 +247,27 @@ class JBRouterHelper extends AppHelper
     }
 
     /**
+     * Basket empty url
+     * @param null $appId
+     * @return string
+     */
+    public function basketEmpty($appId = null)
+    {
+        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+
+        $linkParams = array(
+            'option'     => 'com_zoo',
+            'controller' => 'basket',
+            'task'       => 'clear',
+            'app_id'     => (int)$appId,
+        );
+
+        return $this->_url($linkParams, true);
+    }
+
+    /**
      * Get url to success order
-     * @param int  $menuItemid
+     * @param int $menuItemid
      * @param null $appId
      * @return string
      */
@@ -345,9 +401,50 @@ class JBRouterHelper extends AppHelper
     }
 
     /**
+     * Generate admin menu
+     * @param array $params
+     * @return string
+     */
+    public function admin(array $params = array())
+    {
+        if (!isset($params['controller'])) {
+            $params['controller'] = $this->app->jbrequest->getCtrl();
+        }
+
+        $task = $this->app->jbrequest->getWord('task');
+        if (!isset($params['task']) && !empty($task)) {
+            $params['task'] = $task;
+        }
+
+        if (!isset($params['option'])) {
+            $params['option'] = 'com_zoo';
+        }
+
+        return $this->_url($params, true, JURI::root() . 'administrator/index.php');
+    }
+
+    /**
+     * Payment
+     * @param $appId
+     * @param $type
+     * @return string
+     */
+    public function payment($appId, $type)
+    {
+        $params = array(
+            'option'     => 'com_zoo',
+            'controller' => 'payment',
+            'task'       => 'payment' . $type,
+            'app_id'     => (int)$appId
+        );
+
+        return JURI::root() . 'index.php?' . $this->query($params);
+    }
+
+    /**
      * Get url by params
-     * @param array  $params
-     * @param bool   $zooRoute
+     * @param array $params
+     * @param bool $zooRoute
      * @param string $base
      * @return string
      */
@@ -362,7 +459,29 @@ class JBRouterHelper extends AppHelper
         if ($zooRoute) {
             return $this->app->link($params, false);
         } else {
-            return JRoute::_($base . '?' . http_build_query($params), true);
+            return JRoute::_($base . '?' . $this->query($params), true);
         }
+    }
+
+    /**
+     * @param Item $item
+     * @return mixed
+     */
+    public function externalItem(Item $item)
+    {
+        $root        = JUri::root();
+        $application = JApplication::getInstance('site');
+        $router      = $application->getRouter();
+        $link        = $router->build($this->app->route->item($item, false));
+        return $root . preg_replace('/^.*administrator\//', '', $link, 1);
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    public function query(array $data)
+    {
+        return http_build_query($data, null, '&');
     }
 }

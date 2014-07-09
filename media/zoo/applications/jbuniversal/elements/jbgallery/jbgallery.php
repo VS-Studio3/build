@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class ElementJBGallery
+ */
 class ElementJBGallery extends Element implements iSubmittable
 {
     /**
@@ -56,14 +63,14 @@ class ElementJBGallery extends Element implements iSubmittable
     {
         // init vars
         $this->_uri  = JURI::base();
-        $this->_path =
-                JPATH_ROOT . '/' . trim($this->config->get('directory'), '/') . '/' . trim($this->_data->get('value'), '/');
+        $this->_path = JPATH_ROOT . '/' . trim($this->config->get('directory'), '/')
+            . '/' . trim($this->_data->get('value'), '/');
 
 
         // set params
         $parameter = $this->app->parameter->create()
-                ->loadArray((array)$this->config)
-                ->loadArray($params);
+            ->loadArray((array)$this->config)
+            ->loadArray($params);
 
         // get thumbnails
         $thumbs = $this->_getThumbnails($parameter);
@@ -161,11 +168,11 @@ class ElementJBGallery extends Element implements iSubmittable
                 list($thumb_width, $thumb_height) = @getimagesize($thumb);
 
                 $thumbs[] = array(
-                    'name'         => $name,
+                    'name'         => htmlspecialchars($this->getItem()->name),
                     'filename'     => $filename,
-                    'img'          => $this->_uri . $this->_getRelativePath($file),
+                    'img'          => $this->_getRelativePath($file),
                     'img_file'     => $file,
-                    'thumb'        => $this->_uri . $this->_getRelativePath($thumb),
+                    'thumb'        => $this->_getRelativePath($thumb),
                     'thumb_width'  => $thumb_width,
                     'thumb_height' => $thumb_height
                 );
@@ -203,7 +210,7 @@ class ElementJBGallery extends Element implements iSubmittable
      */
     protected function _getRelativePath($file)
     {
-        return JString::trim(str_replace('\\', '/', preg_replace('/^' . preg_quote(JPATH_ROOT, '/') . '/i', '', $file)), '/');
+        return str_replace('//', '/', $this->app->path->relative($file));
     }
 
     /**
@@ -222,9 +229,7 @@ class ElementJBGallery extends Element implements iSubmittable
             throw new AppValidatorException('This directory does not exist');
         }
 
-        return array(
-            'value' => $value
-        );
+        return $value;
     }
 
     /**

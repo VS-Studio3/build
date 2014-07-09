@@ -1,25 +1,29 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
 $align = $this->app->jbitem->getMediaAlign($item, $layout);
 
-echo $this->renderPosition('title',     array('style' => 'jbtitle'));
+echo $this->renderPosition('title', array('style' => 'jbtitle'));
 
 ?>
 
 <?php if ($this->checkPosition('image')) : ?>
-<div class="item-image align-<?php echo $align;?>">
-    <?php echo $this->renderPosition('image');?>
-</div>
+    <div class="item-image align-<?php echo $align; ?>">
+        <?php echo $this->renderPosition('image'); ?>
+    </div>
 <?php endif; ?>
 
 <?php echo $this->renderPosition('rating'); ?>
@@ -31,10 +35,10 @@ echo $this->renderPosition('title',     array('style' => 'jbtitle'));
 
 
 <?php if ($this->checkPosition('properties')) : ?>
-<h3>Данные о компании</h3>
-<ul class="item-properties">
-    <?php echo $this->renderPosition('properties', array('style' => 'list'));?>
-</ul>
+    <h3><?php echo JText::_('JBZOO_TMPL_COMPANY_INFO'); ?></h3>
+    <ul class="item-properties">
+        <?php echo $this->renderPosition('properties', array('style' => 'list')); ?>
+    </ul>
 <?php endif; ?>
 
 
@@ -44,9 +48,9 @@ echo $this->renderPosition('title',     array('style' => 'jbtitle'));
 
 
 <?php if ($this->checkPosition('meta')) : ?>
-    <h3>Информация о карточке товара</h3>
+    <h3><?php echo JText::_('JBZOO_TMPL_COMPANY_META'); ?></h3>
     <ul class="item-metadata">
-        <?php echo $this->renderPosition('meta', array('style' => 'list'));?>
+        <?php echo $this->renderPosition('meta', array('style' => 'list')); ?>
     </ul>
 <?php endif; ?>
 

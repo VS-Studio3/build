@@ -1,16 +1,23 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
-Class JBModelFavorite extends JBModel
+/**
+ * Class JBModelFavorite
+ */
+class JBModelFavorite extends JBModel
 {
     /**
      * Create and return self instance
@@ -26,27 +33,7 @@ Class JBModelFavorite extends JBModel
      */
     public function checkTable()
     {
-        static $isCheck;
-
-        if (!isset($isCheck)) {
-
-            $tables = $this->_dbHelper->queryResultArray('SHOW FULL TABLES');
-
-            if (!in_array(ZOO_TABLE_JBZOO_FAVORITE, $tables)) {
-
-                $this->_dbHelper->query('CREATE TABLE `' . ZOO_TABLE_JBZOO_FAVORITE . '` (
-                  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-                  `user_id` int(11) NOT NULL,
-                  `item_id` int(11) NOT NULL,
-                  `date` datetime NOT NULL,
-                  PRIMARY KEY (`id`),
-                  UNIQUE KEY `user_id_item_id` (`user_id`,`item_id`),
-                  KEY `user_id` (`user_id`)
-                )');
-            }
-
-            $isCheck = true;
-        }
+        return $this->_jbtables->checkFavorite();
     }
 
     /**
@@ -154,7 +141,7 @@ Class JBModelFavorite extends JBModel
 
         $this->_dbHelper->query(
             "INSERT INTO `" . ZOO_TABLE_JBZOO_FAVORITE . "` (`user_id`, `item_id`, `date`) "
-                . "VALUES ('" . (int)$userId . "', '" . (int)$itemId . "', now())"
+            . "VALUES ('" . (int)$userId . "', '" . (int)$itemId . "', now())"
         );
     }
 

@@ -24,7 +24,7 @@ defined('_JEXEC') or die('Restricted access');
 
 
     <?php if ($this->checkPosition('related')) { ?>
-        <h3>Смотрите также:</h3>
+        <h3>See also:</h3>
         <ul>
             <?php echo $this->renderPosition('related'); ?>
         </ul>
@@ -32,7 +32,7 @@ defined('_JEXEC') or die('Restricted access');
     
     
     <?php if ($this->checkPosition('meta')) { ?>
-        <h3>Метаданные страницы:</h3>
+        <h3>Meta:</h3>
         <ul>
             <?php echo $this->renderPosition('meta',array('style'=>'list')); ?>
         </ul>

@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
-    category   JBZoo
-    author     smet.denis <admin@joomla-book.ru>
-    copyright  Copyright (c) 2009-2012, Joomla-book.ru
-    license    http://joomla-book.ru/info/disclaimer
-    link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+    JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+
+    @package     jbzoo
+    @version     2.x Pro
+    @author      JBZoo App http://jbzoo.com
+    @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+    @license     http://jbzoo.com/license-pro.php JBZoo Licence
+    @coder       Denis Smetannikov <denis@jbzoo.com>
 -->
 <application>
     <name>JBZoo App</name>
     <group>jbuniversal</group>
-    <version>1.6.0</version>
-    <creationDate>2013 01</creationDate>
-    <author>Joomla-book.ru</author>
-    <authorEmail>admin@joomla-book.ru</authorEmail>
-    <authorUrl>http://joomla-book.ru</authorUrl>
-    <copyright>Copyright (C) 2009-2013 Joomla-book.ru</copyright>
-    <license>http://joomla-book.ru/info/disclaimer</license>
-    <description>Zoo application by Joomla-book.ru</description>
+    <version>2.1.1 Pro</version>
+    <creationDate>2013 12</creationDate>
+    <author>JBZoo.com</author>
+    <authorEmail>admin@jbzoo.com</authorEmail>
+    <authorUrl>http://jbzoo.com</authorUrl>
+    <copyright>Copyright (C) JBZoo.com, All rights reserved.</copyright>
+    <license>http://jbzoo.com/license-pro.php JBZoo Licence</license>
+    <description>JBZoo App is universal Joomla CCK, application for YooTheme Zoo component</description>
 
     <params group="application-config">
+
+        <param name="applicationid" type="jbapplicationid" label="JBZOO_APPLICATION_ID"/>
 
         <param name="yoo_support" type="jbbool" default="1" label="JBZOO_YOO_SUPPORT"
                description="JBZOO_YOO_SUPPORT_DESC"/>
@@ -39,7 +43,7 @@
             <option value="none">JBZOO_TAG_NONE</option>
         </param>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_CATEGORIES"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_CATEGORIES"/>
 
         <param name="category_image_height" type="text" default="150" label="JBZOO_CATEGORY_IMAGE_HEIGHT" size="3"/>
 
@@ -48,7 +52,7 @@
         <param name="show_feed_link" type="zoofeed" default="0" label="JBZOO_SHOW_FEED_LINK"
                description="JBZOO_SHOW_FEED_LINK_DESC"/>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_SUBCATEGORIES"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_SUBCATEGORIES"/>
 
         <param name="category_teaser_image_height" type="text" default="50" label="JBZOO_CATEGORY_TEASER_IMAGE_HEIGHT"
                description="JBZOO_CATEGORY_TEASER_IMAGE_HEIGHT_DESC" size="3"/>
@@ -56,14 +60,14 @@
         <param name="category_teaser_image_width" type="text" default="50" label="JBZOO_CATEGORY_TEASER_IMAGE_WIDTH"
                description="JBZOO_CATEGORY_TEASER_IMAGE_WIDTH_DESC" size="3"/>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_ITEMS"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_ITEMS"/>
 
         <param name="items_per_page" type="text" default="20" label="JBZOO_ITEMS_PER_PAGE" size="3"/>
 
-        <param name="item_order" type="zooitemorder" default="_itemname" label="JBZOO_ITEM_ORDER"
+        <param name="item_order" type="jbitemorder" default="" label="JBZOO_ITEM_ORDER"
                description="JBZOO_ITEM_ORDER_DESC"/>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_OTHERS"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_OTHERS"/>
 
         <param name="alpha_index" type="list" default="0" label="JBZOO_ALPHA_INDEX"
                description="JBZOO_ALPHA_INDEX_DESC">
@@ -79,7 +83,7 @@
             <option value="2">JBZOO_ALPHA_EN</option>
         </param>
 
-        <param name="@spacer" type="spacer" default="JBZOO_TEMPLATE_LAYOUTS"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_TEMPLATE_LAYOUTS"/>
 
         <param name="layout_frontpage" type="jblayout" default="__auto__" label="JBZOO_LAYOUT_FRONTPAGE"
                description="JBZOO_LAYOUT_FRONTPAGE_DESC"/>
@@ -135,19 +139,19 @@
 
     <params group="category-config">
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_CATEGORIES"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_CATEGORIES"/>
 
         <param name="show_feed_link" type="zoofeedglobal" default="0" label="JBZOO_SHOW_FEED_LINK"
                description="JBZOO_SHOW_FEED_LINK_DESC"/>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_ITEMS"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_ITEMS"/>
 
         <param name="items_per_page" type="textglobal" default="10" label="JBZOO_ITEMS_PER_PAGE" size="3"/>
 
-        <param name="item_order" type="zooitemorderglobal" default="_itemname" label="JBZOO_ITEM_ORDER"
+        <param name="item_order" type="jbitemorderglobal" default="" label="JBZOO_ITEM_ORDER"
                description="JBZOO_ITEM_ORDER_DESC" random="true" add_default="true"/>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_OTHERS"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_OTHERS"/>
 
         <param name="alpha_index" type="listglobal" default="0" label="JBZOO_ALPHA_INDEX"
                description="JBZOO_ALPHA_INDEX_DESC">
@@ -163,7 +167,7 @@
             <option value="2">JBZOO_ALPHA_EN</option>
         </param>
 
-        <param name="@spacer" type="spacer" default="JBZOO_TEMPLATE_LAYOUTS"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_TEMPLATE_LAYOUTS"/>
 
         <param name="layout_frontpage" type="jblayoutglobal" default="__auto__" label="JBZOO_LAYOUT_FRONTPAGE"
                description="JBZOO_LAYOUT_FRONTPAGE_DESC"/>
@@ -188,6 +192,9 @@
 
         <param name="layout_alphaindex" type="jblayoutglobal" default="__auto__" label="JBZOO_LAYOUT_ALPHAINDEX"
                description="JBZOO_LAYOUT_ALPHAINDEX_DESC"/>
+
+        <param name="lastmodified" type="jbtimestamp"/>
+
     </params>
 
     <params group="application-content">
@@ -202,6 +209,8 @@
     </params>
 
     <params group="category-content">
+        <param name="categoryid" type="jbcategoryid" label="JBZOO_CATEGORY_ID"/>
+
         <param name="category_title" type="textarea" rows="2" cols="30" label="JBZOO_CATEGORY_TITLE"
                description="JBZOO_CATEGORY_TITLE_DESC"/>
 

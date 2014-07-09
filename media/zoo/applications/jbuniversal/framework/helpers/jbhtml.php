@@ -1,24 +1,33 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
-class JBHTMLHelper extends AppHelper {
+/**
+ * Class JBHTMLHelper
+ */
+class JBHTMLHelper extends AppHelper
+{
     /**
      * Render option list
      * @param        $data
      * @param        $name
-     * @param null   $attribs
-     * @param null   $selected
-     * @param bool   $idtag
-     * @param bool   $translate
+     * @param null $attribs
+     * @param null $selected
+     * @param bool $idtag
+     * @param bool $translate
+     * @param bool $isLabelWrap
      * @return string
      */
     public function radio(
@@ -27,7 +36,8 @@ class JBHTMLHelper extends AppHelper {
         $attribs = null,
         $selected = null,
         $idtag = false,
-        $translate = false
+        $translate = false,
+        $isLabelWrap = true
     )
     {
         if (empty($data)) {
@@ -36,17 +46,18 @@ class JBHTMLHelper extends AppHelper {
 
         $attribs = $this->_buildAttrs($attribs);
 
-        return $this->_list('radio', $data, $name, $attribs, $selected, $idtag, $translate);
+        return $this->_list('radio', $data, $name, $attribs, $selected, $idtag, $translate, $isLabelWrap);
     }
 
     /**
      * Render checkbox list
      * @param        $data
      * @param        $name
-     * @param null   $attribs
-     * @param null   $selected
-     * @param bool   $idtag
-     * @param bool   $translate
+     * @param null $attribs
+     * @param null $selected
+     * @param bool $idtag
+     * @param bool $translate
+     * @param bool $isLabelWrap
      * @return string
      */
     public function checkbox(
@@ -55,7 +66,8 @@ class JBHTMLHelper extends AppHelper {
         $attribs = null,
         $selected = null,
         $idtag = false,
-        $translate = false
+        $translate = false,
+        $isLabelWrap = true
     )
     {
         if (empty($data)) {
@@ -68,7 +80,7 @@ class JBHTMLHelper extends AppHelper {
 
         $attribs = $this->_buildAttrs($attribs);
 
-        return $this->_list('checkbox', $data, $name, $attribs, $selected, $idtag, $translate);
+        return $this->_list('checkbox', $data, $name, $attribs, $selected, $idtag, $translate, $isLabelWrap);
     }
 
     /**
@@ -98,9 +110,11 @@ class JBHTMLHelper extends AppHelper {
             $attribs['id'] = $idtag;
         }
 
-        if (isset($attribs['multiple']) && $attribs['multiple'] == 'multiple') {
+        if (is_array($attribs) && isset($attribs['multiple'])) {
             $name = $name . '[]';
         }
+
+        $name = preg_replace('#\[\]\[\]$#', '[]', $name); // hack for difference J2.5 and J3.x
 
         $attribs = $this->_buildAttrs($attribs);
 
@@ -117,12 +131,11 @@ class JBHTMLHelper extends AppHelper {
      */
     public function text($name, $value = null, $attribs = null, $idtag = null)
     {
-        if ($idtag) {
+        if ($idtag && is_array($attribs)) {
             $attribs['id'] = $idtag;
         }
 
         $attribs = $this->_buildAttrs($attribs);
-
         if (strpos($attribs, 'jsAutocomplete') !== false) {
 
             $this->app->jbassets->jqueryui();
@@ -155,9 +168,9 @@ class JBHTMLHelper extends AppHelper {
     /**
      * Render calendar element
      * @param       $name
-     * @param null  $value
-     * @param null  $attribs
-     * @param null  $idtag
+     * @param null $value
+     * @param null $attribs
+     * @param null $idtag
      * @param array $params
      * @return string
      */
@@ -179,7 +192,7 @@ class JBHTMLHelper extends AppHelper {
 
     /**
      * Render jQueryUI slider
-     * @param array  $params
+     * @param array $params
      * @param string $value
      * @param string $name
      * @param string $idtag
@@ -187,7 +200,7 @@ class JBHTMLHelper extends AppHelper {
      */
     public function slider($params, $value = '', $name = '', $idtag = '')
     {
-        if (!empty($value)) {
+        if (!empty($value) && is_string($value)) {
             $value = explode('/', $value);
         } else {
             $value = array($params['min'], $params['max']);
@@ -199,33 +212,33 @@ class JBHTMLHelper extends AppHelper {
             $("#' . $idtag . '-wrapper")[0].slide = null;
             $("#' . $idtag . '-wrapper").slider({
                 "range" : true,
-                "min"   : ' . ((int)$params['min'] ? (int)$params['min'] : 0) . ',
-                "max"   : ' . ((int)$params['max'] ? (int)$params['max'] : 10000) . ',
-                "step"  : ' . ((int)$params['step'] ? (int)$params['step'] : 100) . ',
-                "values": [' . (int)$value['0'] . ', ' . (int)$value['1'] . '],
+                "min"   : ' . ((float)$params['min'] ? round((float)$params['min'], 2) : 0) . ',
+                "max"   : ' . ((float)$params['max'] ? round((float)$params['max'], 2) : 10000) . ',
+                "step"  : ' . ((float)$params['step'] ? round((float)$params['step'], 2) : 100) . ',
+                "values": [' . round((float)$value['0'], 2) . ', ' . round((float)$value['1'], 2) . '],
                 "slide" : function(event,ui) {
                     $("#' . $idtag . '-value").val(ui.values[0] + "/" + ui.values[1]);
-                    $("#' . $idtag . '-value-0").html(ui.values[0]);
-                    $("#' . $idtag . '-value-1").html(ui.values[1]);
+                    $("#' . $idtag . '-value-0").html(numberFormat(ui.values[0], 0, ".", " "));
+                    $("#' . $idtag . '-value-1").html(numberFormat(ui.values[1], 0, ".", " "));
                 }
             });
-		    $("#' . $idtag . '-value").val(' . (int)$value['0'] . '+ "/" +' . (int)$value['1'] . ');
+		    $("#' . $idtag . '-value").val(' . (float)$value['0'] . '+ "/" +' . (float)$value['1'] . ');
         });');
 
         return '<div id="' . $idtag . '-wrapper"> </div>' . "\n"
-                . '<span id="' . $idtag . '-value-0" class="slider-value-0">' . (int)$value['0'] . '</span>' . "\n"
-                . '<span id="' . $idtag . '-value-1" class="slider-value-1">' . (int)$value['1'] . '</span>' . "\n"
-                . '<input type="hidden" id="' . $idtag . '-value" name="' . $name . '" />' . "\n";
+        . '<span id="' . $idtag . '-value-0" class="slider-value-0">' . $value['0'] . '</span>' . "\n"
+        . '<span id="' . $idtag . '-value-1" class="slider-value-1">' . $value['1'] . '</span>' . "\n"
+        . '<input type="hidden" id="' . $idtag . '-value" name="' . $name . '" />' . "\n";
     }
 
     /**
      * Render option list
      * @param        $data
      * @param        $name
-     * @param null   $attribs
-     * @param null   $selected
-     * @param bool   $idtag
-     * @param bool   $translate
+     * @param null $attribs
+     * @param null $selected
+     * @param bool $idtag
+     * @param bool $translate
      * @return string
      */
     public function buttonsJqueryUI(
@@ -238,10 +251,10 @@ class JBHTMLHelper extends AppHelper {
     )
     {
         if (isset($attribs['multiple'])) {
-            $html = $this->checkbox($data, $name, $attribs, $selected, $idtag, $translate);
+            $html = $this->checkbox($data, $name, $attribs, $selected, $idtag, $translate, false);
 
         } else {
-            $html = $this->radio($data, $name, $attribs, $selected, $idtag, $translate);
+            $html = $this->radio($data, $name, $attribs, $selected, $idtag, $translate, false);
         }
 
         $this->app->jbassets->jqueryui();
@@ -260,6 +273,7 @@ class JBHTMLHelper extends AppHelper {
      * @param null $selected
      * @param bool $idtag
      * @param bool $translate
+     * @param array $params
      * @return string
      */
     public function selectChosen(
@@ -268,7 +282,8 @@ class JBHTMLHelper extends AppHelper {
         $attribs = null,
         $selected = null,
         $idtag = false,
-        $translate = false
+        $translate = false,
+        $params = array()
     )
     {
         $this->app->jbassets->chosen();
@@ -277,16 +292,19 @@ class JBHTMLHelper extends AppHelper {
             $("#' . $idtag . '").chosen();
         });');
 
+        $attribs['data-no_results_text'] = JText::_('JBZOO_CHOSEN_NORESULT');
+        $attribs['data-placeholder']     = (isset($params['placeholder'])) ? $params['placeholder'] : JText::_('JBZOO_CHOSEN_SELECT');
+
         return $this->select($data, $name, $attribs, $selected, $idtag, $translate);
     }
 
     /**
      * Select cascade
-     * @param array  $selectInfo
+     * @param array $selectInfo
      * @param string $name
-     * @param array  $selected
-     * @param array  $attribs
-     * @param bool   $idtag
+     * @param array $selected
+     * @param array $attribs
+     * @param bool $idtag
      * @return string
      */
     public function selectCascade(
@@ -300,7 +318,7 @@ class JBHTMLHelper extends AppHelper {
         $maxLevel  = $selectInfo['maxLevel'];
         $listNames = $selectInfo['names'];
 
-        $uniqId         = uniqid();
+        $uniqId         = str_replace('.', '_', uniqid('', true));
         $deepLevelCheck = $deepLevel = 0;
 
         $html = array();
@@ -316,10 +334,12 @@ class JBHTMLHelper extends AppHelper {
                 'id'         => 'jbselect-' . $i . '-' . $uniqId,
             );
 
+            $listName = isset($listNames[$i]) ? $listNames[$i] : ' ';
+
             $html[] = '<div>';
-            $html[] = '<label for="' . $attrs['id'] . '">' . $listNames[$i] . '</label>';
+            $html[] = '<label for="' . $attrs['id'] . '">' . $listName . '</label>';
             $html[] = '<select ' . $this->app->jbhtml->buildAttrs($attrs) . '>';
-            $html[] = '<option value=""> - </option>';
+            $html[] = '<option value=""> - ' . JText::_('JBZOO_ALL') . ' - </option>';
 
             if ($deepLevelCheck == $deepLevel) {
                 $deepLevelCheck++;
@@ -350,21 +370,21 @@ class JBHTMLHelper extends AppHelper {
         $attribs['class'][] = 'jbcascadeselect';
 
         return '<div class="jbcascadeselect-wrapper jbcascadeselect-' . $uniqId . '">'
-                . '<div ' . $this->app->jbhtml->buildAttrs($attribs) . '>'
-                . implode(" ", $html)
-                . '</div></div>';
+        . '<div ' . $this->app->jbhtml->buildAttrs($attribs) . '>'
+        . implode(" ", $html)
+        . '</div></div>';
     }
 
     /**
      * Generates an HTML checkbox/radio list.
-     * @param   string   $inputType    Type of html input element
-     * @param   array    $data         An array of objects
-     * @param   string   $name         The value of the HTML name attribute
-     * @param   string   $attribs      Additional HTML attributes for the <select> tag
-     * @param   string   $selected     The name of the object variable for the option text
-     * @param   boolean  $idtag        Value of the field id or null by default
-     * @param   boolean  $translate    True if options will be translated
-     * @param   boolean  $isLabelWrap  True if options wrappeed label tag
+     * @param   string $inputType    Type of html input element
+     * @param   array $data         An array of objects
+     * @param   string $name         The value of the HTML name attribute
+     * @param   string $attribs      Additional HTML attributes for the <select> tag
+     * @param   string $selected     The name of the object variable for the option text
+     * @param   boolean $idtag        Value of the field id or null by default
+     * @param   boolean $translate    True if options will be translated
+     * @param   boolean $isLabelWrap  True if options wrappeed label tag
      * @return  string HTML for the select list
      */
     private function _list($inputType, $data, $name, $attribs = null, $selected = null, $idtag = false,
@@ -384,17 +404,26 @@ class JBHTMLHelper extends AppHelper {
         }
 
         $html = array();
-        foreach ($data as $obj) {
+        foreach ($data as $keyObj => $obj) {
 
-            $value = $obj->value;
-            $text  = $translate ? JText::_($obj->text) : $obj->text;
-            $id    = (isset($obj->id) ? $obj->id : null);
+            if (is_object($obj)) {
+                $value = $obj->value;
+                $text  = $translate ? JText::_($obj->text) : $obj->text;
+                $id    = (isset($obj->id) ? $obj->id : null);
+            } else {
+                $value = $keyObj;
+                $text  = $translate ? JText::_($obj) : $obj;
+                $id    = null;
+            }
+
+            $valueSlug = $this->app->string->sluggify($value);
 
             $extra = array(
                 'value' => $value,
                 'name'  => $name,
                 'type'  => $inputType,
-                'id'    => $idText . $value,
+                'id'    => uniqid('id' . $valueSlug . '-'),
+                'class' => 'value-' . $valueSlug
             );
 
             if (is_array($selected)) {
@@ -415,17 +444,20 @@ class JBHTMLHelper extends AppHelper {
 
             $extraLabel = array(
                 'for'   => $extra['id'],
-                'class' => $inputType . '-lbl',
+                'class' => array(
+                    $inputType . '-lbl',
+                    'lbl-' . $this->app->string->sluggify($value),
+                ),
             );
 
             if ($isLabelWrap) {
                 $html[] = '<label ' . $this->_buildAttrs($extraLabel) . '>'
-                        . '<input ' . $this->_buildAttrs($extra) . ' />'
-                        . $text . '</label>';
+                    . ' <input ' . $this->_buildAttrs($extra) . ' /> '
+                    . $text . '</label>';
 
             } else {
-                $html[] = '<input ' . $this->_buildAttrs($extra) . ' />'
-                        . '<label ' . $this->_buildAttrs($extraLabel) . '>' . $text . '</label>';
+                $html[] = ' <input ' . $this->_buildAttrs($extra) . ' />'
+                    . '<label ' . $this->_buildAttrs($extraLabel) . '> ' . $text . '</label>';
 
             }
 
@@ -481,6 +513,7 @@ class JBHTMLHelper extends AppHelper {
     {
         $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
         $value = JString::trim($value);
+
         return $value;
     }
 }

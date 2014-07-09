@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
-    category   JBZoo
-    author     smet.denis <admin@joomla-book.ru>
-    copyright  Copyright (c) 2009-2012, Joomla-book.ru
-    license    http://joomla-book.ru/info/disclaimer
-    link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+    JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+
+    @package     jbzoo
+    @version     2.x Pro
+    @author      JBZoo App http://jbzoo.com
+    @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+    @license     http://jbzoo.com/license-pro.php JBZoo Licence
+    @coder       Denis Smetannikov <denis@jbzoo.com>
 -->
 <element type="jbprice" group="JBZoo" orderable="true">
-    <name>JBZoo Price</name>
-    <author>Joomla-book.ru</author>
-    <creationDate>06 2012</creationDate>
-    <copyright>Joomla-book.ru (c)</copyright>
-    <authorEmail>admin@joomla-book.ru</authorEmail>
-    <authorUrl>http://joomla-book.ru</authorUrl>
-    <version>1.0</version>
+    <name>JBZoo Price (Deprecated !)</name>
     <description>Price element for catalog</description>
+    <author>JBZoo.com</author>
+    <creationDate>2013 07</creationDate>
+    <copyright>Copyright (C) JBZoo.com,  All rights reserved.</copyright>
+    <authorEmail>admin@jbzoo.com</authorEmail>
+    <authorUrl>http://jbzoo.com</authorUrl>
+    <version>1.0</version>
     <params>
         <param name="default" type="text" default="0" label="Default" description=""/>
         <param name="currency" type="jbcurrency" default="RUB" label="JBZOO_CURRENCY"
@@ -38,8 +40,16 @@
     </params>
 
     <params group="render">
-        <param name="show_basket" type="jbbool" default="1" label="JBZOO_CART_SHOW_BASKET"
-               description="JBZOO_CART_SHOW_BASKET_DESC"/>
+
+        <param name="template" type="list" default="default" label="JBZOO_CART_ELEMENT_TEMPLATE"
+               description="JBZOO_CART_ELEMENT_TEMPLATE_DESC">
+            <option value="default">JBZOO_CART_ELEMENT_TEMPLATE_DEFAULT</option>
+            <option value="modal">JBZOO_CART_ELEMENT_TEMPLATE_POPUP</option>
+            <option value="oneclick">JBZOO_CART_ELEMENT_TEMPLATE_ONECLICK</option>
+            <option value="onlyprice">JBZOO_CART_ELEMENT_TEMPLATE_ONLYPRICE</option>
+            <option value="onlybuttons-popup">JBZOO_CART_ELEMENT_TEMPLATE_ONLYBUTTONS</option>
+            <option value="onlybuttons-oneclick">JBZOO_CART_ELEMENT_TEMPLATE_ONLYBUTTONS_ONECLICK</option>
+        </param>
 
         <param name="show_sku" type="jbbool" default="1" label="JBZOO_CART_SHOW_SKU"
                description="JBZOO_CART_SHOW_SKU_DESC"/>

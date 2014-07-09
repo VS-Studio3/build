@@ -1,84 +1,60 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBModelElementItemcategory
+ */
 class JBModelElementItemcategory extends JBModelElement
 {
 
     /**
      * Set AND element conditions
      * @param JBDatabaseQuery $select
-     * @param string          $elementId
-     * @param string|array    $value
-     * @param int             $i
-     * @param bool            $exact
+     * @param string $elementId
+     * @param string|array $value
+     * @param int $i
+     * @param bool $exact
      * @return JBDatabaseQuery
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        $value = $this->_prepareValue($value);
-        $select->innerJoin(ZOO_TABLE_CATEGORY_ITEM . ' AS tCategoryItem ON tItem.id = tCategoryItem.item_id');
-        $select->where('tCategoryItem.category_id IN (' . implode(',', $value) . ')');
-
-        return $select;
+        return $this->_getWhere($value, $elementId);
     }
 
     /**
      * Set OR element conditions
      * @param JBDatabaseQuery $select
-     * @param string          $elementId
-     * @param string|array    $value
-     * @param int             $i
-     * @param bool            $exact
+     * @param string $elementId
+     * @param string|array $value
+     * @param int $i
+     * @param bool $exact
      * @return array
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        $value   = $this->_prepareValue($value);
-        $itemsId = $this->_getItemIdsByCategoryIds($value);
-
-        return 'tItem.id IN (' . implode(',', $itemsId) . ')';
+        return $this->_getWhere($value, $elementId);
     }
-
-    /**
-     * Get ItemId's by categoriesId's
-     * @param $categoriesId
-     * @return array
-     */
-    protected function _getItemIdsByCategoryIds($categoriesId)
-    {
-
-        if (!is_array($categoriesId)) {
-            $categoriesId = array($categoriesId);
-        }
-
-        $select = $this->_getSelect()
-            ->select('tCategoryItem.item_id')
-            ->from(ZOO_TABLE_CATEGORY_ITEM . ' AS tCategoryItem')
-            ->where('tCategoryItem.category_id IN (' . implode(', ', $categoriesId) . ')');
-
-        $result = $this->fetchAll($select);
-
-        $result = $this->_groupBy($result, 'item_id');
-
-        return $result;
-    }
-
 
     /**
      * Prepare and validate value
-     * @param $value
-     * @return mixed
+     * @param array|string $value
+     * @param bool $exact
+     * @return array|mixed
      */
-    protected function _prepareValue($value)
+    protected function _prepareValue($value, $exact = false)
     {
         if (!is_array($value)) {
             $value = array($value);
@@ -100,6 +76,7 @@ class JBModelElementItemcategory extends JBModelElement
 
     /**
      * Add subcategories ids for selected categories
+     * TODO Use JBModelCategory
      * @param $parentCategories
      * @return array
      */
@@ -121,4 +98,27 @@ class JBModelElementItemcategory extends JBModelElement
 
         return $result;
     }
+
+    /**
+     * @param $value
+     * @param $elementId
+     * @return array
+     */
+    protected function _getWhere($value, $elementId)
+    {
+        $values = $this->_prepareValue($value);
+
+        $elementIdStr = $this->_jbtables->getFieldName($elementId, 's');
+        $elementIdNum = $this->_jbtables->getFieldName($elementId, 'n');
+
+        foreach ($values as $valueOne) {
+            if (is_numeric($valueOne)) {
+                return array('tIndex.' . $elementIdNum . ' IN (' . implode(',', $values) . ')');
+            } else {
+                return array('tIndex.' . $elementIdStr . ' IN (' . implode(',', $values) . ')');
+            }
+        }
+    }
+
+
 }

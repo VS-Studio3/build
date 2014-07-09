@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBFilterHelper
+ */
 class JBFilterHelper extends AppHelper
 {
 
@@ -39,7 +46,7 @@ class JBFilterHelper extends AppHelper
     /**
      * Set filter info before helper use
      * @param string $type
-     * @param int    $application
+     * @param int $application
      * @return void
      */
     public function set($type, $application)
@@ -81,9 +88,9 @@ class JBFilterHelper extends AppHelper
     /**
      * Element render
      * @param string $identifier
-     * @param bool   $value
-     * @param array  $params
-     * @param array  $attrs
+     * @param bool $value
+     * @param array $params
+     * @param array $attrs
      * @return mixed
      * @throws Exception
      */
@@ -118,7 +125,7 @@ class JBFilterHelper extends AppHelper
 
     /**
      * Mapper elementType to render method
-     * @param array  $params
+     * @param array $params
      * @param string $elementType
      * @return string
      */

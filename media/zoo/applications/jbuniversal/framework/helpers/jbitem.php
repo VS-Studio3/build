@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBItemHelper
+ */
 class JBItemHelper extends AppHelper
 {
     /**
@@ -19,13 +26,12 @@ class JBItemHelper extends AppHelper
 
     /**
      * Get align for media position for item
-     * @param Item   $item
+     * @param Item $item
      * @param string $layout
      * @return string
      */
     public function getMediaAlign(Item $item, $layout)
     {
-
         $paramName = str_replace('.' . $item->type . '.', '.', $layout);
         $paramName = str_replace('.', '_', $paramName);
         $paramName = 'template.' . $paramName . '_image_align';
@@ -48,25 +54,34 @@ class JBItemHelper extends AppHelper
      */
     public function renderImageFromItem(Item $item, $elementId, $isLink = false)
     {
-        if (!$elementId) {
+        if (empty($elementId)) {
             return null;
+        }
+
+        if (is_array($elementId)) {
+            $result = '';
+            foreach ($elementId as $elementIdrow) {
+                $result .= "\n " . $this->renderImageFromItem($item, $elementIdrow, $isLink);
+            }
+
+            return $result;
         }
 
         $element = $item->getElement($elementId);
         if (JString::strtolower(get_class($element)) == 'elementjbimage') {
 
             return $element->render(array(
-                'width'    => 50,
-                'height'   => 50,
-                'template' => 'itemlink',
+                'width'    => 75,
+                'height'   => 75,
+                'template' => $isLink ? 'itemlink' : 'default',
                 'display'  => 'first',
             ));
 
         } else if (JString::strtolower(get_class($element)) == 'elementimage') {
 
             return $element->render(array(
-                'width'  => 50,
-                'height' => 50,
+                'width'  => 75,
+                'height' => 75,
             ));
         }
 

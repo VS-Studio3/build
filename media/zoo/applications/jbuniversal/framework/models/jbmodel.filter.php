@@ -1,16 +1,23 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
-Class JBModelFilter extends JBModel
+/**
+ * Class JBModelFilter
+ */
+class JBModelFilter extends JBModel
 {
 
     /**
@@ -24,141 +31,271 @@ Class JBModelFilter extends JBModel
 
     /**
      * Filter search
-     * @param array  $elements
+     * @param array $elements
      * @param string $logic
-     * @param bool   $type
-     * @param int    $applicationId
-     * @param bool   $exact
-     * @param int    $offset
-     * @param int    $limit
-     * @param string $order
+     * @param bool $type
+     * @param int $appId
+     * @param bool $exact
+     * @param int $offset
+     * @param int $limit
+     * @param array $order
      * @return array|JObject
      */
     public function search(
-        $elements = array(), $logic = 'AND', $type = false,
-        $applicationId = 0, $exact = false, $offset = 0, $limit = 0,
-        $order = 'alpha'
+        $elements = array(),
+        $logic = 'AND',
+        $type = false,
+        $appId = 0,
+        $exact = false,
+        $offset = 0,
+        $limit = 20,
+        $order = array()
     )
     {
-        $cacheHash = sha1(serialize(func_get_args()));
-        $cacheKey  = 'filter/' . $cacheHash;
-        $result    = $this->app->jbcache->get($cacheHash, $cacheKey);
+        $this->app->jbdebug->mark('filter::model::filter-start');
+
+        $cacheHash  = sha1(serialize(func_get_args()));
+        $cacheGroup = 'filter';
+        $result     = $this->app->jbcache->get($cacheHash, $cacheGroup);
 
         if (empty($result)) {
+            // get seach select
+            $select = $this->_getSearchSelect($elements, $logic, $type, $appId, $exact);
 
-            $order  = $this->app->jborder->get($order, 'tItem');
-            $select = $this->_getSearchSelect($elements, $logic, $type, $applicationId, $exact);
-
+            // search page conditions
             $select->limit($limit, $offset);
-            $select->order($order);
+            $this->_addOrder($select, $order, $type);
 
-            $this->_setBigSelects();
+            //jbdump::sql($select);
+            //$this->_explain($select);
 
+            // query
             $rows   = $this->fetchAll($select, true);
             $result = $this->_groupBy($rows, 'id');
 
-            $this->app->jbcache->set($cacheHash, $result, $cacheKey);
+            // save to cache
+            $this->app->jbcache->set($cacheHash, $result, $cacheGroup);
         }
 
-        $this->app->jbdebug->mark('filter::model::search');
+        $this->app->jbdebug->mark('filter::model::filter-request');
 
-        return $result;
+        $items = $this->getZooItemsByIds($result);
+        $items = $this->app->jbarray->sortByArray($items, $result);
+
+        $this->app->jbdebug->mark('filter::model::filter-finish');
+
+        return $items;
     }
 
     /**
      * Get count for pagination
-     * @param array  $elements
+     * @param array $elements
      * @param string $logic
-     * @param bool   $type
-     * @param int    $applicationId
-     * @param bool   $exact
+     * @param bool $type
+     * @param int $appId
+     * @param bool $exact
      * @return mixed
      */
-    public function searchCount($elements = array(), $logic = 'AND', $type = false, $applicationId = 0, $exact = false)
+    public function searchCount(
+        $elements = array(),
+        $logic = 'AND',
+        $type = false,
+        $appId = 0,
+        $exact = false
+    )
     {
+        $this->app->jbdebug->mark('filter::model::searchCount-start');
+
         $cacheHash = sha1(serialize(func_get_args()));
-        $cacheKey  = 'filter-count/' . $cacheHash;
+        $cacheKey  = 'filter-count';
         $result    = $this->app->jbcache->get($cacheHash, $cacheKey);
 
         if (empty($result)) {
 
-            $select = $this->_getSearchSelect($elements, $logic, $type, $applicationId, $exact);
-            $rows   = $this->fetchAll($select, true);
+            $select = $this->_getSearchSelect($elements, $logic, $type, $appId, $exact);
+            $select
+                ->clear('select')
+                ->select('count(DISTINCT tItem.id) as count');
 
-            $result = count($rows);
+            $result = $this->fetchRow($select)->count;
 
             $this->app->jbcache->set($cacheHash, $result, $cacheKey);
         }
 
-        $this->app->jbdebug->mark('filter::model::searchCount');
+        $this->app->jbdebug->mark('filter::model::searchCount-finish');
 
         return (int)$result;
     }
 
     /**
      * Create sql query for search items in database
-     * @param array  $elements
+     * @param array $elements
      * @param string $logic
-     * @param bool   $type
-     * @param int    $applicationId
-     * @param bool   $exact
-     * @param int    $offset
-     * @param int    $limit
+     * @param bool $itemType
+     * @param int $appId
+     * @param bool $exact
      * @return JBDatabaseQuery
      */
     protected function _getSearchSelect(
-        $elements = array(), $logic = 'AND', $type = false,
-        $applicationId = 0, $exact = false, $offset = 0, $limit = 0
+        $elements = array(),
+        $logic = 'AND',
+        $itemType = false,
+        $appId = 0,
+        $exact = false
     )
     {
-        static $select;
+        $logic     = strtoupper(trim($logic));
+        $tableName = $this->_jbtables->getIndexTable($itemType);
 
-        if (isset($select)) {
-            return clone($select);
-        }
-
-        $logic = strtoupper(trim($logic));
-
-        $select = $this->_getItemSelect($type, $applicationId)
+        $select = $this->_getItemSelect($itemType, $appId)
             ->clear('select')
-            ->select(array('tItem.id AS id'))
-            ->group('tItem.id');
+            ->select('DISTINCT tItem.id as id')
+            ->innerJoin($tableName . ' AS tIndex ON tIndex.item_id = tItem.id')
+            ->leftJoin(ZOO_TABLE_JBZOO_SKU . ' AS tSku ON tSku.item_id = tItem.id');
 
-        $conditions = array();
+        $where = array();
+
+        $tableZooIndexIncluded = false;
+
         if (count($elements) > 0) {
             $i = 0;
-
             foreach ($elements as $elementId => $value) {
                 $i++;
 
-                $modelElement = $this->app->jbentity->getElementModel(
-                    $elementId, $type, $applicationId, $this->_isRange($value)
-                );
+                $isRange       = $this->_isRange($value);
+                $elementSearch = $this->app->jbentity->getElementModel($elementId, $itemType, $appId, $isRange);
 
-                if ($logic == 'OR') {
+                // check excluded user types
+                if (in_array($elementSearch->getElementType(), array('textarea'))) {
 
-                    $tmpCondition = $modelElement->conditionOR($select, $elementId, $value, $i, $exact);
-                    if (!empty($tmpCondition)) {
-                        $conditions[] = $tmpCondition;
+                    if (!$tableZooIndexIncluded) {
+                        $select->innerJoin(ZOO_TABLE_SEARCH . ' AS tZooIndex ON tZooIndex.item_id = tItem.id');
+                    }
+                }
+
+                if ($logic == 'AND') {
+                    $tmpConds = $elementSearch->conditionAND($select, $elementId, $value, $i, $exact);
+                    if (is_array($tmpConds)) {
+                        $where = array_merge($tmpConds, $where);
                     }
 
                 } else {
-                    $select = $modelElement->conditionAND($select, $elementId, $value, $i, $exact);
+                    $tmpConds = $elementSearch->conditionOR($select, $elementId, $value, $i, $exact);
+                    if (is_array($tmpConds)) {
+                        $where = array_merge($tmpConds, $where);
+                    }
+                }
+
+            }
+
+            $where = array_filter($where);
+
+            if (!empty($where)) {
+
+                if ($logic == 'AND') {
+                    $select->where('(' . implode(' AND ', $where) . ')');
+                } else {
+                    $select->where('(' . implode(' OR ', $where) . ')');
+                }
+            }
+
+        }
+
+        return $select;
+    }
+
+    /**
+     * Add order to query
+     * @param JBDatabaseQuery $select
+     * @param array $order
+     * @param string $itemType
+     */
+    protected function _addOrder(JBDatabaseQuery $select, $order, $itemType)
+    {
+        if (!empty($order) && is_array($order)) {
+
+            $orders = $order;
+            if (isset($order['field'])) {
+                $orders = array($order);
+            }
+
+            foreach ($orders as $order) {
+
+                $order = $this->app->data->create($order);
+
+                $reverse    = $order->get('reverse');
+                $orderParam = $order->get('order');
+
+                if (!empty($reverse)) {
+
+                    if (is_array($reverse) && isset($reverse[0])) {
+                        $dir = $reverse[0] == 1 ? 'DESC' : 'ASC';
+                    } else {
+                        $dir = $reverse == 1 ? 'DESC' : 'ASC';
+                    }
+
+                } else if (!empty($orderParam)) {
+                    $orderParam = trim(strtoupper($orderParam));
+                    $dir        = $orderParam == 'DESC' ? 'DESC' : 'ASC';
+                } else {
+                    $dir = 'ASC';
+                }
+
+                if (!in_array($order->get('mode'), array('s', 'n', 'd'), true)) {
+                    $order->set('mode', 's');
+                }
+
+                $field = $order->get('field');
+                if ($field == 'corename') {
+                    $select->order('tItem.name ' . $dir);
+
+                } else if ($field == 'corealias') {
+                    $select->order('tItem.alias ' . $dir);
+
+                } else if ($field == 'corecreated') {
+                    $select->order('tItem.created ' . $dir);
+
+                } else if ($field == 'corehits') {
+                    $select->order('tItem.hits ' . $dir);
+
+                } else if ($field == 'coremodified') {
+                    $select->order('tItem.modified ' . $dir);
+
+                } else if ($field == 'corepublish_down') {
+                    $select->order('tItem.publish_down ' . $dir);
+
+                } else if ($field == 'corepublish_up') {
+                    $select->order('tItem.publish_up ' . $dir);
+
+                } else if ($field == 'coreauthor') {
+                    $select
+                        ->leftJoin('#__users AS tJoomlaUsers ON tItem.created_by = tJoomlaUsers.id')
+                        ->order('tJoomlaUsers.name ' . $dir);
+
+                } else if ($field == 'random') {
+                    $select->order('RAND()');
+
+                } elseif (strpos($field, '__')) {
+
+                    list ($elementId, $priceField) = explode('__', $field);
+                    if (in_array($priceField, array('sku', 'total', 'price'), true)) {
+
+                        $select
+                            ->order('tSku.' . $priceField . ' ' . $dir)
+                            ->where('tSku.type = ?', 1);
+                    }
+
+                } else {
+
+                    $fieldName = $this->_jbtables->getFieldName($field, $order->get('mode'));
+                    $columns   = $this->_jbtables->getFields($this->_jbtables->getIndexTable($itemType));
+
+                    if (in_array($fieldName, $columns, true)) {
+                        $select->order('tIndex.' . $fieldName . ' ' . $dir);
+                    }
                 }
             }
         }
-
-        if ($logic == 'OR') {
-            if ($exact) {
-                $select->innerJoin(ZOO_TABLE_JBZOO_INDEX . ' AS tIndex ON tItem.id = tIndex.item_id');
-            } else {
-                $select->innerJoin(ZOO_TABLE_SEARCH . ' AS tIndex ON tItem.id = tIndex.item_id');
-            }
-
-            $select->where("\n (" . implode("\n OR ", $conditions) . ') ');
-        }
-
-        return clone($select);
     }
 
     /**

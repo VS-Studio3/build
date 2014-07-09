@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+
+    @package     jbzoo
+    @version     2.x Pro
+    @author      JBZoo App http://jbzoo.com
+    @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+    @license     http://jbzoo.com/license-pro.php JBZoo Licence
+    @coder       Denis Smetannikov <denis@jbzoo.com>
+-->
+<form>
+    <fields>
+        <fieldset name="others" label=""
+                  addfieldpath="/media/zoo/applications/jbuniversal/joomla/fields">
+
+            <field type="jbbool" defult="1" name="JBZOO_CONFIG_SHOWUPDATE" label="JBZOO_CONFIG_SHOWUPDATE"
+                   description="JBZOO_CONFIG_SHOWUPDATE_DESCRIPTION"/>
+
+            <field type="jbbool" defult="1" name="JBZOO_CONFIG_CURRENCY_ONLINE" label="JBZOO_CONFIG_CURRENCY_ONLINE"
+                   description="JBZOO_CONFIG_CURRENCY_ONLINE_DESC"/>
+
+            <field type="jbbool" defult="1" name="JBZOO_CONFIG_ADMINMENU" label="JBZOO_CONFIG_ADMINMENU"
+                   description="JBZOO_CONFIG_ADMINMENU_DESC"/>
+
+        </fieldset>
+    </fields>
+</form>

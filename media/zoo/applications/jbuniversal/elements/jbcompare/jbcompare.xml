@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
-    category   JBZoo
-    author     smet.denis <admin@joomla-book.ru>
-    copyright  Copyright (c) 2009-2012, Joomla-book.ru
-    license    http://joomla-book.ru/info/disclaimer
-    link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+    JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+
+    @package     jbzoo
+    @version     2.x Pro
+    @author      JBZoo App http://jbzoo.com
+    @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+    @license     http://jbzoo.com/license-pro.php JBZoo Licence
+    @coder       Denis Smetannikov <denis@jbzoo.com>
 -->
 <element type="jbcompare" group="JBZoo">
     <name>JBZoo Compare</name>
-    <author>Joomla-book.ru</author>
-    <creationDate>2012</creationDate>
-    <copyright>Copyright (C) Joomla-book.ru</copyright>
-    <authorEmail>admin@joomla-book.ru</authorEmail>
-    <authorUrl>http://joomla-book.ru</authorUrl>
-    <version>1.0</version>
     <description>JBZoo Compare</description>
+    <author>JBZoo.com</author>
+    <creationDate>2013 07</creationDate>
+    <copyright>Copyright (C) JBZoo.com,  All rights reserved.</copyright>
+    <authorEmail>admin@jbzoo.com</authorEmail>
+    <authorUrl>http://jbzoo.com</authorUrl>
+    <version>1.0</version>
 
     <params>
         <param name="name" type="text" default="" label="Name" description="Name used in item editor"/>

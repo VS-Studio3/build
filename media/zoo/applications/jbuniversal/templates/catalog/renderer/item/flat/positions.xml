@@ -7,24 +7,48 @@
 		<position name="properties">Properties</position>
 		<position name="price">Price</position>
 		<position name="agent">Agent</position>
+		<position name="map">Map</position>
+		<position name="favourite">Favourite</position>
+		<position name="related">Related</position>
+		<position name="comments">Comments</position>
 	</positions>
     
 	<positions layout="teaser">
-        <position name="cell1">Table cell #1</position>
-        <position name="cell2">Table cell #2</position>
-        <position name="cell3">Table cell #3</position>
-        <position name="cell5">Table cell #5</position>
-        <position name="cell6">Table cell #6</position>
-        <position name="cell7">Table cell #7</position>
-        <position name="cell8">Table cell #8</position>
+        <position name="image">Image</position>
+        <position name="price">Price</position>
+        <position name="beds">Beds</position>
+        <position name="baths">Baths</position>
+        <position name="address">Address</position>
+        <position name="year">Year Built</position>
+        <position name="sqft">Sq Ft</position>
+        <position name="save">Save</position>
+        <position name="additionally">Additionally</position>
+        <position name="type">Type</position>
+        <position name="agent">Agent</position>
+        <position name="compare">Compare</position>
+        <position name="date">Date</position>
+        <position name="marked">Marked</position>
 	</positions>
     
     <positions layout="submission">
         <position name="main">Main</position>
         <position name="properties">Properties</position>
     </positions>
+
+    <positions layout="related">
+        <position name="main">Main</position>
+        <position name="properties">Properties</position>
+    </positions>
     
     <positions layout="compare">
         <position name="fields">Fields</position>
-    </positions>    
+    </positions>
+
+    <positions layout="favorite">
+        <position name="title">Title</position>
+        <position name="image">Image</position>
+        <position name="properties">Properties</position>
+        <position name="text">Text</position>
+        <position name="meta">Meta</position>
+    </positions>
 </renderer>

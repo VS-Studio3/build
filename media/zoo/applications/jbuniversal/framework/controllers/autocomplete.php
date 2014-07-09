@@ -1,40 +1,46 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
-require_once dirname(__FILE__) . '/base.php';
-
-class AutocompleteJBUniversalController extends BaseJBUniversalController
+/**
+ * Class AutocompleteJBUniversalController
+ */
+class AutocompleteJBUniversalController extends JBUniversalController
 {
-    const MAX_LENGTH = 30;
+    const MAX_LENGTH = 20;
 
     /**
-     * @throws Exception
+     * @throws AppException
      */
     public function index()
     {
-        $this->_init('filter');
-
         $this->app->jbdebug->mark('autocomplete::start');
         if (!$this->app->jbcache->start(null, 'autocomplete')) {
 
-            $type    = $this->_jbreq->get('type');
-            $query   = $this->_jbreq->get('value');
-            $appId   = $this->_jbreq->get('app_id');
-            $element = $this->_jbreq->get('name');
+            $type    = $this->_jbrequest->get('type');
+            $query   = $this->_jbrequest->get('value');
+            $appId   = $this->_jbrequest->get('app_id');
+            $element = $this->_jbrequest->get('name');
 
             if ($element && preg_match('#^e\[(.*?)\]#i', $element, $elementName)) {
                 $elementName = $elementName[1];
 
                 $autocomleteDb = JBModelAutocomplete::model();
+
+                $element     = $this->app->jbentity->getElement($elementName, $type, $appId);
+                $elementType = $element->getElementType();
 
                 if ($elementName == '_itemname') {
                     $rows = $autocomleteDb->name($query, $type, $appId);
@@ -44,6 +50,12 @@ class AutocompleteJBUniversalController extends BaseJBUniversalController
 
                 } elseif ($elementName == '_itemauthor') {
                     $rows = $autocomleteDb->author($query, $type, $appId);
+
+                } else if ($elementType == 'jbpriceadvance') {
+                    $rows = $autocomleteDb->sku($query, $elementName, $type, $appId);
+
+                } else if ($elementType == 'textarea') {
+                    $rows = $autocomleteDb->textarea($query, $elementName, $type, $appId);
 
                 } else {
                     $rows = $autocomleteDb->field($query, $elementName, $type, $appId);
@@ -62,9 +74,9 @@ class AutocompleteJBUniversalController extends BaseJBUniversalController
                         }
 
                         $data[] = array(
-                            'id'    => $value,
-                            'label' => $value,
-                            'value' => JString::trim($value, '.'),
+                            'id'    => JString::str_ireplace("\n", " ", $value),
+                            'label' => JString::str_ireplace("\n", " ", $value),
+                            'value' => JString::str_ireplace("\n", " ", JString::trim($value, '.')),
                         );
                     }
                 }
@@ -72,7 +84,7 @@ class AutocompleteJBUniversalController extends BaseJBUniversalController
                 echo json_encode($data);
 
             } else {
-                throw new Exception('Unkown element name');
+                throw new AppException('Unkown element name');
             }
 
             $this->app->jbcache->stop();

@@ -1,36 +1,41 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
-require_once dirname(__FILE__) . '/base.php';
-
-class CompareJBUniversalController extends BaseJBUniversalController {
+/**
+ * Class CompareJBUniversalController
+ */
+class CompareJBUniversalController extends JBUniversalController
+{
     /**
      * Filter action
-     * @throws CompareJBUniversalControllerException
+     * @throws AppException
      * @return void
      */
     function compare()
     {
         // init
         $this->app->jbdebug->mark('compare::init');
-        $this->_init();
 
-        $type   = $this->_jbreq->get('type');
-        $appId  = $this->_jbreq->get('app_id');
-        $itemId = $this->_jbreq->get('Itemid');
-        $layout = $this->_jbreq->get('layout', 'v');
+        $type   = $this->_jbrequest->get('type');
+        $appId  = $this->_jbrequest->get('app_id');
+        $itemId = $this->_jbrequest->get('Itemid');
+        $layout = $this->_jbrequest->get('layout', 'v');
 
         if (!$type || !$appId) {
-            throw new CompareJBUniversalControllerException('Type or AppId is no set');
+            throw new AppException('Type or AppId is no set');
         }
 
         // get items
@@ -46,7 +51,7 @@ class CompareJBUniversalController extends BaseJBUniversalController {
         $this->itemId     = $itemId;
 
         if (!$this->template = $this->application->getTemplate()) {
-            $this->app->error->raiseError(500, JText::_('No template selected'));
+            $this->app->jbnotify->error(JText::_('No template selected'));
             return;
         }
 
@@ -71,19 +76,15 @@ class CompareJBUniversalController extends BaseJBUniversalController {
      */
     public function clear()
     {
-        $this->_init();
         $this->app->jbcompare->removeItems();
 
-        $type   = $this->_jbreq->get('type');
-        $appId  = $this->_jbreq->get('app_id');
-        $itemId = $this->_jbreq->get('back_itemid');
+        $type   = $this->_jbrequest->get('type');
+        $appId  = $this->_jbrequest->get('app_id');
+        $itemId = $this->_jbrequest->get('back_itemid');
 
         $compareUrl = $this->app->jbrouter->compare($itemId, 'v', $type, $appId);
 
         JFactory::getApplication()->redirect($compareUrl, JText::_('JBZOO_COMPARE_CLEAR'));
     }
 
-}
-
-class CompareJBUniversalControllerException extends AppException {
 }

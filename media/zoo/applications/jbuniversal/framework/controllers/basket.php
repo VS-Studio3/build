@@ -1,57 +1,63 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
-require_once dirname(__FILE__) . '/base.php';
 
-class BasketJBUniversalController extends BaseJBUniversalController
+/**
+ * Class BasketJBUniversalController
+ */
+class BasketJBUniversalController extends JBUniversalController
 {
 
-    const TIME_BETWEEN_PUBLIC_SUBMISSIONS = 1;
-    const SESSION_PREFIX                  = 'ZOO_';
+    const TIME_BETWEEN_PUBLIC_SUBMISSIONS = 30;
+    const SESSION_PREFIX                  = 'JBZOO_';
 
     /**
      * Filter action
-     * @throws BasketJBUniversalControllerException
-     * @return void
+     * @throws AppException
      */
     function index()
     {
         // init
         $this->app->jbdebug->mark('basket::init');
-        $this->_init();
 
-        $appId  = $this->_jbreq->get('app_id');
-        $Itemid = $this->_jbreq->get('Itemid');
-
-
+        $appId  = $this->_jbrequest->get('app_id');
+        $Itemid = $this->_jbrequest->get('Itemid');
 
         if (!$appId) {
-            throw new BasketJBUniversalControllerException('AppId is no set');
+            $this->app->jbnotify->warning(JText::_('JBZOO_BASKET_APP_ID_IS_NO_SET'));
+            return false;
         }
 
         $appParams = $this->application->getParams();
+        $isAdvance = (int)$appParams->get('global.jbzoo_cart_config.is_advance', 0);
 
         if ((int)$appParams->get('global.jbzoo_cart_config.enable', 0) == 0) {
-            throw new BasketJBUniversalControllerException('Application is not a basket');
+            $this->app->jbnotify->warning(JText::_('JBZOO_BASKET_APPLICATION_IS_NOT_A_BASKET'));
+            return false;
         }
 
         // get items
-        $basketItems = $this->app->jbcart->getAllItems();
-        $itemIds     = $this->app->jbcart->getItemIds();
+        $basketItems = $this->app->jbcart->getBasketItems($isAdvance);
+        $itemIds     = $this->app->jbcart->getItemIds($isAdvance);
         $items       = JBModelFilter::model()->getZooItemsByIds($itemIds);
 
         if ($appParams->get('global.jbzoo_cart_config.type-layout')) {
             list($type, $layout) = explode(':', $appParams->get('global.jbzoo_cart_config.type-layout'));
         } else {
-            throw new BasketJBUniversalControllerException('Form template is no set');
+            $this->app->jbnotify->warning(JText::_('JBZOO_BASKET_FORM_TEMPLATE_IS_NO_SET'));
+            return false;
         }
 
         if (!JFactory::getUser()->id && (int)$appParams->get('global.jbzoo_cart_config.auth', 0)) {
@@ -67,9 +73,10 @@ class BasketJBUniversalController extends BaseJBUniversalController
         $this->layout_path    = $layout;
         $this->submissionType = $type;
         $this->appParams      = $appParams;
+        $this->isAdvance      = $isAdvance;
 
         if (!$this->template = $this->application->getTemplate()) {
-            $this->app->error->raiseError(500, JText::_('No template selected'));
+            $this->app->jbnotify->error(JText::_('No template selected'));
 
             return;
         }
@@ -113,7 +120,8 @@ class BasketJBUniversalController extends BaseJBUniversalController
             }
 
         } else {
-            throw new BasketJBUniversalControllerException('Submission form is no set');
+            $this->app->jbnotify->warning(JText::_('JBZOO_BASKET_SUBMISSION_FORM_IS_NO_SET'));
+            return false;
         }
 
         $this->app->jbdebug->mark('basket::renderInit');
@@ -135,13 +143,14 @@ class BasketJBUniversalController extends BaseJBUniversalController
      */
     public function delete()
     {
-        $this->_init();
-
-        $itemId    = $this->_jbreq->get('itemid');
+        $itemId    = $this->_jbrequest->get('itemid');
+        $hash      = $this->_jbrequest->get('hash');
         $item      = $this->app->table->item->get($itemId);
         $appParams = $this->application->getParams();
 
-        $this->app->jbcart->removeItem($item);
+        $isAdvance = (int)$appParams->get('global.jbzoo_cart_config.is_advance', 0);
+
+        $this->app->jbcart->removeItem($item, $isAdvance, $hash);
         $recountResult = $this->app->jbcart->recount($appParams);
 
         $this->app->jbajax->send($recountResult);
@@ -152,11 +161,10 @@ class BasketJBUniversalController extends BaseJBUniversalController
      */
     public function reloadModule()
     {
-        $this->_init();
-
-        $moduleId = $this->_jbreq->get('moduleId');
+        $moduleId = $this->_jbrequest->get('moduleId');
         $html     = $this->app->jbjoomla->renderModuleById($moduleId);
 
+        header('Content-Type: text/html; charset=utf-8'); // fix apache default charset
         jexit($html);
     }
 
@@ -165,16 +173,36 @@ class BasketJBUniversalController extends BaseJBUniversalController
      */
     public function quantity()
     {
-        $this->_init();
-
-        $value     = (int)$this->_jbreq->get('value');
-        $itemId    = (int)$this->_jbreq->get('itemId');
-        $item      = $this->app->table->item->get($itemId);
         $appParams = $this->application->getParams();
+        $isAdvance = (int)$appParams->get('global.jbzoo_cart_config.is_advance', 0);
 
-        $this->app->jbcart->changeQuantity($item, $value);
+        // get request
+        $value  = (int)$this->_jbrequest->get('value');
+        $itemId = (int)$this->_jbrequest->get('itemId');
+        $hash   = trim($this->_jbrequest->get('hash'));
 
-        $recountResult = $this->app->jbcart->recount($appParams);
+        // get product item
+        $item = $this->app->table->item->get($itemId);
+
+        if ($isAdvance) {
+
+            $jbPrices = $item->getElementsByType('jbpriceadvance');
+            if (!empty($jbPrices)) {
+                $jbPrice = current($jbPrices);
+
+                if ($jbPrice->isInStock($hash, $value)) {
+                    $this->app->jbcart->changeQuantity($item, $value, $hash, $isAdvance);
+                    $recountResult = $this->app->jbcart->recount($appParams, $isAdvance);
+                    $this->app->jbajax->send($recountResult);
+
+                } else {
+                    $this->app->jbajax->send(array('message' => JText::_('JBZOO_JBPRICE_NOT_AVAILABLE_MESSAGE')), false);
+                }
+            }
+        }
+
+        $this->app->jbcart->changeQuantity($item, $value, $hash, $isAdvance);
+        $recountResult = $this->app->jbcart->recount($appParams, $isAdvance);
 
         $this->app->jbajax->send($recountResult);
     }
@@ -185,18 +213,17 @@ class BasketJBUniversalController extends BaseJBUniversalController
     public function createOrder()
     {
         $this->app->request->checkToken() or jexit('Invalid Token');
-        $this->_init();
 
         $post   = $this->app->request->get('post:', 'array');
-        $appId  = $this->_jbreq->get('app_id');
-        $Itemid = $this->_jbreq->get('Itemid');
+        $appId  = $this->_jbrequest->get('app_id');
+        $Itemid = $this->_jbrequest->get('Itemid');
         $msg    = '';
 
         try {
             $application = $this->app->table->application->get($appId);
 
             if (!$application) {
-                throw new BasketJBUniversalControllerException('AppId is no set');
+                throw new AppException('AppId is no set');
             }
 
             $appParams = $this->application->getParams();
@@ -207,7 +234,7 @@ class BasketJBUniversalController extends BaseJBUniversalController
             $item = $this->_createEmptyItem($this->type, $application);
 
             if (!$this->type) {
-                throw new BasketJBUniversalControllerException('Type is not defined');
+                throw new AppException('Type is not defined');
             }
 
             $this->template = $application->getTemplate();
@@ -246,19 +273,30 @@ class BasketJBUniversalController extends BaseJBUniversalController
 
             $sessionFormKey = self::SESSION_PREFIX . 'SUBMISSION_FORM_' . $submission->id;
 
+            $order = JBModelOrder::model()->getDetails($item);
+            if ($order) {
+                $totalPrice   = $order->getTotalPrice();
+                $mimimalPrice = (float)$appParams->get('global.jbzoo_cart_config.minimal-summa', 0);
+
+                if ($mimimalPrice > 0 && $mimimalPrice > $totalPrice) {
+                    $this->app->jbnotify->warning(JString::str_ireplace('%S', $mimimalPrice, JText::_('JBZOO_CART_MINIMAL_PRICE_ERROR')));
+                    $error = true;
+                }
+            }
+
             // save item if it is valid
             if ($error) {
                 $this->app->system->application->setUserState($sessionFormKey, serialize($post));
-                $this->app->error->raiseWarning(0, JText::_('JBZOO_CART_SUBMIT_ERRROS'));
+                $this->app->jbnotify->warning(JText::_('JBZOO_CART_SUBMIT_ERRROS'));
 
             } else {
                 $user = JFactory::getUser();
 
                 $nowDate     = $this->app->date->create()->toSql();
                 $nowDateTime = new DateTime($nowDate);
-                $date        = $this->app->date->create()->toSql() . ' (GMT ' . ($nowDateTime->getOffset() / 3600) . ')';
+                $date        = JHTML::_('date', 'now', JText::_('Y-m-d H:i:s')) . ' (GMT ' . ($nowDateTime->getOffset() / 3600) . ')';
 
-                $item->name        = $this->type->name . ' / ' . $date . ($user->email ? ' / ' . $user->email : '');
+                $item->name        = $this->type->name . ' #__ID__ / ' . $date . ($user->email ? ' / ' . $user->email : '');
                 $item->alias       = $this->app->alias->item->getUniqueAlias($item->id, $this->app->string->sluggify($item->name));
                 $item->state       = 1;
                 $item->modified    = $nowDate;
@@ -267,7 +305,7 @@ class BasketJBUniversalController extends BaseJBUniversalController
                 $timestamp = time();
                 if ($timestamp < $this->app->system->session->get('ZOO_LAST_SUBMISSION_TIMESTAMP') + BasketJBUniversalController::TIME_BETWEEN_PUBLIC_SUBMISSIONS) {
                     $this->app->system->application->setUserState($sessionFormKey, serialize($post));
-                    throw new BasketJBUniversalControllerException('You are submitting too fast, please try again in a few moments.');
+                    throw new AppException('You are submitting too fast, please try again in a few moments.');
                 }
 
                 $this->app->system->session->set('ZOO_LAST_SUBMISSION_TIMESTAMP', $timestamp);
@@ -281,6 +319,10 @@ class BasketJBUniversalController extends BaseJBUniversalController
                 $item->getParams()->set('config.primary_category', 0);
                 $this->app->event->dispatcher->notify($this->app->event->create($item, 'basket:beforesave', array('item' => $item, 'appParams' => $appParams)));
                 $this->app->event->dispatcher->notify($this->app->event->create($submission, 'submission:beforesave', array('item' => $item, 'new' => true)));
+                $this->app->table->item->save($item);
+
+                $item->name = JString::str_ireplace('__ID__', $item->id, $item->name);
+
                 $this->app->table->item->save($item);
                 $this->app->event->dispatcher->notify($this->app->event->create($item, 'basket:saved', array('item' => $item, 'appParams' => $appParams)));
 
@@ -301,16 +343,11 @@ class BasketJBUniversalController extends BaseJBUniversalController
                 }
             }
 
-        } catch (BasketJBUniversalControllerException $e) {
-
-            $error = true;
-            $this->app->error->raiseWarning(0, (string)JText::_($eq));
-
         } catch (AppException $e) {
 
             $error = true;
-            $this->app->error->raiseWarning(0, JText::_('There was an error saving your submission, please try again later.'));
-            $this->app->error->raiseWarning(0, (string)$e);
+            $this->app->jbnotify->warning(JText::_('There was an error saving your submission, please try again later.'));
+            $this->app->jbnotify->warning((string)JText::_($e));
         }
 
         $this->setRedirect(JRoute::_($this->app->jbrouter->basket($Itemid, $appId), false), $msg);
@@ -337,7 +374,7 @@ class BasketJBUniversalController extends BaseJBUniversalController
         $item->created_by       = JFactory::getUser()->get('id');
         $item->created_by_alias = '';
         $item->state            = 0;
-        $item->searchable       = true;
+        $item->searchable       = 0;
         $item->getParams()
             ->set('config.enable_comments', true)
             ->set('config.primary_category', 0);
@@ -349,7 +386,7 @@ class BasketJBUniversalController extends BaseJBUniversalController
      * Bind data
      * @param array $post
      * @param array $elementsConfig
-     * @param Item  $item
+     * @param Item $item
      * @return int
      */
     protected function _bind($post, $elementsConfig, $item)
@@ -376,8 +413,4 @@ class BasketJBUniversalController extends BaseJBUniversalController
         return $errors;
     }
 
-}
-
-class BasketJBUniversalControllerException extends AppException
-{
 }

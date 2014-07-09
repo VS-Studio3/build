@@ -1,12 +1,16 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
@@ -16,30 +20,42 @@ require_once dirname(__FILE__) . '/helper.php';
 $propsHelper = new JBZooFilterPropsHelper($params);
 $zoo         = App::getInstance('zoo');
 
-if (!$zoo->jbcache->start($params->toArray(), 'mod_props')) {
+$zoo->jbdebug->mark('mod_jbzoo_props::start');
 
-    $zoo->jbdebug->mark('mod_jbzoo_props::start');
+$zoo->jbassets->setAppCSS();
+$zoo->jbassets->setAppJS();
 
-    // get params
-    $type        = $params->get('type', 0);
-    $application = $params->get('application', 0);
-    $layout      = $params->get('layout', 0);
+// get params
+$type        = $params->get('type', 0);
+$application = $params->get('application', 0);
 
-    if ($type && $application && $layout) {
+// compatibility params with v2.x
+if ($params->get('item_layout')) {
+    $itemLayout   = $params->get('item_layout', 'default');
+    $moduleLayout = $params->get('layout', 'default');
 
-        // prepeare
-        $zoo->jbfilter->set($type, $application);
-
-        // get application instance
-        $application = $zoo->table->application->get($application);
-
-        // set renderer
-        $renderer = $zoo->renderer->create('filterProps')->addPath(array(dirname(__FILE__)));
-
-        // render
-        include(JModuleHelper::getLayoutPath('mod_jbzoo_props', $params->get('module-layout', 'default')));
-    }
-
-    $zoo->jbcache->stop();
-    $zoo->jbdebug->mark('mod_jbzoo_props::finish');
+} else {
+    $itemLayout   = $params->get('layout', 'default');
+    $moduleLayout = $params->get('module-layout', 'default');
 }
+
+if ($type && $application && $itemLayout) {
+
+    // prepeare
+    $zoo->jbfilter->set($type, $application);
+
+    // get application instance
+    $application = $zoo->table->application->get($application);
+
+    // set renderer
+    $renderer = $zoo->renderer->create('filterProps')->addPath(array(
+        $zoo->path->path('component.site:'),
+        dirname(__FILE__)
+    ));
+
+    // render
+    include(JModuleHelper::getLayoutPath('mod_jbzoo_props', $moduleLayout));
+}
+
+
+$zoo->jbdebug->mark('mod_jbzoo_props::finish');

@@ -1,14 +1,17 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
  */
 
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
-define('JBZOO_USERNAME', 'user_kito555');
-define('JBZOO_PASSWORD', '3e12c9e090c757bff56834241f1984274e4f1e02');
+
+define('JBZOO_USERNAME', 'user_vstetsenko');
+define('JBZOO_PASSWORD', '5a36e93dbd8ef7be9a173ac920d8e8c2cc27d81a');

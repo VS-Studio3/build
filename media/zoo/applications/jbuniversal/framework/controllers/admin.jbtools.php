@@ -1,263 +1,140 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
+
 /**
+ * Class JBToolsJBuniversalController
  * JBZoo tools controller for back-end
  */
-class JBToolsJBuniversalController extends AppController
+class JBToolsJBuniversalController extends JBUniversalController
 {
 
+    const INDEX_STEP = 200;
+
     /**
-     * Constructor
-     * @param array $default
+     * Index page
      */
-    public function __construct($default = array())
+    public function index()
     {
-        parent::__construct($default);
-        $this->baseurl = $this->app->link(array('controller' => $this->controller), false);
+        $this->renderView();
     }
 
     /**
-     * Check database action
+     * Database reindex page
      */
-    public function checkdb()
+    public function reindex()
     {
-        $searchDb = JBModelSearchindex::model();
-        $searchDb->checkColumns();
-        $totalRows = $searchDb->reIndex();
-        $message   = 'JBZoo - total updated lines: ' . $totalRows;
-        $this->app->jbupdate->check();
+        $this->indexStep = self::INDEX_STEP;
+        $this->total     = JBModelSearchindex::model()->getTotal();
 
-        $this->setRedirect(
-            'index.php?' . http_build_query(array(
-                'option'     => 'com_zoo',
-                'controller' => 'manager',
-                'task'       => 'types',
-                'group'      => 'jbuniversal'
-            )), $message
-        );
+        $this->renderView();
     }
 
     /**
-     * Toggle update message
+     * Index DB by ajax call
      */
-    public function toggleUpdate()
+    public function reindexStep()
     {
-        $configPath = $this->app->path->path('jbapp:config') . '/config.php';
+        $limit  = self::INDEX_STEP;
+        $page   = (int)$this->app->jbrequest->get('page', 0);
+        $offset = $limit * $page;
 
-        if (!defined('JBZOO_CONFIG_SHOWUPDATE') || JBZOO_CONFIG_SHOWUPDATE) {
+        $modelIndex = JBModelSearchindex::model();
 
-            $message = 'Update messages is disabled';
-            $this->_saveFile(array(
-                'JBZOO_CONFIG_SHOWUPDATE' => 0
-            ), $configPath);
+        $lines = $modelIndex->reIndex($limit, $offset);
+        $total = $modelIndex->getTotal();
 
-        } else {
-            $message = 'Update messages is enabled';
-            $this->_saveFile(array(
-                'JBZOO_CONFIG_SHOWUPDATE' => 1
-            ), $configPath);
-
+        $current = $limit * ($page + 1);
+        if ($current > $total) {
+            $current = $total;
         }
 
-        $this->setRedirect(
-            'index.php?' . http_build_query(array(
-                'option'     => 'com_zoo',
-                'controller' => 'manager',
-                'task'       => 'types',
-                'group'      => 'jbuniversal'
-            )), $message
-        );
+        $progress = round($current * 100 / $total, 2);
+
+
+        $this->app->jbajax->send(array(
+            'progress' => $progress,
+            'current'  => $current,
+            'total'    => $total,
+            'lines'    => $lines,
+            'step'     => $page + 1,
+            'stepsize' => $limit,
+        ));
     }
 
     /**
-     * Licence form action
-     * TODO create normal template for form
+     * Clean database from Zoo tools
      */
-    public function licence()
+    public function cleandb()
     {
-        $username = defined('JBZOO_USERNAME') ? JBZOO_USERNAME : '';
-        $password = '';
-
-        if (!$this->app->jbrequest->isPost()
-            || empty($_REQUEST['jbuser']['name'])
-            || empty($_REQUEST['jbuser']['password'])
-        ) {
-
-            if ($this->app->jbrequest->isPost()
-                && (empty($_REQUEST['jbuser']['name']) || empty($_REQUEST['jbuser']['password']))
-            ) {
-                $this->app->jbnotify->warning('Please fill out all fields.');
-            }
-
-            ?>
-        <h1>Check JBZoo Licence</h1>
-
-        <p>To obtain a license key, visit <a href="http://joomla-book.ru/" target="_blank">Joomla-book.ru</a>
-            or write <a href="mailto:admin@joomla-book.ru">admin@joomla-book.ru</a>.</p>
-
-        <p>Please enter your username and password on your application that you received after purchase.</p>
-
-        <form action="index.php" method="post" name="adminForm" id="message-form" class="form-validate"
-              autocomplete="off">
-            <div class="width-100">
-                <fieldset class="adminform">
-                    <ul class="adminformlist">
-                        <li>
-                            <label for="user-name" class="hasTip required" title="">
-                                JBZoo username<span class="star">&nbsp;*</span>
-                            </label>
-                            <input type="text"
-                                   name="jbuser[name]"
-                                   value="<?php echo $username;?>"
-                                   placeholder="Enter you JBZoo username licence"
-                                   id="user-name"
-                                   class="required"
-                                   size="60"
-                                   autocomplete="off"/>
-                        </li>
-                        <li>
-                            <label for="user-password" class="hasTip required" title="">
-                                Password<span class="star">&nbsp;*</span>
-                            </label>
-                            <input type="password"
-                                   name="jbuser[password]"
-                                   value="<?php echo $password;?>"
-                                   placeholder="Enter you JBZoo password"
-                                   id="user-password"
-                                   class="required"
-                                   size="60"
-                                   autocomplete="off"/>
-                        </li>
-                        <li>
-                            <div class="clr clear"></div>
-                            <input type="submit" name="submit" value="Register!">
-                        </li>
-                    </ul>
-                </fieldset>
-            </div>
-            <input type="hidden" name="tmpl" value="component">
-            <input type="hidden" name="option" value="com_zoo">
-            <input type="hidden" name="controller" value="jbtools">
-            <input type="hidden" name="task" value="licence">
-        </form>
-        <?php
+        if (!$this->_jbrequest->isPost()) {
+            $this->renderView();
         } else {
 
-            $host     = preg_replace('#^www\.#', '', $_SERVER['SERVER_NAME']);
-            $login    = trim($_POST['jbuser']['name']);
-            $password = trim($_POST['jbuser']['password']);
-            $hash     = sha1($host . '|' . $login . '|' . $password);
+            $this->item_count = $this->app->table->item->count();
+            $this->steps      = (int)(11 + ($this->item_count / 10));
 
-            $params = array(
-                'JBZOO_USERNAME' => $login,
-                'JBZOO_PASSWORD' => $hash,
-            );
+            $this->renderView('process');
+        }
+    }
 
-            $defaultLicencePath = $this->app->path->path('jbapp:config') . '/licence.php';
-            $domainLicencePath  = $this->app->path->path('jbapp:config') . '/licence.' . $host . '.php';
+    /**
+     * Check files action
+     */
+    public function checkFiles()
+    {
+        if (!$this->_jbrequest->isAjax()) {
+            $this->renderView();
 
-            if ($this->_saveFile($params, $defaultLicencePath) && $this->_saveFile($params, $domainLicencePath)) {
-                $this->app->jbnotify->notice('Registration was successful. Thank you!');
-                $this->app->jbnotify->notice('Please, close it window');
-                $this->app->jbcache->clear('update');
+        } else {
+
+            $this->app->jbajax->disableTmpl();
+
+            try {
+                $this->results = $this->app->jbcheckfiles->check();
+                $this->renderView('result');
+                jexit();
+
+            } catch (JBCheckFilterException $e) {
+                echo $e->getMessage();
             }
 
         }
     }
 
     /**
-     * Show payment links
+     * Check Zoo filesystem
      */
-    public function paymentLinks()
+    public function checkFilesZoo()
     {
-        $appId = (int)$this->app->jbrequest->get('app_id');
-        $app   = $this->app->table->application->get($appId);
+        if (!$this->_jbrequest->isAjax()) {
+            $this->renderView();
+        } else {
 
-        $baseUrl = JURI::root();
+            $this->app->jbajax->disableTmpl();
 
-        $resultUrl  = $baseUrl . 'index.php?option=com_zoo&controller=payment&task=paymentcallback&app_id=' . $appId;
-        $successUrl = $baseUrl . 'index.php?option=com_zoo&controller=payment&task=paymentsuccess&app_id=' . $appId;
-        $failUrl    = $baseUrl . 'index.php?option=com_zoo&controller=payment&task=paymentfail&app_id=' . $appId;
+            try {
+                $this->results = $this->app->modification->check();
+                $this->renderView('result');
+                jexit();
 
-        ?>
-    <p><?php echo JText::_('JBZOO_URL_ALL_DESC');?></p>
-    <hr>
+            } catch (AppModificationException $e) {
+                echo $e->getMessage();
+            }
 
-    <h3>Result URL</h3>
-    <p><?php echo JText::_('JBZOO_URL_RESULT_DESC');?></p>
-    <textarea rows="3" cols="70" readonly="readonly" style="width:auto;height:auto;"><?php echo $resultUrl;?></textarea>
-
-    <h3>Success URL</h3>
-    <p><?php echo JText::_('JBZOO_URL_SUCCESS_DESC');?></p>
-    <textarea rows="3" cols="70" readonly="readonly" style="width:auto;height:auto;"><?php echo $successUrl;?></textarea>
-
-    <h3>Fail URL</h3>
-    <p><?php echo JText::_('JBZOO_URL_FAIL_DESC');?></p>
-    <textarea rows="3" cols="70" readonly="readonly" style="width:auto;height:auto;"><?php echo $failUrl;?></textarea>
-    <?php
-
+        }
     }
 
-    /**
-     * Save file
-     * @param array $params
-     * @param $path
-     * @return bool
-     */
-    protected function _saveFile(array $params, $path)
-    {
-
-        $fileTemplate = array(
-            '<?php',
-            '/**',
-            ' * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component',
-            ' * @category   JBZoo',
-            ' * @author     smet.denis <admin@joomla-book.ru>',
-            ' * @copyright  Copyright (c) 2009-2012, Joomla-book.ru',
-            ' * @license    http://joomla-book.ru/info/disclaimer',
-            ' * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page',
-            ' */',
-            '',
-            'defined(\'_JEXEC\') or die(\'Restricted access\');',
-            '',
-        );
-
-        foreach ($params as $key => $value) {
-
-            $constName  = JString::strtoupper($key);
-            $constValue = is_string($value) ? "'" . $value . "'" : $value;
-
-            $fileTemplate[] = 'define(\'' . $constName . '\', ' . $constValue . ');';
-        }
-
-        $fileTemplate[] = '';
-
-        $fileContent = implode("\n", $fileTemplate);
-
-        if (JFile::exists($path)) {
-            JFile::delete($path);
-        }
-
-        if (!JFile::write($path, $fileContent)) {
-            $this->app->jbnotify->warning('The file is not created, check the permissions on the directory JBZoo.');
-
-            return false;
-        }
-
-        return true;
-    }
-
-}
-
-class ExceptionJBToolsJBuniversalController extends AppException
-{
 }

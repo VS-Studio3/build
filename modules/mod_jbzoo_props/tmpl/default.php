@@ -1,28 +1,32 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 $zoo = App::getInstance('zoo');
 
-$layout = $params->get('layout', 'default');
-
 // init assets
-$zoo->jbassets->filterprops($layout);
+$zoo->jbassets->filterprops($itemLayout);
 ?>
 
-<div class="jbzoo jbzoo-props props-list-<?php echo $layout;?>">
-    <?php echo $renderer->render('item.' . $params->get('layout', 'default'), array(
-    'type'        => $type,
-    'layout'      => $layout,
-    'application' => $application,
-    'params'      => $params,
-    'module'      => $module
-)); ?>
+<div class="jbzoo jbzoo-props props-list-<?php echo $itemLayout; ?>">
+    <?php
+    echo $renderer->render('item.' . $itemLayout, array(
+        'type'        => $type,
+        'layout'      => $itemLayout,
+        'application' => $application,
+        'params'      => $params,
+        'module'      => $module
+    )); ?>
 </div>

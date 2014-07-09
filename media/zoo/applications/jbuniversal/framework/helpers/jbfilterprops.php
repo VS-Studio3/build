@@ -1,21 +1,28 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBFilterPropsHelper
+ */
 class JBFilterPropsHelper extends AppHelper
 {
     /**
      * Element render
      * @param       $identifier
-     * @param bool  $value
+     * @param bool $value
      * @param array $params
      * @return bool
      */
@@ -26,7 +33,14 @@ class JBFilterPropsHelper extends AppHelper
         $isDepend  = (int)$params['moduleParams']->get('depend', 1);
 
         $elements    = $isDepend ? $this->app->jbrequest->getElements() : array();
-        $propsValues = JBModelValues::model()->getPropsValues($identifier, null, null, $elements);
+        $propsValues = JBModelValues::model()->getPropsValues(
+            $identifier,
+            $params['moduleParams']->get('type'),
+            $params['moduleParams']->get('application'),
+            $elements
+        );
+
+        $jbrouter = $this->app->jbrouter;
 
         if (!empty($propsValues)) {
 
@@ -35,30 +49,25 @@ class JBFilterPropsHelper extends AppHelper
 
                 $class = '';
                 if ($this->_isActive($identifier, $propsValue['value'])) {
-
-                    $link = $this->app->jbrouter->filter(
-                        $identifier, $propsValue['value'], $params['moduleParams'], 2
-                    );
-
+                    $link  = $jbrouter->filter($identifier, $propsValue['value'], $params['moduleParams'], 2);
                     $class = ' class="active"';
-
                 } else {
-                    $link = $this->app->jbrouter->filter(
-                        $identifier, $propsValue['value'], $params['moduleParams'], ($isDepend ? 1 : 0)
-                    );
+                    $link = $jbrouter->filter($identifier, $propsValue['value'], $params['moduleParams'], ($isDepend ? 1 : 0));
                 }
 
                 // render html list item
-                $html[] = '<li' . $class . '><a href="' . $link . '" title="' . $propsValue['value'] . '"><span>'
-                    . $propsValue['value'] . ' '
+                $html[] = '<li' . $class . '><a href="' . $link . '"'
+                    . ' title="' . $this->_escape($propsValue['value']) . '"'
+                    . ' rel="nofollow"><span>'
+                    . $this->_escape($propsValue['value']) . ' '
                     . (($showCount) ? '<span class="element-count">(' . $propsValue['count'] . ')</span>' : '')
                     . '</span></a>'
-                    . ($class ? '<a href="' . $link . '" class="cancel">&nbsp;</a>' : '')
+                    . ($class ? '<a rel="nofollow" href="' . $link . '" class="cancel">&nbsp;</a>' : '')
                     . '</li>';
 
             }
 
-            return '<ul class="jbzoo-props-list">' . implode("\n", $html) . '</ul>';
+            return '<ul class="jbzoo-props-list"><!--noindex-->' . implode("\n", $html) . '<!--/noindex--></ul>';
         }
 
         return '';
@@ -87,6 +96,16 @@ class JBFilterPropsHelper extends AppHelper
         }
 
         return false;
+    }
+
+    /**
+     * Encode html special chars
+     * @param $text
+     * @return string
+     */
+    protected function _escape($text)
+    {
+        return htmlspecialchars($text, ENT_QUOTES);
     }
 
 }

@@ -1,16 +1,24 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
-class FilterRenderer extends AppRenderer {
+/**
+ * Class FilterRenderer
+ */
+class FilterRenderer extends AppRenderer
+{
 
     protected $_type = null;
     protected $_template = null;
@@ -55,7 +63,7 @@ class FilterRenderer extends AppRenderer {
     /**
      * Render position
      * @param string $position
-     * @param array  $args
+     * @param array $args
      * @return string
      */
     public function renderPosition($position, $args = array())
@@ -80,8 +88,11 @@ class FilterRenderer extends AppRenderer {
 
                 $params = array_merge(
                     array(
-                        'first' => ($i == 1),
-                        'last'  => ($i == count($elementsConfig) - 1)
+                        'first'               => ($i == 1),
+                        'last'                => ($i == count($elementsConfig) - 1),
+                        'item_type'           => $this->_type,
+                        'item_template'       => $this->_template,
+                        'item_application_id' => $this->_application->id,
                     ),
                     $data,
                     $args
@@ -153,7 +164,7 @@ class FilterRenderer extends AppRenderer {
         // config file
         if (empty($this->_config)) {
             if ($file = $this->_path->path('default:' . $dir . '/' . $this->_config_file)) {
-                $content = JFile::read($file);
+                $content = $this->app->jbfile->read($file);
             } else {
                 $content = null;
             }
@@ -181,9 +192,14 @@ class FilterRenderer extends AppRenderer {
      */
     protected function _getConfigPosition($position)
     {
-        $configName = $this->_application->getGroup() . '.' . $this->_type . '.' . $this->_template;
-        $config     = $this->getConfig('item')->get($configName);
-        return $config && isset($config[$position]) ? $config[$position] : array();
+        if ($this->_application) {
+            $configName = $this->_application->getGroup() . '.' . $this->_type . '.' . $this->_template;
+            $config     = $this->getConfig('item')->get($configName);
+
+            return $config && isset($config[$position]) ? $config[$position] : array();
+        }
+
+        return array();
     }
 
 }

@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class ElementJBCompare
+ */
 class ElementJBCompare extends Element
 {
     /**
@@ -62,15 +69,15 @@ class ElementJBCompare extends Element
         $result = array(
             'status' => false,
         );
-        
+
         $itemIds = $this->app->jbcompare->getItemsByType($this->getItem()->type);
         if (!isset($itemIds[$this->getItem()->id])) {
             if (count($itemIds) >= $this->config->get('limit', 4)) {
-                $result['status'] = false;
+                $result['status']  = false;
                 $result['message'] = JText::_('JBZOO_COMPARE_LIMIT_ERROR');
             }
         }
-        
+
         if (!isset($result['message'])) {
             if ($this->app->jbcompare->toggleState($this->getItem())) {
                 $result['status'] = true;

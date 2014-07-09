@@ -1,16 +1,24 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 require_once App::getInstance('zoo')->path->path('renderer:item.php');
 
+/**
+ * Class CompareRenderer
+ */
 class CompareRenderer extends ItemRenderer
 {
 
@@ -18,7 +26,7 @@ class CompareRenderer extends ItemRenderer
 
     /**
      * Render constructor
-     * @param App  $app
+     * @param App $app
      * @param null $path
      */
     public function __construct($app, $path = null)
@@ -55,8 +63,8 @@ class CompareRenderer extends ItemRenderer
     /**
      * Render item element
      * @param string $elementId
-     * @param Item   $item
-     * @param array  $params
+     * @param Item $item
+     * @param array $params
      * @return string
      */
     public function renderItemElement($elementId, Item $item, $params = array())
@@ -77,21 +85,22 @@ class CompareRenderer extends ItemRenderer
     /**
      * Render items
      * @param string $type
-     * @param int    $appId
-     * @param array  $items
+     * @param int $appId
+     * @param array $items
      * @return array
      */
     public function renderFields($type, $appId, array $items)
     {
-        $elements = $this->getPositionData(self::COMPARE_POSITION, $type, (int)$appId);
-
+        $elements      = $this->getPositionData(self::COMPARE_POSITION, $type, (int)$appId);
+        $layout        = $this->_layout;
         $renderedItems = array();
 
         foreach ($items as $item) {
-
             $renderedItems[$item->id] = array('itemname' => $item->name);
-
-            foreach ($elements as $element) {
+            foreach ($elements as $index => $element) {
+                $element['_layout']                            = $layout;
+                $element['_position']                          = self::COMPARE_POSITION;
+                $element['_index']                             = $index;
                 $renderedItems[$item->id][$element['element']] = $this->renderItemElement($element['element'], $item, $element);
             }
 

@@ -3,7 +3,7 @@
  * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
  * @category   JBZoo
  * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
+ * @copyright  Copyright (c) 2009-2013, Joomla-book.ru
  * @license    http://joomla-book.ru/info/disclaimer
  * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
  */
@@ -15,7 +15,7 @@ $this->app->jbassets->jqueryAccordion();
 
 <?php if ($this->app->jbenv->isWidgetkit(false)) : ?>
     <div class="wk-accordion wk-accordion-default clearfix" data-widgetkit="accordion"
-         data-options='{"style":"default","collapseall":1}'>
+         data-options='{"style":"default","collapseall":1,"matchheight":true}'>
 <?php else : ?>
     <div class="basket-info jsBasketInfo jsAccordion">
 <?php endif; ?>

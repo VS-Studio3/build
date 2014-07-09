@@ -1,13 +1,18 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 // create label
 $label = '';
@@ -24,25 +29,16 @@ if (isset($params['showlabel']) && $params['showlabel']) {
 }
 
 // create class attribute
-$classes   = array();
-$classes[] = 'filter-element';
+$classes = array_filter(array(
+    'filter-element',
+    isset($params['jbzoo_filter_render']) ? 'element-' . $params['jbzoo_filter_render'] : '',
+    ($params['first']) ? 'first' : '',
+    ($params['last']) ? 'last' : '',
+));
 
-if (isset($params['jbzoo_filter_render'])) {
-    $classes[] = 'element-' . $params['jbzoo_filter_render'];
-}
-
-if ($params['first']) {
-    $classes[] = 'first';
-}
-
-if ($params['last']) {
-    $classes[] = 'last';
-}
-
-$class = implode(' ', $classes);
 
 ?>
-<div class="<?php echo $class; ?>">
+<div class="<?php echo implode(' ', $classes); ?>">
     <?php echo $label . '<div class="field">' . $elementHTML . '</div>'; ?>
     <div class="clear clr"></div>
 </div>

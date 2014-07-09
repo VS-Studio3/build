@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBRequestHelper
+ */
 class JBRequestHelper extends AppHelper
 {
 
@@ -23,8 +30,10 @@ class JBRequestHelper extends AppHelper
         if (!is_array($value)) {
 
             $value = strip_tags($value);
-            $value = str_replace(array('"', "'", ';', '--'), '', $value);
             $value = JString::trim($value);
+
+            // force clean input vars
+            //$value = str_replace(array('"', "'", ';', '--', '`', '.', ','), ' ', $value);
 
             if (JString::strlen($value)) {
                 return $value;
@@ -51,8 +60,8 @@ class JBRequestHelper extends AppHelper
     public function get($valueName, $default = null)
     {
         $jInput = JFactory::getApplication()->input;
-        $value = $jInput->get($valueName, $default, false);
-        $value = $this->clear($value);
+        $value  = $jInput->get($valueName, $default, false);
+        $value  = $this->clear($value);
 
         return $value;
     }
@@ -108,11 +117,7 @@ class JBRequestHelper extends AppHelper
      */
     public function isPost()
     {
-        if (version_compare(JVERSION, '1.5.0', '<=')) {
-            return 'POST' == JFactory::getApplication()->input->getMethod(false, false);
-        } else {
-            return 'POST' == JRequest::getMethod();
-        }
+        return 'POST' == JFactory::getApplication()->input->getMethod(false, false);
     }
 
     /**
@@ -131,7 +136,7 @@ class JBRequestHelper extends AppHelper
             }
 
         } else if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])
-                && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
         ) {
             return true;
         }
@@ -150,4 +155,99 @@ class JBRequestHelper extends AppHelper
         return $this->get($requestKey, null) == $value;
     }
 
+    /**
+     * Get file
+     * @param $fieldName
+     * @param null $group
+     * @return array|null
+     */
+    public function getFile($fieldName, $group = null)
+    {
+        $result = array();
+
+        if ($group && isset($_FILES[$group])) {
+            if (isset($_FILES[$group]['name']) && is_array($_FILES[$group]['name'])) {
+
+                foreach ($_FILES[$group] as $key => $value) {
+                    if (isset($value[$fieldName])) {
+                        $result[$key] = $value[$fieldName];
+                    }
+                }
+
+                return $result;
+            } else {
+                return isset($_FILES[$fieldName]) ? $_FILES[$fieldName] : null;
+            }
+
+        } else {
+            return isset($_FILES[$fieldName]) ? $_FILES[$fieldName] : null;
+        }
+
+    }
+
+    /**
+     * Get array from request
+     * @param string $arrayName
+     * @param array $default
+     * @return array
+     */
+    public function getArray($arrayName, $default = array())
+    {
+        $result = $this->app->request->get($arrayName, 'array');
+
+        if (is_null($result)) {
+            return $default;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set request value
+     * @param $key
+     * @param $value
+     * @return mixed
+     */
+    public function set($key, $value)
+    {
+        if (class_exists('jbrequest')) {
+            JRequest::setVar($key, $value);
+        }
+
+        return $this->app->request->set($key, $value);
+    }
+
+    /**
+     * Get request value as word
+     * @param $varName
+     * @param null $default
+     * @return string
+     */
+    public function getWord($varName, $default = null)
+    {
+        $value = $this->get($varName, $default);
+        $value = strtolower((string)preg_replace('/[^A-Z\_\-]/i', '', $value));
+
+        return $value;
+    }
+
+    /**
+     * Get current controller name (HACK)
+     * @param string $default
+     * @return mixed
+     */
+    public function getCtrl($default = 'default')
+    {
+        return str_replace('jbuniversal', '', $this->getWord('controller', $default));
+    }
+
+    /**
+     * Check equel controller with word (HASK)
+     * @param $check
+     * @return bool
+     */
+    public function isCtrl($check)
+    {
+        return $this->getCtrl('') === strtolower($check);
+    }
 }

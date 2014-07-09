@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBArrayHelper
+ */
 class JBArrayHelper extends AppHelper
 {
     /**
@@ -33,17 +40,41 @@ class JBArrayHelper extends AppHelper
 
     /**
      * Group array by key
-     * @param array  $options
-     * @param string $fieldName
+     * @param array $array
+     * @param string $key
+     * @param string $value
      * @return array
      */
-    public function group($options, $fieldName = 'id')
+    public function groupByKey($array, $key = 'id', $value = null)
     {
+        if (!is_array($array)) {
+            return array();
+        }
+
         $result = array();
 
-        if (!empty($options) && is_array($options)) {
-            foreach ($options as $option) {
-                $result[$option[$fieldName]] = $option;
+        foreach ($array as $item) {
+
+            if (is_array($item)) {
+
+                if (isset($item[$key])) {
+                    if ($value) {
+                        $result[$item[$key]] = $item[$value];
+                    } else {
+                        $result[$item[$key]][] = $item;
+                    }
+                }
+
+            } else if (is_object($item)) {
+
+                if (isset($item->$key)) {
+
+                    if ($value) {
+                        $result[$item->$key] = $item->$value;
+                    } else {
+                        $result[$item->$key][] = $item;
+                    }
+                }
             }
         }
 
@@ -52,9 +83,9 @@ class JBArrayHelper extends AppHelper
 
     /**
      * Add cell to assoc array
-     * @param array  $array
+     * @param array $array
      * @param string $key
-     * @param mixed  $val
+     * @param mixed $val
      * @return array
      */
     function unshiftAssoc(array $array, $key, $val)
@@ -69,7 +100,7 @@ class JBArrayHelper extends AppHelper
 
     /**
      * Get one field from array of arrays (array of objects)
-     * @param array  $options
+     * @param array $options
      * @param string $fieldName
      * @return array
      */
@@ -89,6 +120,80 @@ class JBArrayHelper extends AppHelper
         }
 
         return $result;
+    }
+
+    /**
+     * Recursive array mapping
+     * @param Closure $function
+     * @param array $array
+     * @return array
+     */
+    public function mapRecursive($function, $array)
+    {
+        $resArray = array();
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $resArray[$key] = $this->mapRecursive($function, $value);
+            } else {
+                $resArray[$key] = call_user_func($function, $value);
+            }
+        }
+
+        return $resArray;
+    }
+
+    /**
+     * @param $array
+     * @param $orderArray
+     * @return array
+     */
+    public function sortByArray(array $array, array $orderArray)
+    {
+        $ordered = array();
+
+        foreach ($orderArray as $key) {
+
+            if (array_key_exists($key, $array)) {
+                $ordered[$key] = $array[$key];
+            }
+
+        }
+
+        return $ordered + $array;
+    }
+
+    /**
+     * @param array $array
+     * @param string $prefix
+     * @return array
+     */
+    public function addToEachKey(array $array, $prefix)
+    {
+        $result = array();
+        foreach ($array as $key => $item) {
+            $result[$prefix . $key] = $item;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $needle
+     * @param $haystack
+     * @return bool|int|string
+     */
+    function recursiveSearch($needle, $haystack)
+    {
+        foreach ($haystack as $key => $value) {
+            $currentKey = $key;
+
+            if ($needle === $value OR (is_array($value) && $this->recursiveSearch($needle, $value) !== false)) {
+                return $currentKey;
+            }
+        }
+
+        return false;
     }
 
 }

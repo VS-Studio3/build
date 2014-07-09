@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBToolbarHelper
+ */
 class JBToolbarHelper extends AppHelper
 {
 
@@ -18,61 +25,38 @@ class JBToolbarHelper extends AppHelper
      */
     public function toolbar()
     {
-        if ($this->app->jbrequest->is('controller', 'manager') &&
-            $this->app->jbrequest->is('task', 'types') &&
-            $this->app->jbrequest->is('group', 'jbuniversal')
-        ) {
-            $this->_link('stats', 'JBZOO_BUTTON_CHECK_DB', array(
-                'controller' => 'jbtools',
-                'task'       => 'checkdb',
-            ));
-
-            $this->_popup('licence', 'JBZOO_BUTTON_LICENCE', array(
-                'controller' => 'jbtools',
-                'task'       => 'licence',
-            ), 500, 270);
-
-
-            if (!defined('JBZOO_CONFIG_SHOWUPDATE') || JBZOO_CONFIG_SHOWUPDATE) {
-                $this->_link('stats', 'JBZOO_BUTTON_TOGGLEUPDATE_NO', array(
-                    'controller' => 'jbtools',
-                    'task'       => 'toggleupdate',
-                ));
-            } else {
-                $this->_link('stats', 'JBZOO_BUTTON_TOGGLEUPDATE_YES', array(
-                    'controller' => 'jbtools',
-                    'task'       => 'toggleupdate',
-                ));
-            }
-
-        }
+        $this->_customLink('jbzoosupport', 'JBZOO_BUTTON_SUPPORT', 'http://forum.jbzoo.com');
+        $this->_separator();
     }
 
     /**
      * Show button for popup window
      * @param string $icon
      * @param string $name
-     * @param array  $urlParams
-     * @param int    $width
-     * @param int    $height
+     * @param array $urlParams
+     * @param int $width
+     * @param int $height
+     * @return string
      */
     protected function _popup($icon, $name, array $urlParams, $width = 600, $height = 450)
     {
         $urlParams = array_merge(array(
-            'option' => 'com_zoo',
-            'tmpl'   => 'component'
+            'option'     => 'com_zoo',
+            'tmpl'       => 'component',
+            'controller' => 'jbtools',
         ), $urlParams);
 
-        $link = JRoute::_(JURI::root() . 'administrator/index.php?' . http_build_query($urlParams), true, -1);
+        $link = JRoute::_(JURI::root() . 'administrator/index.php?' . $this->app->jbrouter->query($urlParams), true, -1);
 
-        JToolBar::getInstance('toolbar')->appendButton('Popup', $icon, $name, $link, $width, $height);
+        return JToolBar::getInstance('toolbar')->appendButton('Popup', $icon, $name, $link, $width, $height);
     }
 
     /**
      * Show link-button
      * @param string $icon
      * @param string $name
-     * @param array  $urlParams
+     * @param array $urlParams
+     * @return string
      */
     protected function _link($icon, $name, $urlParams)
     {
@@ -81,8 +65,29 @@ class JBToolbarHelper extends AppHelper
             'tmpl'   => 'component'
         ), $urlParams);
 
-        $link = JRoute::_(JURI::root() . 'administrator/index.php?' . http_build_query($urlParams), true, -1);
+        $link = JRoute::_(JURI::root() . 'administrator/index.php?' . $this->app->jbrouter->query($urlParams), true, -1);
 
-        JToolBar::getInstance('toolbar')->appendButton('Link', $icon, $name, $link);
+        return JToolBar::getInstance('toolbar')->appendButton('Link', $icon, $name, $link);
+    }
+
+    /**
+     * Show custom link-button
+     * @param string $icon
+     * @param string $name
+     * @param string $link
+     * @return string
+     */
+    protected function _customLink($icon, $name, $link)
+    {
+        return JToolBar::getInstance('toolbar')->appendButton('Link', $icon, $name, $link);
+    }
+
+    /**
+     * Add seporator
+     * @return string
+     */
+    protected function _separator()
+    {
+        JToolBar::getInstance('toolbar')->appendButton('Separator', 'spacer', '90');
     }
 }

@@ -10,12 +10,19 @@
         <position name="cell7">Table cell #7</position>
         <position name="cell8">Table cell #8</position>
     </positions>
-    
+
+    <positions layout="full">
+        <position name="title">Title</position>
+        <position name="properties">Properties</position>
+        <position name="text">Text</position>
+        <position name="others">Others</position>
+    </positions>
+
     <positions layout="submission">
         <position name="content">Content</position>
         <position name="media">Media</position>
         <position name="meta">Meta</position>
         <position name="administration">Administration</position>
-    </positions>    
-    
+    </positions>
+
 </renderer>

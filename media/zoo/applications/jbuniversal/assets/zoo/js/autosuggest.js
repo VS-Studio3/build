@@ -1,5 +1,5 @@
 /* Copyright (C) YOOtheme GmbH, http://www.gnu.org/licenses/gpl.html GNU/GPL */
-/* zoo v 3.0.8 */
+/* zoo v3.0.10 */
 (function (b) {
     var e = function () {
     };
@@ -47,7 +47,7 @@
             "click", function () {
                 d.selectItem(this)
             })
-    }, addItem:function (a) {
+    }, addItem                 :function (a) {
         "string" == typeof a && (a = {label:a.trim(), value:a.trim()});
         if ("" != a.value && (this.options.allowDuplicates || !this.itemExists(a))) {
             var c = b('<li class="as-selection-item">').text(a.label).data("item", a).insertBefore(this.original);
@@ -55,16 +55,16 @@
             b('<input type="hidden" class="as-value">').attr("name", this.options.inputName).val(a.value).appendTo(c)
         }
         this.input.val("")
-    }, removeItem:function (a) {
+    }, removeItem              :function (a) {
         a.remove()
-    }, itemExists:function (a) {
+    }, itemExists              :function (a) {
         var c =
             !1;
         this.selections_holder.find("li.as-selection-item").each(function () {
             b(this).data("item") && b(this).data("item").value.toLowerCase() == a.value.toLowerCase() && (c = !0)
         });
         return c
-    }, selectItem:function (a) {
+    }, selectItem              :function (a) {
         b("li.as-selection-item", this.selections_holder).not(a).removeClass("selected");
         b(a).addClass("selected");
         this.input.not(":focus") && this.input.focus()

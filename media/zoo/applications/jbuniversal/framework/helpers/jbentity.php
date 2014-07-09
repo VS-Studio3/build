@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBEntityHelper
+ */
 class JBEntityHelper extends AppHelper
 {
     /**
@@ -45,7 +52,7 @@ class JBEntityHelper extends AppHelper
 
     /**
      * Get element by id
-     * @param string      $elementId
+     * @param string $elementId
      * @param string|null $type
      * @param string|null $applicationId
      * @return mixed
@@ -68,7 +75,7 @@ class JBEntityHelper extends AppHelper
     /**
      * Get type
      * @param string $type
-     * @param int    $applicationId
+     * @param int $applicationId
      * @return Type
      */
     public function getType($type, $applicationId)
@@ -99,9 +106,9 @@ class JBEntityHelper extends AppHelper
 
     /**
      * Get element model
-     * @param string  $elementId
-     * @param string  $type
-     * @param int     $applicationId
+     * @param string $elementId
+     * @param string $type
+     * @param int $applicationId
      * @param boolean $isRange
      * @return JBModelElement
      */
@@ -116,21 +123,18 @@ class JBEntityHelper extends AppHelper
         }
 
         $modelName = 'JBModelElement' . $elementType;
-        if ($isRange) {
-            //$modelName = 'JBModelElementRange' . $elementType;
-        }
 
         if (class_exists($modelName)) {
-            return new $modelName($element, $applicationId);
+            return new $modelName($element, $applicationId, $type);
 
         } elseif ($isRange && class_exists('JBModelElementRange')) {
-            return new JBModelElementRange($element, $applicationId);
+            return new JBModelElementRange($element, $applicationId, $type);
 
         } elseif (!$isRange && class_exists('JBModelElement')) {
-            return new JBModelElement($element, $applicationId);
+            return new JBModelElement($element, $applicationId, $type);
 
         } else {
-            $this->app->error->raiseError(500, 'Not found model ' . $modelName);
+            $this->app->error->raiseError(500, 'Model not found - ' . $modelName);
         }
 
         return null;
@@ -138,26 +142,42 @@ class JBEntityHelper extends AppHelper
 
     /**
      * Get all itemtypes data
+     * @param bool $groupByType
      * @return array
      */
-    public function getItemTypesData()
+    public function getItemTypesData($groupByType = false)
     {
         static $result;
 
-        if (!isset($result)) {
+        $groupByType = (int)$groupByType;
+
+        if (!isset($result[$groupByType])) {
+
+            if (!is_array($result)) {
+                $result = array();
+            }
+
+            $result[$groupByType] = array();
 
             $typesPath = $this->app->path->path('jbtypes:');
             $files     = JFolder::files($typesPath, '.config');
 
-            $result = array();
+            $result[$groupByType] = array();
             foreach ($files as $file) {
-                $fileContent = JFile::read($typesPath . '/' . $file);
+                $fileContent = $this->app->jbfile->read($typesPath . '/' . $file);
                 $typeData    = json_decode($fileContent, true);
-                $result      = array_merge($result, $typeData['elements']);
+                $typeAlias   = str_replace('.config', '', $file);
+
+                if ($groupByType) {
+                    $result[$groupByType][$typeAlias] = $typeData['elements'];
+                } else {
+                    $result[$groupByType] = array_merge($result[$groupByType], $typeData['elements']);
+                }
+
             }
         }
 
-        return $result;
+        return $result[$groupByType];
     }
 
     /**
@@ -167,11 +187,46 @@ class JBEntityHelper extends AppHelper
      */
     public function getTypeByElementId($elementId)
     {
-        $elements = $this->getItemTypesData();
+        $elements = $this->getItemTypesData(false);
         if (isset($elements[$elementId])) {
             return $elements[$elementId]['type'];
         }
 
         return null;
     }
+
+    /**
+     * Get element type by it ID
+     * @param string $elementId
+     * @return null|string
+     */
+    public function getItemTypeByElementId($elementId)
+    {
+        $elements = $this->getItemTypesData(true);
+
+        foreach ($elements as $itemType => $elements) {
+            if (isset($elements[$elementId])) {
+                return $itemType;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get field name by it
+     * @param $fieldId
+     * @return string
+     */
+    public function getFieldNameById($fieldId)
+    {
+        $elements = $this->getItemTypesData(false);
+
+        if (isset($elements[$fieldId]['name'])) {
+            return $elements[$fieldId]['name'];
+        }
+
+        return JText::_('JBZOO_FIELDS_CORE_' . $fieldId);
+    }
+
 }

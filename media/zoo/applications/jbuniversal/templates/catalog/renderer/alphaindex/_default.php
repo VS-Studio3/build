@@ -1,13 +1,18 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 $this->app->jbdebug->mark('layout::alphaindex::start');
 
@@ -27,15 +32,15 @@ if ($this->app->string->strpos($alpha, '#</span>')) {
 $alpha_chars = $vars['params']->get('config.alpha_chars', 0);
 
 ?>
-<div class="alphaindex rborder">
-    <?php if ($alpha_chars == 0 || $alpha_chars == 2) { ?>
-    <div class="alphaindex_line_en"><?php echo $alpha_en_ru[0]; ?></div>
-    <?php } ?>
+    <div class="alphaindex rborder">
+        <?php if ($alpha_chars == 0 || $alpha_chars == 2) { ?>
+            <div class="alphaindex_line_en"><?php echo $alpha_en_ru[0]; ?></div>
+        <?php } ?>
 
-    <?php if ($alpha_chars == 0 || $alpha_chars == 1) { ?>
-    <div class="alphaindex_line_ru"><?php echo $alpha_en_ru[1]; ?></div>
-    <?php } ?>
-</div>
+        <?php if ($alpha_chars == 0 || $alpha_chars == 1) { ?>
+            <div class="alphaindex_line_ru"><?php echo $alpha_en_ru[1]; ?></div>
+        <?php } ?>
+    </div>
 
 <?php
 $this->app->jbdebug->mark('layout::alphaindex::finish');

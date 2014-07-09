@@ -1,10 +1,12 @@
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
 
 .jbzoo-app-product .subcategory-title {
@@ -45,15 +47,53 @@
     min-height: 310px;
 }
 
-.jbzoo-app-product .product-props {
-    float: right;
-    width: 54%;
+.jbzoo-app-product .product-buttons {
+    float: left;
 }
 
-.jbzoo.jbzoo-app-product .items .column {
+.jbzoo-app-product .items .column {
     padding: 0;
+}
+
+.jbzoo-app-product .item-body {
+    padding: 12px;
 }
 
 .wk-slideshow .slides > li {
     text-align: center;
+}
+
+.jbzoo-app-product .jbzoo-item-teaser .item-image {
+    margin-right: 30px;
+}
+
+.jbzoo-app-product .jbzoo-item-teaser .wrapper-jbcompare {
+    right: 10px;
+    top: 48px;
+    float: left;
+    position: absolute;
+}
+
+.jbzoo-app-product .column {
+    position: relative;
+}
+
+.jbzoo-app-product .jbzoo-item-teaser .wrapper-jbfavorite {
+    position: absolute;
+    right: 10px;
+    bottom: 62px;
+}
+
+.jbzoo-app-product .jbzoo-item-teaser .element-rating {
+    margin-bottom: 10px;
+}
+
+.jbzoo-app-product .subtitle h2 {
+    color: #777;
+    font-weight: normal;
+    font-size: 16px;
+}
+
+.jbzoo-app-product .price-value-position .jbprice-buttons {
+    display: none;
 }

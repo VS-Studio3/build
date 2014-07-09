@@ -1,19 +1,38 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 $zoo = App::getInstance('zoo');
 $zoo->jbassets->initJBPrice();
 
-echo '<span class="jbprice-row jbprice-row-' . $params['counter'] . '">';
+$rowCounter = (int)$params->get('counter');
+
+echo '<label class="jbprice-row jbprice-row-' . $rowCounter . '">';
 $htmlValues = array();
+
+if ($template == 'oneclick') {
+
+    $checked = '';
+    if ($rowCounter == 0) {
+        $checked = 'checked="checked"';
+    }
+
+    echo '<input type="radio" ' . $checked . ' value="' . $rowCounter . '"
+        name="jbprice-' . $this->getItem()->id . '-' . $params->get('uniqid') . '" />&nbsp;';
+
+}
 
 foreach ($values as $currency => $value) {
 
@@ -22,11 +41,16 @@ foreach ($values as $currency => $value) {
         $activeClass = ' active';
     }
 
-    $htmlValues[] = '<span class="price-value jsPriceValue price-currency-' . $currency . $activeClass . '">' . $value . '</span>';
+    if ($value['noFormat'] > 0) {
+        $htmlValues[] = '<span class="price-value jsPriceValue price-currency-' . $currency . $activeClass . '">' . $value['format'] . '</span>';
+    }
 }
+
+
+echo implode("\n", $htmlValues) . "\n";
 
 if ($description) {
     echo '<span class="description">' . $description . '</span> ';
 }
-echo implode("\n", $htmlValues) . "\n";
-echo '</span>';
+
+echo '</label>';

@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBModel
+ */
 Class JBModel
 {
     /**
@@ -33,6 +40,16 @@ Class JBModel
     protected $_dbHelper = null;
 
     /**
+     * @var JBTablesHelper
+     */
+    protected $_jbtables = null;
+
+    /**
+     * @var JBCacheHelper
+     */
+    protected $_jbcache = null;
+
+    /**
      * Constructor
      */
     protected function __construct()
@@ -41,8 +58,11 @@ Class JBModel
 
         $this->_db       = JFactory::getDbo();
         $this->_dbHelper = $this->app->database;
-        $this->_dbNow    = $this->_db->quote($this->app->date->create()->toSql());
-        $this->_dbNull   = $this->_db->quote($this->_db->getNullDate());
+        $this->_jbtables = $this->app->jbtables;
+        $this->_jbcache  = $this->app->jbcache;
+
+        $this->_dbNow  = $this->_db->quote($this->app->date->create()->toSql());
+        $this->_dbNull = $this->_db->quote($this->_db->getNullDate());
     }
 
     /**
@@ -66,7 +86,7 @@ Class JBModel
     /**
      * Fetch one row
      * @param JBDatabaseQuery $select
-     * @param bool            $toArray
+     * @param bool $toArray
      * @return JObject
      */
     public function fetchRow(JBDatabaseQuery $select, $toArray = false)
@@ -77,7 +97,7 @@ Class JBModel
     /**
      * Fetch all query result
      * @param JBDatabaseQuery $select
-     * @param bool            $toArray
+     * @param bool $toArray
      * @return array|JObject
      */
     public function fetchAll(JBDatabaseQuery $select, $toArray = false)
@@ -86,14 +106,26 @@ Class JBModel
     }
 
     /**
+     * Simple query to database
+     * @param string $select
+     * @return mixed
+     */
+    protected function sqlQuery($select)
+    {
+        return $this->_db->setQuery((string)$select)->execute();
+    }
+
+    /**
      * Query to database
      * @param JBDatabaseQuery $select
-     * @param bool            $isOne
-     * @param bool            $toArray
+     * @param bool $isOne
+     * @param bool $toArray
      * @return mixed
      */
     protected function _query(JBDatabaseQuery $select, $isOne = false, $toArray = false)
     {
+        //jbdump::sql($select);
+
         $selectSql = (string)$select;
         $this->app->jbdebug->sql($selectSql);
         $this->_db->setQuery($selectSql);
@@ -119,7 +151,7 @@ Class JBModel
 
     /**
      * Get database query object for item
-     * @param null|string     $type
+     * @param null|string $type
      * @param null|string|int $applicationId
      * @return JBDatabaseQuery
      */
@@ -150,7 +182,7 @@ Class JBModel
 
     /**
      * Get zoo items by IDs
-     * @param array  $ids
+     * @param array $ids
      * @param string $order
      * @return array
      */
@@ -178,14 +210,12 @@ Class JBModel
      */
     protected function _setBigSelects()
     {
-        $this->_db->setQuery('SET SQL_BIG_SELECTS = 1');
-        $this->_db->query();
-        $this->app->jbdebug->mark('model::setBigSelects');
+        $this->_db->setQuery('SET SQL_BIG_SELECTS = 1')->execute();
     }
 
     /**
      * Group array by key
-     * @param array  $rows
+     * @param array $rows
      * @param string $key
      * @return array
      */
@@ -241,7 +271,7 @@ Class JBModel
 
     /**
      * Multi insert
-     * @param array  $data
+     * @param array $data
      * @param string $table
      * @return mixed
      */
@@ -254,10 +284,10 @@ Class JBModel
         $keys = array_keys(current($data));
 
         foreach ($keys as $num => $key) {
-            $keys[$num] = $table . '.' . $key;
+            $keys[$num] = '`' . $key . '`';
         }
 
-        $value_titles = '(' . implode(', ', $keys) . ")\n";
+        $valueTitles = '(' . implode(', ', $keys) . ")\n";
 
         $preValues = array();
         foreach ($data as $values) {
@@ -270,9 +300,21 @@ Class JBModel
 
         $insertedValues = implode(",\n", $preValues);
 
-        $query = 'INSERT INTO ' . $table . ' ' . $value_titles . ' VALUES ' . $insertedValues;
+        $query = 'INSERT INTO ' . $table . ' ' . $valueTitles . ' VALUES ' . $insertedValues;
+        //dump::sql($query);
 
         return $this->_dbHelper->query($query);
+    }
+
+    /**
+     * Insert data
+     * @param $data
+     * @param $table
+     * @return mixed
+     */
+    protected function _insert($data, $table)
+    {
+        return $this->_multiInsert(array($data), $table);
     }
 
     /**
@@ -313,4 +355,82 @@ Class JBModel
 
         return '(' . $fieldName . ' LIKE ' . implode(' AND ' . $fieldName . ' LIKE ', $values) . ' )';
     }
+
+    /**
+     * Render explain table
+     * Function ported from Joomla debug plugin
+     * @param JBDatabaseQuery $select
+     * @return null|string
+     */
+    protected function _explain(JBDatabaseQuery $select)
+    {
+        if (!(class_exists('jbdump') || (defined('JDEBUG') && JDEBUG))) {
+            return null;
+        }
+
+        $table = $this->app->database->queryAssocList('EXPLAIN ' . $select->__toString());
+
+        if (!$table) {
+            return null;
+        }
+
+        $html = array();
+
+        $html[] = '<table class="table" style="width:1600px"><tr>';
+        foreach (array_keys($table[0]) as $k) {
+            $html[] = '<th>' . htmlspecialchars($k) . '</th>';
+        }
+        $html[] = '</tr>';
+
+        foreach ($table as $tr) {
+            $html[] = '<tr>';
+
+            foreach ($tr as $k => $td) {
+                if ($td === null) {
+                    $td = 'NULL';
+                }
+
+                if ($k == 'Error') {
+                    $html[] = '<td class="dbg-warning">' . htmlspecialchars($td);
+
+                } elseif ($k == 'key') {
+                    if ($td === 'NULL') {
+                        $html[] = '<td><strong style="color:#f00;">NO_INDEX</strong>';
+                    } else {
+                        $html[] = '<td><strong>' . htmlspecialchars($td) . '</strong>';
+                    }
+                } elseif ($k == 'Extra') {
+                    $htmlTd = htmlspecialchars($td);
+                    $htmlTd = preg_replace('/([^;]) /', '\1&nbsp;', $htmlTd);
+
+                    $htmlTdWithWarnings = str_replace(
+                        'Using&nbsp;filesort',
+                        '<strong style="color:#f00;">USE_FILESORT</strong>',
+                        $htmlTd
+                    );
+
+                    $html[] = '<td>' . $htmlTdWithWarnings;
+
+                } elseif ($k == 'possible_keys') {
+                    $td     = str_replace(',', ",\n", $td);
+                    $html[] = '<td>' . htmlspecialchars($td);
+
+                } else {
+                    $html[] = '<td>' . htmlspecialchars($td);
+                }
+
+                $html[] = '</td>';
+            }
+
+            $html[] = '</tr>';
+        }
+
+        $html[] = '</table>';
+
+        $result = implode("\n ", $html);
+
+        jbdump::sql($select);
+        dump($result, 0, 'Explain::html');
+    }
+
 }

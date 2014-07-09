@@ -1,22 +1,42 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 // register ElementRepeatable class
 App::getInstance('zoo')->loader->register('ElementRepeatable', 'elements:repeatable/repeatable.php');
 
 /**
- * Repeatble image element by JBZoo
+ * Class ElementJBImage
  */
 class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
 {
+    /**
+     * @var JBImageHelper
+     */
+    protected $_jbimage = null;
+
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_jbimage = $this->app->jbimage;
+    }
+
     /**
      * Checks if the repeatables element's value is set.
      * @param array $params render parameter
@@ -24,16 +44,15 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
      */
     public function _hasValue($params = array())
     {
+        $file         = JString::trim($this->get('file'));
+        $isExists     = !empty($file) && JFile::exists(JPATH_ROOT . '/' . $file);
         $defaultImage = $this->_getDefaultImage($params);
 
-        if ($defaultImage) {
-            return true;
-
-        } else {
-            $file = JString::trim($this->get('file'));
-
-            return !empty($file) && JFile::exists(JPATH_ROOT . '/' . $file);
+        if (!$isExists && !$defaultImage) {
+            return false;
         }
+
+        return true;
     }
 
     /**
@@ -42,7 +61,28 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
      */
     public function _getSearchData()
     {
-        return $this->get('title');
+        $file     = JString::trim($this->get('file'));
+        $isExists = !empty($file) && JFile::exists(JPATH_ROOT . '/' . $file);
+        $title    = $this->get('title');
+
+        if ($isExists) {
+            return $title . "\n__IMAGE_EXISTS__";
+        } else {
+            return $title . "\n__IMAGE_NO_EXISTS__";
+        }
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSearchData()
+    {
+        $result = array();
+        foreach ($this as $self) {
+            $result[] = $this->_getSearchData();
+        }
+
+        return (empty($result) ? null : implode("\n", $result));
     }
 
     /**
@@ -56,56 +96,55 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
         $params = $this->app->data->create($params);
 
         // init vars
-        $title      = $this->get('title');
-        $alt        = $title = empty($title) ? $this->getItem()->name : $title;
-        $imagePopup = $appendClass = $url = $target = $rel = '';
+        $title  = $this->get('title');
+        $width  = (int)$params->get('width', 0);
+        $height = (int)$params->get('height', 0);
+        $alt    = $title = empty($title) ? $this->getItem()->name : $title;
+        $url    = $imagePopup = $appendClass = $target = $rel = '';
 
+        // get image
         if ($this->_isFileExists($this->get('file'))) {
-
-            $image = $this->app->jbimage->resize(
-                $this->get('file'),
-                $params->get('width', 0),
-                $params->get('height', 0)
-            );
-
+            $image = $this->_jbimage->resize($this->get('file'), $width, $height);
         } else {
             $image = $this->_getDefaultImage($params);
         }
 
         // select render template
         $template = $params->get('template', 'default');
+
         if ($template == 'link') {
             $url    = $this->get('link');
-            $target = (int)$this->get('target') ? '_blank' : false;
             $rel    = $this->get('rel');
+            $target = (int)$this->get('target') ? '_blank' : false;
 
         } elseif ($template == 'itemlink') {
             if ($this->getItem()->getState()) {
-                $url   = $this->app->route->item($this->_item, false);
+                $url = JRoute::_($this->app->route->item($this->_item, false), false, 2);
                 $title = empty($title) ? $this->getItem()->name : $title;
             }
 
         } elseif ($template == 'popup') {
 
+            $appendClass = 'jbimage-gallery';
             if ((int)$params->get('group_popup', 1)) {
-                $rel = 'jbimage-popup';
-            } else {
-                $appendClass = 'jbimage-gallery';
+                $rel = 'jbimage-gallery-' . $this->getItem()->id;
             }
 
-            $target = '_blank';
-
+            $target      = '_blank';
             $widthPopup  = (int)$params->get('width_popup', 0);
             $heightPopup = (int)$params->get('height_popup', 0);
-            if (!$widthPopup && !$heightPopup) {
-                $url = $this->app->jbimage->resize($this->get('file'), $widthPopup, $heightPopup)->url;
-            } else {
-                $url = $this->get('file');
+
+            if ($image) {
+                $url = $this->_jbimage->getUrl($this->get('file'));
+                if ($widthPopup || $heightPopup) {
+                    $newImg = $this->_jbimage->resize($image->orig, $widthPopup, $heightPopup);
+                    $url    = $newImg->url;
+                }
             }
         }
 
         // render layout
-        if ($layout = $this->getLayout('jbimage-' . $template . '.php')) {
+        if ($image && $layout = $this->getLayout('jbimage-' . $template . '.php')) {
             return $this->renderLayout($layout, array(
                     'imageAttrs' => $this->_buildAttrs(array(
                         'class'  => 'jbimage',
@@ -195,11 +234,17 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
      */
     public function _renderSubmission($params = array())
     {
+        $this->app->jbsession->set($this->identifier . '||' . $this->key(), null, 'jbimage_validate');
+
         $this->app->document->addScript('elements:jbimage/assets/js/submission.js');
         $this->app->jbassets->addRootUrl();
 
         // init vars
+        $data  = $this->data();
         $image = $this->get('file');
+        if (isset($data[$this->key()]['image'])) {
+            $image = $data[$this->key()]['image'];
+        }
 
         // is uploaded file
         $image = is_array($image) ? '' : $image;
@@ -210,15 +255,20 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
         // build image select
         $lists = array();
         if ($trusted_mode) {
+
             $options = array($this->app->html->_('select.option', '', '- ' . JText::_('Select Image') . ' -'));
-            if (!empty($image) && !$this->_inUploadPath($image)) {
+
+            if (!empty($image) && $this->_inUploadPath($image)) {
                 $options[] = $this->app->html->_('select.option', $image, '- ' . JText::_('No Change') . ' -');
             }
+
             $img_ext = str_replace(',', '|', trim(JComponentHelper::getParams('com_media')->get('image_extensions'), ','));
             foreach ($this->app->path->files('root:' . $this->_getUploadImagePath(), false, '/\.(' . $img_ext . ')$/i') as $file) {
                 $options[] = $this->app->html->_('select.option', $this->_getUploadImagePath() . '/' . $file, $file);
             }
+
             $lists['image_select'] = $this->app->html->_('select.genericlist', $options, $this->getControlName('image'), 'class="image"', 'value', 'text', $image);
+
         } else {
             if (!empty($image)) {
                 $image = $this->app->zoo->resizeImage($this->app->path->path('root:' . $image), 0, 0);
@@ -245,7 +295,6 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
      * @param AppData $params submission parameters
      * @return array
      * @throws AppValidatorException
-     * @throws AppValidatorException
      */
     public function _validateSubmission($value, $params)
     {
@@ -263,6 +312,7 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
             if (!$this->_inUploadPath($file) && $file != $old_file) {
                 throw new AppValidatorException(sprintf('This file is not located in the upload directory.'));
             }
+
             if (!JFile::exists($file)) {
                 throw new AppValidatorException(sprintf('This file does not exist.'));
             }
@@ -273,15 +323,30 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
                 // get the uploaded file information
                 $userfile = $this->_getUploadedFile();
 
-                $max_upload_size = $this->config->get('max_upload_size', '512') * 1024;
-                $max_upload_size = empty($max_upload_size) ? null : $max_upload_size;
+                // validator hack for element error message after submission controller redirect
+                if (
+                    (empty($userfile) || empty($userfile['tmp_name'])) &&
+                    ($value->get('filename') || $value->get('image'))
+                ) {
+                    if ($message = $this->app->jbsession->get($this->identifier . '||' . $this->key(), 'jbimage_validate')) {
+                        throw new AppValidatorException($message);
+                    }
+                }
 
-                $file = $this->app->validator
-                    ->create('file', array('mime_type_group' => 'image', 'max_size' => $max_upload_size))
-                    ->addMessage('mime_type_group', 'Uploaded file is not an image.')
-                    ->clean($userfile);
+                // hack hide undefined error after redirect
+                if (!empty($userfile)) {
+                    $max_upload_size = $this->config->get('max_upload_size', '512') * 1024;
+                    $max_upload_size = empty($max_upload_size) ? null : $max_upload_size;
+
+                    $file = $this->app->validator
+                        ->create('file', array('mime_type_group' => 'image', 'max_size' => $max_upload_size))
+                        ->addMessage('mime_type_group', 'Uploaded file is not an image.')
+                        ->clean($userfile);
+                }
 
             } catch (AppValidatorException $e) {
+
+                $this->app->jbsession->set($this->identifier . '||' . $this->key(), $e->getMessage(), 'jbimage_validate');
 
                 if ($e->getCode() != UPLOAD_ERR_NO_FILE) {
                     throw $e;
@@ -318,7 +383,7 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
      */
     protected function _inUploadPath($image)
     {
-        return $this->_getUploadImagePath() == dirname($image);
+        return JPath::clean($this->_getUploadImagePath()) == JPath::clean(dirname($image));
     }
 
     /**
@@ -338,7 +403,7 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
         $uploadDirectory = JPath::clean($uploadDirectory);
         if (!JFolder::exists($uploadDirectory)) {
             mkdir($uploadDirectory, 0777, true);
-            chmod($uploadDirectory, 0777);
+            @chmod($uploadDirectory, 0777);
         }
 
         return $uploadDirectory;
@@ -353,14 +418,14 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
     protected function _moveUploadedFiles($userfile)
     {
         if (is_array($userfile) && $userfile['size'] > 0) {
-            $ext       = $this->app->filesystem->getExtension($userfile['name']);
-            $base_path = JPATH_ROOT . '/' . $this->_getUploadImagePath() . '/';
-            $file      = $base_path . $userfile['name'];
-            $filename  = basename($file, '.' . $ext);
+            $ext      = $this->app->filesystem->getExtension($userfile['name']);
+            $basePath = JPATH_ROOT . '/' . $this->_getUploadImagePath() . '/';
+            $file     = $basePath . $userfile['name'];
+            $filename = basename($file, '.' . $ext);
 
             $i = 1;
             while (JFile::exists($file)) {
-                $file = $base_path . $filename . '-' . $i++ . '.' . $ext;
+                $file = $basePath . $filename . '-' . $i++ . '.' . $ext;
             }
 
             if (!JFile::upload($userfile['tmp_name'], $file)) {
@@ -369,7 +434,7 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
 
             $this->app->zoo->putIndexFile(dirname($file));
 
-            return $this->app->path->relative($file);
+            return JPath::clean($this->app->path->relative($file));
         }
 
         return $userfile;
@@ -386,15 +451,19 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
 
             $result = array();
             foreach ($values as $key => $value) {
-                $result[$key] = $value[$this->identifier][$this->key()]['file'];
+                if (isset($value[$this->identifier][$this->key()]['file'])) {
+                    $result[$key] = $value[$this->identifier][$this->key()]['file'];
+                }
             }
 
-            // transliteration to file name to latin
-            $ext            = $this->app->filesystem->getExtension($result['name']);
-            $filename       = preg_replace('#\.' . $ext . '$#iu', '', $result['name']);
-            $result['name'] = $this->app->string->sluggify($filename) . '.' . $ext;
+            if (!empty($result)) {
+                // transliteration filename to latin
+                $ext            = $this->app->filesystem->getExtension($result['name']);
+                $filename       = preg_replace('#\.' . $ext . '$#iu', '', $result['name']);
+                $result['name'] = $this->app->string->sluggify($filename) . '.' . $ext;
 
-            return $result;
+                return $result;
+            }
         }
 
         return null;
@@ -402,43 +471,36 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
 
     /**
      * Get default image
+     * @param JSONData $params
+     * @return null|object
      */
-    protected function _getDefaultImage($params = array())
+    protected function _getDefaultImage($params)
     {
-
-        if (is_array($params)) {
-            $params = $this->app->params->create($params);
-        }
-
-        $width  = (int)$params->get('width', 0);
-        $height = (int)$params->get('height', 0);
+        // init vars
+        $width         = (int)$params->get('width', 0);
+        $height        = (int)$params->get('height', 0);
+        $defaultImage  = $this->config->get('default_image');
+        $defaultEnable = (int)$this->config->get('default_enable', 0);
 
         $result = null;
 
-        if ((int)$this->config->get('default_enable', 0)) {
+        if ($defaultEnable && $defaultImage) {
 
-            $imagePath = $this->config->get('default_image', '');
+            if (strpos($defaultImage, 'http') !== false) {
 
-            if (strpos($imagePath, 'http') !== false) {
-                $result = $imagePath;
-
-            } else if (JFile::exists($imagePath) || JFile::exists(JPATH_BASE . '/' . $imagePath)) {
-                return $this->app->jbimage->resize($imagePath, $width, $height);
+                return (object)array(
+                    'width'   => $width,
+                    'height'  => $height,
+                    'path'    => $defaultImage,
+                    'orig'    => $defaultImage,
+                    'origUrl' => $defaultImage,
+                    'url'     => $defaultImage,
+                    'rel'     => $defaultImage,
+                );
 
             } else {
-                $result = $this->app->jbimage->placeholder($width, $height);
+                return $this->_jbimage->resize($defaultImage, $width, $height);
             }
-        }
-
-        if ($result) {
-            return (object)array(
-                'width'  => $params->get('width', 0),
-                'height' => $params->get('height', 0),
-                'mime'   => 'image/jpeg',
-                'bits'   => 8,
-                'path'   => $result,
-                'url'    => $this->app->path->relative($result),
-            );
         }
 
         return null;
@@ -451,16 +513,44 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
      */
     protected function _isFileExists($imagePath)
     {
-
         if (strpos($imagePath, 'http') !== false) {
             return true;
 
-        } else if (JFile::exists($imagePath) || JFile::exists(JPATH_BASE . '/' . $imagePath)) {
+        } else if (JFile::exists($imagePath) || JFile::exists(JPATH_ROOT . '/' . $imagePath)) {
             return true;
-
         }
 
         return false;
+    }
+
+    /**
+     * Trigger on item delete
+     */
+    public function triggerItemDeleted()
+    {
+        $result = array();
+
+        $this->seek(0);
+        while ($this->valid()) {
+            $result[] = $this->_triggerItemDeleted();
+            $this->next();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Each image delete
+     */
+    protected function _triggerItemDeleted()
+    {
+        $file = $this->get('file');
+        if ($file && JFile::exists(JPATH_ROOT . '/' . $file)) {
+            return JFile::delete(JPATH_ROOT . '/' . $file);
+
+        }
+
+        return null;
     }
 
 }

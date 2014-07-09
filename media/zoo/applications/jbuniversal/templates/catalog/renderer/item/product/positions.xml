@@ -13,6 +13,7 @@
         <position name="meta">Meta</position>
 
         <position name="image">Image</position>
+        <position name="price">Price</position>
         <position name="anons">Anons</position>
 
         <position name="tab-text">Tab: text</position>
@@ -27,12 +28,9 @@
 
     <positions layout="teaser">
         <position name="title">Title</position>
-        <position name="subtitle">Subtitle</position>
         <position name="price">Price</position>
         <position name="properties">Properties</position>
         <position name="image">Image</position>
-        <position name="rating">Rating</position>
-        <position name="links">Links</position>
     </positions>
 
     <positions layout="related">
@@ -45,10 +43,9 @@
 
     <positions layout="subcategory_item">
         <position name="title">Title</position>
-        <position name="image">Image</position>
+        <position name="price">Price</position>
         <position name="properties">Properties</position>
-        <position name="text">Text</position>
-        <position name="meta">Meta</position>
+        <position name="image">Image</position>
     </positions>
 
     <positions layout="submission">
@@ -70,4 +67,15 @@
         <position name="meta">Meta</position>
     </positions>
 
+    <positions layout="quickview">
+        <position name="top">Top</position>
+        <position name="title">Title</position>
+        <position name="price">Price</position>
+        <position name="image">Image</position>
+        <position name="description">Description</position>
+        <position name="properties">Properties</position>
+        <position name="bottom">Bottom</position>
+        <position name="related">Related</position>
+    </positions>    
+    
 </renderer>

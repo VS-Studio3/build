@@ -1,20 +1,27 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBFavoriteHelper
+ */
 class JBFavoriteHelper extends AppHelper
 {
 
     protected $_namespace = 'jbzoo';
-    protected $_namespaceHelper = 'jbfavorite';
+    protected $_namespaceHelper = 'favorite';
 
     /**
      * Check is current user is auth
@@ -137,11 +144,8 @@ class JBFavoriteHelper extends AppHelper
      */
     protected function _getSession()
     {
-        $session   = JFactory::getSession();
-        $jbcompare = $session->get($this->_namespaceHelper, array(), $this->_namespace);
-        $result    = $this->app->data->create($jbcompare);
-
-        return $result;
+        $data = $this->app->jbsession->getGroup($this->_namespaceHelper);
+        return $this->app->data->create($data);
     }
 
     /**
@@ -151,12 +155,7 @@ class JBFavoriteHelper extends AppHelper
      */
     protected function _setSession($key, $value)
     {
-        $session   = JFactory::getSession();
-        $jbcompare = $session->get($this->_namespaceHelper, array(), $this->_namespace);
-
-        $jbcompare[$key] = $value;
-
-        $session->set($this->_namespaceHelper, $jbcompare, $this->_namespace);
+        return $this->app->jbsession->set($key, $value, $this->_namespaceHelper);
     }
 
 }

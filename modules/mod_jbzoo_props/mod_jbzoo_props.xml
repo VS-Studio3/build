@@ -1,70 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
-    category   JBZoo
-    author     smet.denis <admin@joomla-book.ru>
-    copyright  Copyright (c) 2009-2012, Joomla-book.ru
-    license    http://joomla-book.ru/info/disclaimer
-    link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+    JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+
+    @package     jbzoo
+    @version     2.x Pro
+    @author      JBZoo App http://jbzoo.com
+    @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+    @license     http://jbzoo.com/license-pro.php JBZoo Licence
+    @coder       Denis Smetannikov <denis@jbzoo.com>
 -->
 <extension type="module" version="2.5" method="upgrade" client="site">
     <name>JBZoo Search List</name>
-	<author>Joomla-book</author>
-	<creationDate>2013 01</creationDate>
-	<copyright>Joomla-book.ru</copyright>
-	<license>http://joomla-book.ru/info/disclaimer</license>
-	<assetsLicense>http://joomla-book.ru/info/disclaimer</assetsLicense>
-	<authorEmail>admin@joomla-book.ru</authorEmail>
-	<authorUrl>http://joomla-book.ru</authorUrl>
-	<version>1.6.0</version>
+    <author>JBZoo.com</author>
+    <creationDate>2013 12</creationDate>
+    <copyright>Copyright (C) JBZoo.com, All rights reserved.</copyright>
+    <authorEmail>admin@jbzoo.com</authorEmail>
+    <authorUrl>http://jbzoo.com</authorUrl>
+    <version>2.1.1 Pro</version>
+    <updateUrl>http://server.jbzoo.com/checkupdates</updateUrl>
+    <license>http://jbzoo.com/license-pro.php JBZoo Licence</license>
+    <description>JBZOO_SEARCH_LIST_MODULE_DESCRIPTION</description>
 
     <files>
-   		<filename module="mod_jbzoo_props">mod_jbzoo_props.php</filename>
+        <filename module="mod_jbzoo_props">mod_jbzoo_props.php</filename>
         <filename>helper.php</filename>
         <filename>index.html</filename>
-   		<folder>fields</folder>
-   		<folder>renderer</folder>
-   		<folder>tmpl</folder>
-   	</files>
+        <folder>renderer</folder>
+        <folder>tmpl</folder>
+    </files>
 
     <config>
-        <fields name="params" >
-            <fieldset name="basic" addfieldpath="/modules/mod_jbzoo_props/fields">
-                <field name="@spacer" type="jbzooinit" />
-                <field name="application" type="zooapplication" default="" label="JBZOO_FILTER_ITEMS" description="JBZOO_FILTER_ITEMS_DESC" categories="true" frontpage="true" items="true" types="true" />
-                <field name="mode"      type="hidden" label="" required="false" description="" />
-                <field name="type"      type="hidden" label="" required="false" description="" />
-                <field name="category"  type="hidden" label="" required="false" description="" />
-                <field name="item_id"   type="hidden" label="" required="false" description="" />
-                <field name="layout" type="filename" default="default" label="JBZOO_FILTER_LAYOUT" description="JBZOO_FILTER_LAYOUT_DESC" path="/renderer/item/" />
-                <field name="menuitem" type="menuitem" default="0" state="1" label="JBZOO_FILTER_MENU" description="JBZOO_FILTER_MENU_DESC" />
-                <field name="moduleclass_sfx" type="text" default="" label="JBZOO_MODULE_SFX" description="JBZOO_MODULE_SFX_DESC" />
-                <field name="module-layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+        <fields name="params">
+            <fieldset name="basic" addfieldpath="/media/zoo/applications/jbuniversal/joomla/fields">
+                <field name="@spacer" type="jbzooinit"/>
+
+                <field name="application" type="jbapplist" default="" label="JBZOO_FILTER_APPLICATION"
+                       description="JBZOO_FILTER_APPLICATION_DESC"/>
+
+                <field name="type" type="jbtype" default="" label="JBZOO_FILTER_ITEM_TYPE"
+                       description="JBZOO_FILTER_ITEM_TYPE_DESC"/>
+
+                <field name="item_layout" type="jbfilename" default="default" label="JBZOO_FILTER_LAYOUT"
+                       description="JBZOO_FILTER_LAYOUT_DESC" path="/modules/mod_jbzoo_props/renderer/item/" ext="php"/>
+
+                <field name="menuitem" type="menuitem" default="0" state="1" label="JBZOO_FILTER_MENU"
+                       description="JBZOO_FILTER_MENU_DESC"/>
+
+                <field name="moduleclass_sfx" type="text" default="" label="JBZOO_MODULE_SFX"
+                       description="JBZOO_MODULE_SFX_DESC"/>
+
+                <field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL"
+                       description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
+
             </fieldset>
 
             <fieldset name="CONFIG">
-                <field name="limit" type="list" default="20" label="JBZOO_FILTER_LIST_LIMIT" description="JBZOO_FILTER_LIST_LIMIT_DESC">
-                    <option value="5">JBZOO_NUMBERS_5</option>
-                    <option value="10">JBZOO_NUMBERS_10</option>
-                    <option value="15">JBZOO_NUMBERS_15</option>
-                    <option value="20">JBZOO_NUMBERS_20</option>
-                    <option value="25">JBZOO_NUMBERS_25</option>
-                    <option value="30">JBZOO_NUMBERS_30</option>
-                    <option value="50">JBZOO_NUMBERS_50</option>
-                    <option value="100">JBZOO_NUMBERS_100</option>
-                    <option value="all">JBZOO_ALL</option>
+                <field name="limit" type="test" default="20" label="JBZOO_FILTER_LIST_LIMIT"
+                       description="JBZOO_FILTER_LIST_LIMIT_DESC"/>
+
+                <field name="depend" type="jbbool" default="1" label="JBZOO_FILTER_LIST_DEPEND"
+                       description="JBZOO_FILTER_LIST_DEPEND_DESC"/>
+
+                <field name="count" type="jbbool" default="1" label="JBZOO_FILTER_LIST_COUNT"
+                       description="JBZOO_FILTER_LIST_COUNT_DESC"/>
+
+            </fieldset>
+
+            <fieldset name="ORDER">
+                <field name="order" type="jbitemorderadv" default="none" label="JBZOO_ORDER"
+                       description="JBZOO_ORDER_DESC"/>
+            </fieldset>
+
+            <fieldset name="CACHE">
+                <field name="cache" type="list" default="1" label="JBZOO_CACHE_CACHING"
+                       description="JBZOO_CACHE_CACHING_DESC">
+                    <option value="1">JBZOO_CACHE_USE_GLOBAL</option>
+                    <option value="0">JBZOO_CACHE_NOCACHING</option>
                 </field>
 
-                <field name="depend" type="list" default="1" label="JBZOO_FILTER_LIST_DEPEND" description="JBZOO_FILTER_LIST_DEPEND_DESC">
-                    <option value="1">JBZOO_YES</option>
-                    <option value="0">JBZOO_NO</option>
-                </field>
+                <field name="cache_time" type="text" label="JBZOO_CACHE_TIME" default="900"
+                       description="JBZOO_CACHE_TIME_DESC"/>
 
-                <field name="count" type="list" default="1" label="JBZOO_FILTER_LIST_COUNT" description="JBZOO_FILTER_LIST_COUNT_DESC">
-                   <option value="1">JBZOO_YES</option>
-                   <option value="0">JBZOO_NO</option>
-                </field>
-
+                <field name="cachemode" type="hidden" default="safeuri"/>
             </fieldset>
 
         </fields>

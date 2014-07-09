@@ -1,18 +1,24 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 // register ElementRepeatable class
 App::getInstance('zoo')->loader->register('ElementRepeatable', 'elements:repeatable/repeatable.php');
 
 /**
+ * Class ElementJBPrice
  * The Price element for JBZoo
  */
 class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
@@ -112,10 +118,10 @@ class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
         );
 
         $html[] = $this->app->html->_('control.text', $this->getControlName('sku'), $skuValue, $this->app->jbhtml->buildAttrs($attrs));
-        $html[] = '<br>';
+        $html[] = '<br/>';
         $html[] = '<strong>' . JText::_('JBZOO_CART_IN_STOCK') . '</strong>&nbsp;&nbsp;&nbsp;';
         $html[] = $this->app->html->_('select.booleanlist', $this->getControlName('in_stock'), '', $this->_isInStock());
-        $html[] = '<br><br>';
+        $html[] = '<br/><br/>';
         $html[] = $this->_renderRepeatable('_edit');
 
         return '<div class="jbprice-wrapper">' . implode("\n ", $html) . '</div>';
@@ -145,19 +151,27 @@ class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
         $valueCur  = $this->_getCurrency();
         $activeCur = $this->_getActiveCur($params);
 
-        $values = array();
-        foreach ($params['currency-list'] as $currency) {
-            $values[$currency] = $this->app->jbmoney->convert($valueCur, $currency, $value);
-            $values[$currency] = $this->app->jbmoney->toFormat($values[$currency], $currency);
+        $values       = array();
+        $currencyList = $params->get('currency-list', array());
+
+        foreach ($currencyList as $currency) {
+            $noFormat = $this->app->jbmoney->convert($valueCur, $currency, $value);
+            $format   = $this->app->jbmoney->toFormat($noFormat, $currency);
+
+            $values[$currency] = array(
+                'noFormat' => $noFormat,
+                'format'   => $format,
+            );
         }
 
         if ($layout = $this->getLayout('_jbprice.php')) {
             return self::renderLayout($layout, array(
                 'params'      => $params,
-                'config'      => $this->config,
                 'values'      => $values,
-                'description' => $description,
                 'activeCur'   => $activeCur,
+                'description' => $description,
+                'config'      => $this->config,
+                'template'    => $params->get('template', 'default'),
             ));
         }
 
@@ -173,46 +187,44 @@ class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
     {
         if (!empty($params['currency-list'])) {
 
-            $result = array();
+            $params = $this->app->data->create($params);
 
+            $rows    = array();
             $summAll = 0;
 
+            $params->set('uniqid', uniqid());
             foreach ($this as $key => $self) {
-
-                $params['counter'] = $key;
+                $params->set('counter', $key);
 
                 $summAll += (float)$this->_getSearchData();
-
-                $result[] = $this->_render($params);
+                $rows[] = $this->_render($params);
             }
 
-            $item      = $this->getItem();
             $count     = count($params['currency-list']);
             $activeCur = $this->_getActiveCur($params);
-            $isInCart  = $this->app->jbcart->isExists($item);
-            $modalUrl  = $this->app->jbrouter->element($this->identifier, $item->id, 'ajaxModalWindow');
-
-            $rmFromCartUrl = $this->app->jbrouter->element($this->identifier, $item->id, 'ajaxRemoveFromCart');
-
-            $params = $this->app->data->create($params);
 
             if ($layout = $this->getLayout()) {
 
-                $html = self::renderLayout($layout, array(
+                $item = $this->getItem();
+
+                return self::renderLayout($layout, array(
                     'count'             => $count,
                     'params'            => $params,
                     'activeCur'         => $activeCur,
                     'config'            => $this->config,
                     'currencyList'      => $params->get('currency-list'),
-                    'values'            => $this->app->element->applySeparators($params['separated_by'], $result),
-                    'isInCart'          => $isInCart,
-                    'modalUrl'          => $modalUrl,
-                    'removeFromCartUrl' => $rmFromCartUrl,
-                    'nopaidOrder'       => !$summAll && (int)$this->config->get('basket-nopaid', 0)
+                    'template'          => $params->get('template', 'default'),
+                    'isInCart'          => $this->app->jbcart->isExists($item),
+                    'modalUrl'          => $this->app->jbrouter->element($this->identifier, $item->id, 'ajaxModalWindow'),
+                    'addToCartUrl'      => $this->app->jbrouter->element($this->identifier, $item->id, 'ajaxAddToCart'),
+                    'removeFromCartUrl' => $this->app->jbrouter->element($this->identifier, $item->id, 'ajaxRemoveFromCart'),
+                    'values'            => $this->app->element->applySeparators($params->get('separated_by'), $rows),
+                    'nopaidOrder'       => !$summAll && (int)$this->config->get('basket-nopaid', 0),
+                    'basketUrl'         => $this->_getBasketUrl(),
                 ));
-
-                return $html;
             }
+
+            return null;
         }
 
         return 'Please, select a currency';
@@ -238,7 +250,8 @@ class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
 
             $this->app->jbcart->addItem($this->getItem(), $params);
         }
-        $this->app->jbajax->send();
+
+        $this->app->jbajax->send(array('basketUrl' => $this->_getBasketUrl()));
     }
 
     /**
@@ -257,21 +270,12 @@ class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
     {
         $currency = $this->config->get('currency');
 
-        $basketUrl = null;
-
-        $basketMenuitem = (int)$this->config->get('basket-menuitem');
-        $basketAppid    = (int)$this->config->get('basket-appid');
-
-        if ($basketMenuitem && $basketAppid) {
-            $basketUrl = $this->app->jbrouter->basket($basketMenuitem, $basketAppid);
-        }
-
         echo self::renderLayout($this->getLayout('modal.php'), array(
             'config'       => $this->config,
             'values'       => $this->data(),
             'currency'     => $currency,
             'addToCartUrl' => $this->app->jbrouter->element($this->identifier, $this->getItem()->id, 'ajaxAddToCart'),
-            'basketUrl'    => $basketUrl
+            'basketUrl'    => $this->_getBasketUrl(),
         ));
     }
 
@@ -346,12 +350,10 @@ class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
     {
         $activeCur = $this->get('currency', $this->_getCurrency());
 
-        if (!isset($params['currency-list'])) {
-            $params['currency-list'] = array();
-        }
+        $currencyList = $params->get('currency-list', array());
 
-        if (!in_array($activeCur, $params['currency-list'])) {
-            $activeCur = current($params['currency-list']);
+        if (!in_array($activeCur, $currencyList)) {
+            $activeCur = current($currencyList);
         }
 
         return $activeCur;
@@ -422,4 +424,19 @@ class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
         return $result;
     }
 
+    /**
+     * Get
+     * @return null
+     */
+    protected function _getBasketUrl()
+    {
+        $basketUrl      = null;
+        $basketMenuitem = (int)$this->config->get('basket-menuitem');
+        $basketAppid    = (int)$this->config->get('basket-appid');
+        if ($basketMenuitem && $basketAppid) {
+            $basketUrl = $this->app->jbrouter->basket($basketMenuitem, $basketAppid);
+        }
+
+        return $basketUrl;
+    }
 }

@@ -1,26 +1,35 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBModelElementCountry
+ */
 class JBModelElementCountry extends JBModelElement
 {
 
     /**
      * Prepare value
-     * @param $values
+     * @param $value
      * @param $exact
      * @return mixed
      */
-    protected function _prepareValue($values, $exact)
+    protected function _prepareValue($value, $exact = false)
     {
+        $values = $value;
+
         if ($exact) {
             return $values;
 
@@ -56,7 +65,7 @@ class JBModelElementCountry extends JBModelElement
         $result = array();
         foreach ($countries as $country) {
             $translated          = JText::_($country);
-            $result[$translated] = $country;
+            $result[$translated] = $translated;
         }
 
         return $result;

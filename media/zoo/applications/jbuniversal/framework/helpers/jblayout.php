@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBLayoutHelper
+ */
 class JBLayoutHelper extends AppHelper
 {
 
@@ -130,7 +137,7 @@ class JBLayoutHelper extends AppHelper
     /**
      * Load application layout
      * @param       $layout
-     * @param null  $templateVar
+     * @param null $templateVar
      * @param array $vars
      * @return string
      */
@@ -314,6 +321,7 @@ class JBLayoutHelper extends AppHelper
         }
 
         if ($renderer) {
+            $this->app->jbassets->itemStyle($item->type);
             $htmlItem = $renderer->render($itemLayout, compact('item'));
         }
 
@@ -337,6 +345,22 @@ class JBLayoutHelper extends AppHelper
         $this->app->jbdebug->mark('jblayout::itemRender (' . $item->id . ')::finish');
 
         return $htmlItem;
+    }
+
+    /**
+     * @param $item
+     * @param $layout
+     * @return bool
+     */
+    public function checkLayout($item, $layout)
+    {
+
+        $layout = $this->_getItemLayout($item, $layout);
+
+        if($layout == 'item.teaser'){
+            return false;
+        }
+        return true;
     }
 
 }

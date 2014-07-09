@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
-    category   JBZoo
-    author     smet.denis <admin@joomla-book.ru>
-    copyright  Copyright (c) 2009-2012, Joomla-book.ru
-    license    http://joomla-book.ru/info/disclaimer
-    link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+    JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+
+    @package     jbzoo
+    @version     2.x Pro
+    @author      JBZoo App http://jbzoo.com
+    @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+    @license     http://jbzoo.com/license-pro.php JBZoo Licence
+    @coder       Denis Smetannikov <denis@jbzoo.com>
 -->
 <template>
     <name>Catalog</name>
-    <version>1.6.0</version>
-    <creationDate>2013 01</creationDate>
-    <author>Joomla-book.ru</author>
-    <authorEmail>admin@joomla-book.ru</authorEmail>
-    <authorUrl>http://joomla-book.ru</authorUrl>
-    <copyright>Copyright (C) 2009-2013 Joomla-book.ru</copyright>
-    <license>http://joomla-book.ru/info/disclaimer</license>
     <description>JBZoo catalog template</description>
+    <author>JBZoo.com</author>
+    <creationDate>2013 07</creationDate>
+    <copyright>Copyright (C) JBZoo.com,  All rights reserved.</copyright>
+    <authorEmail>admin@jbzoo.com</authorEmail>
+    <authorUrl>http://jbzoo.com</authorUrl>
+    <version>1.0</version>
 
     <params group="category">
         <param name="show_alpha_index" type="jbbool" default="0" label="JBZOO_SHOW_ALPHA_INDEX"/>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_CATEGORIES"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_CATEGORIES"/>
+
+        <param name="category_title_show" type="jbbool" default="1" label="JBZOO_CATEGORY_TITLE_SHOW"
+               description="JBZOO_CATEGORY_TITLE_SHOW_DESC"/>
 
         <param name="category_show" type="jbbool" default="1" label="JBZOO_CATEGORY_SHOW"
                description="JBZOO_CATEGORY_SHOW_DESC"/>
@@ -46,7 +50,7 @@
         <param name="category_text" type="jbbool" default="1" label="JBZOO_CATEGORY_TEXT"
                description="JBZOO_CATEGORY_TEXT_DESC"/>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_SUBCATEGORIES"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_SUBCATEGORIES"/>
 
         <param name="subcategory_show" type="jbbool" default="1" label="JBZOO_SUBCATEGORY_SHOW"
                description="JBZOO_SUBCATEGORY_SHOW_DESC"/>
@@ -94,7 +98,7 @@
         <param name="subcategory_items_count" type="text" default="5" label="JBZOO_SUBCATEGORY_ITEMS_COUNT"
                description="JBZOO_SUBCATEGORY_ITEMS_COUNT_DESC"/>
 
-        <param name="@spacer" type="spacer" default="JBZOO_CONFIG_ITEMS"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_CONFIG_ITEMS"/>
 
         <param name="item_cols" type="radio" default="1" label="JBZOO_ITEM_COLS" description="JBZOO_ITEM_COLS_DESC">
             <option value="1">JBZOO_NUMBERS_1</option>
@@ -116,7 +120,7 @@
     </params>
 
     <params group="item">
-        <param name="@spacer" type="spacer" default="JBZOO_ITEM_IMAGE_ALIGN"/>
+        <param name="@spacer" type="jbspacer" default="JBZOO_ITEM_IMAGE_ALIGN"/>
 
         <param name="item_full_image_align" type="list" default="left" label="JBZOO_ITEM_FULL_IMAGE_ALIGN"
                description="JBZOO_ITEM_FULL_IMAGE_ALIGN_DESC">

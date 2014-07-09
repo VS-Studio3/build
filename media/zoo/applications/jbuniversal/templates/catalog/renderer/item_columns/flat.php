@@ -1,43 +1,23 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
-$this->app->jbassets->tablesorter();
 
-if ($vars['count']) : ?>
-    <table class="jsTableSorter tablesorter">
-        <caption>В продаже квартиры и дома</caption>
-        <thead>
-        <tr>
-            <th>Фото</th>
-            <th>Улица</th>
-            <th>Район</th>
-            <th>Площадь</th>
-            <th>Тип</th>
-            <th>Этаж</th>
-            <th>*</th>
-        </tr>
-        </thead>
-        <tbody>
-            <?php
-            foreach ($vars['objects'] as $object) :
-                echo $object;
-            endforeach;
-            ?>
-        </tbody>
-    </table>
+?>
+<div class="listings-title"><?php echo JText::_('JBZOO_TMPL_FLAT_LISTINGS'); ?></div>
 
-    <script type="text/javascript">
-        jQuery(function ($) {
-            $('.jsTableSorter').tablesorter({});
-        });
-    </script>
+<div class="listings-realty">
+    <?php echo implode(" \n", $vars['objects']); ?>
+</div>
 
-<?php endif;

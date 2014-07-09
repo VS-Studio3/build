@@ -1,15 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
+/**
+ * Class JBFilterElementCategory
+ */
 class JBFilterElementCategory extends JBFilterElement
 {
     /**
@@ -35,14 +42,14 @@ class JBFilterElementCategory extends JBFilterElement
      */
     private function _getCategoriesList()
     {
-        $applicationId = (int)$this->_params->get('jbzoo_application_id', 0);
+        $applicationId = (int)$this->_params->get('item_application_id', 0);
         $application   = $this->app->table->application->get($applicationId);
         $modeParam     = $this->_params->get('jbzoo_category_mode', 'tree');
 
-		$allCategories = array();
-		if ($application) {
-			$allCategories = $application->getCategories(true);
-		}
+        $allCategories = array();
+        if ($application) {
+            $allCategories = $application->getCategories(true);
+        }
 
         $result = array();
 
@@ -93,10 +100,10 @@ class JBFilterElementCategory extends JBFilterElement
             $found = false;
             foreach ($catValues as $catValue) {
 
-                if ($catValue['value'] == $category->id) {
+                if ($catValue['value'] == $category->name) {
                     $category->countItems = $catValue['count'];
                     $categoriesList[]     = $category;
-                    $found = true;
+                    $found                = true;
                     break;
                 }
 
@@ -106,11 +113,9 @@ class JBFilterElementCategory extends JBFilterElement
                 $category->countItems = 0;
                 $categoriesList[]     = $category;
             }
-
         }
 
-        $modeParam   = $this->_params->get('jbzoo_category_mode', 'tree');
-        $filterCount = (int)$this->_params->get('jbzoo_filter_count', 1);
+        $modeParam = $this->_params->get('jbzoo_category_mode', 'tree');
 
         $options = array();
         foreach ($categoriesList as $category) {
@@ -119,17 +124,15 @@ class JBFilterElementCategory extends JBFilterElement
                 $options[] = array(
                     'value' => $category->id,
                     'text'  => '&nbsp;&nbsp;&nbsp;' . $category->treename,
-                    'count' => $filterCount ? $category->countItems : null,
+                    'count' => $this->_isCountShow ? $category->countItems : null,
                 );
-
             } else {
                 $options[] = array(
                     'value' => $category->id,
                     'text'  => $category->name,
-                    'count' => $filterCount ? $category->countItems : null,
+                    'count' => $this->_isCountShow ? $category->countItems : null,
                 );
             }
-
         }
 
         return $options;

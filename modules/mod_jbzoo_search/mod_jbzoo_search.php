@@ -1,13 +1,18 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 // load config
 require_once dirname(__FILE__) . '/helper.php';
@@ -15,12 +20,26 @@ require_once dirname(__FILE__) . '/helper.php';
 $filterHelper = new JBZooFilterHelper($params);
 $zoo          = App::getInstance('zoo');
 
-// get params
-$type        = $params->get('type', 0);
-$application = $params->get('application', 0);
-$layout      = $params->get('layout', 0);
+$zoo->jbdebug->mark('mod_jbzoo_search::start');
 
-if ($type && $application && $layout) {
+$zoo->jbassets->setAppCSS();
+$zoo->jbassets->setAppJS();
+
+// get params
+$type        = $params->get('type');
+$application = $params->get('application', 0);
+
+// compatibility params with v2.x
+if ($params->get('item_layout')) {
+    $itemLayout = $params->get('item_layout', 'default');
+    $moduleLayout = $params->get('layout', 'default');
+    
+} else {
+    $itemLayout       = $params->get('layout', 'default');
+    $moduleLayout = $params->get('module-layout', 'default');
+}
+
+if ($type && $application && $itemLayout) {
 
     // prepeare
     $zoo->jbfilter->set($type, $application);
@@ -30,14 +49,19 @@ if ($type && $application && $layout) {
 
     // get categories html
     $pagesHTML     = $filterHelper->getPages();
+    $orderList     = $filterHelper->getOrderList();
     $orderingsHTML = $filterHelper->getOrderings();
     $logicHTML     = $filterHelper->getLogic();
 
     // set renderer
-    $renderer = $zoo->renderer->create('filter')->addPath(
-        array(dirname(__FILE__), $zoo->path->path('applications:' . JBZOO_APP_GROUP . '/catalog/renderer'))
-    );
+    $renderer = $zoo->renderer->create('filter')->addPath(array(
+        $zoo->path->path('component.site:'),
+        dirname(__FILE__),
+        $zoo->path->path('applications:' . JBZOO_APP_GROUP . '/catalog/renderer')
+    ));
 
     // render
-    include(JModuleHelper::getLayoutPath('mod_jbzoo_search', $params->get('module-layout', 'default')));
+    include(JModuleHelper::getLayoutPath('mod_jbzoo_search', $moduleLayout));
 }
+
+$zoo->jbdebug->mark('mod_jbzoo_search::start');

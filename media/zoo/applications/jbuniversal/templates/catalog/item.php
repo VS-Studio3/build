@@ -1,13 +1,18 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 $this->app->jbdebug->mark('template::item::start');
 
@@ -15,15 +20,26 @@ $this->app->jblayout->setView($this);
 
 $this->app->jbwrapper->start();
 
+$layout = $this->app->jbrequest->get('jbquickview');
+
 // render item
 if (!$this->app->jbcache->start(array($this->item->modified, $this->item->id))) {
-    echo $this->app->jblayout->renderItem($this->item, 'full');
-    $this->app->jbcache->stop();
-}
 
-// render comments (if no rendered in element)
-if (!defined('JBZOO_COMMENTS_RENDERED')) {
-    echo $this->app->comment->renderComments($this, $this->item);
+    if ($this->app->jblayout->checkLayout($this->item, $layout)){
+
+        echo $this->app->jblayout->renderItem($this->item, $layout);
+
+    } else {
+
+        echo $this->app->jblayout->renderItem($this->item, 'full');
+
+        // render comments (if no rendered in element)
+        if (!defined('JBZOO_COMMENTS_RENDERED_' . $this->item->id)) {
+            echo $this->app->comment->renderComments($this, $this->item);
+        }
+    }
+
+    $this->app->jbcache->stop();
 }
 
 $this->app->jbwrapper->end();

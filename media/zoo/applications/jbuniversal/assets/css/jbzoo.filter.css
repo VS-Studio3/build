@@ -1,10 +1,12 @@
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
 
 /*********************** custom */
@@ -158,7 +160,6 @@
     margin-top: 0.5em;
     padding: 2px;
     display: block;
-    margin-left: 1em;
 }
 
 .jbzoo-props .cancel {
@@ -248,10 +249,27 @@
     background: url('../img/icon/calendar.png') 98% 50% no-repeat transparent;
 }
 
+.jbzoo  input.calendar-element {
+    background-image: none;
+}
+
 .ui-autocomplete.ui-menu {
     z-index: 100 !important;
 }
 
 .jbzoo .filter-table td {
     padding: 0 1em;
+}
+
+.jbzoo .jbzootabs-accordion-content input[type=text] {
+    width: 95%;
+}
+
+.jbzoo .jbzoo-filter input[type=radio] {
+    float: left;
+    margin-right: 12px;
+}
+
+.jbzoo .jbzoo-filter label {
+    margin-bottom: 6px;
 }

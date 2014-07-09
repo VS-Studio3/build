@@ -1,78 +1,84 @@
+/**
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
+ */
+
+
 jQuery(document).ready(function ($) {
 
-    var a = function () {
-    };
+    $.fn.JBImageSubmission = function (initOptions) {
 
-    $.extend(a.prototype, {
-        name      :"JBImageSubmission",
-        options   :{
-            uri:""
-        },
-        initialize:function (a, c) {
-            this.options = $.extend({}, this.options, c);
+        var $this = $(this),
+            options = $.extend({}, initOptions);
 
-            var b = this;
-            this.element = a;
-            this.advanced = a.find("select.image");
-            this.fileSelect = a.find(".file-select");
-            this.selectImage = this.advanced.length ? this.advanced : a.find("input.image");
-
-            a.find("span.image-cancel").bind("click", function () {
-                b.selectImage.val("");
-                b.sanatize()
-            });
-
-            this.advanced.length && this.selectImage.bind("change", function () {
-                a.find("img").attr("src", JB_URL_ROOT + b.selectImage.val());
-                b.sanatize();
-            });
-
-            $(this.fileSelect).change(function () {
-                var value = this.value.replace(/^.*[\/\\]/g, '');
-                a.find('.filename').val(value);
-            });
-
-            b.sanatize()
-        },
-        sanatize  :function () {
-            if (this.selectImage.val()) {
-                this.element.find("div.image-select").addClass("hidden");
-                this.element.find("div.image-preview").removeClass("hidden");
+        function reInit($obj, $selectImage) {
+            if ($selectImage.val()) {
+                $obj.find(".image-select").addClass("hidden");
+                $obj.find(".image-preview").removeClass("hidden");
             } else {
-                this.element.find("div.image-select").removeClass("hidden");
-                this.element.find("div.image-preview").addClass("hidden");
+                $obj.find(".image-select").removeClass("hidden");
+                $obj.find(".image-preview").addClass("hidden");
             }
         }
-    });
 
-    $.fn[a.prototype.name] = function () {
-        var e = arguments, c = e[0] ? e[0] : null;
+        return $this.each(function (n, obj) {
 
-        return this.each(function () {
-            var b = $(this);
+            var $obj = $(obj),
+                $advanced = $obj.find("select.image"),
+                $fileSelect = $obj.find(".file-select"),
+                $selectImage = $advanced.length ? $advanced : $obj.find("input.image"),
+                $cancel = $obj.find(".image-cancel");
 
-            if (a.prototype[c] && b.data(a.prototype.name) && c != "initialize") {
-                b.data(a.prototype.name)[c].apply(b.data(a.prototype.name), Array.prototype.slice.call(e, 1));
+            // cancel
+            $cancel.unbind().bind("click", function () {
+                $selectImage.val("");
+                reInit($obj, $selectImage);
+            });
 
-            } else if (!c || $.isPlainObject(c)) {
-                var f = new a;
-                a.prototype.initialize && f.initialize.apply(f, $.merge([b], e));
-                b.data(a.prototype.name, f);
+            // set selected image
+            if ($advanced.length) {
 
-            } else {
-                $.error("Method " + c + " does not exist on jQuery." + a.name);
+                $selectImage
+                    .unbind()
+                    .bind("change", function () {
+                        $obj.find("img").attr("src", JB_URL_ROOT + $selectImage.val());
+                        reInit($obj, $selectImage);
+                    });
             }
+
+            // set new image on select
+            $fileSelect.change(function () {
+                var value = this.value.replace(/^.*[\/\\]/g, '');
+                $obj.find('.filename').val(value);
+            });
+
+            reInit($obj, $selectImage);
         });
+
     };
 
-    $('#item-submission .jbimage-submission').JBImageSubmission({});
+    var $jbimages = $('.jbzoo .jbimage-submission');
 
-    var $parent = $('#item-submission .jbimage-submission').closest('.repeat-elements');
-    $parent.find('p.add').bind('click', function () {
-        var $elementRow = $parent.find('.jbimage-submission:last');
-        $elementRow.JBImageSubmission();
-        $elementRow.find('.image-cancel').click();
-        $elementRow.find('input').val('');
+    $jbimages.JBImageSubmission();
+
+    $jbimages.each(function (n, obj) {
+
+        var $obj = $(obj),
+            $parent = $obj.closest('.repeat-elements');
+
+        $parent.find('p.add').bind('click', function () {
+
+            var $elementRow = $parent.find('.jbimage-submission:last');
+            $elementRow.JBImageSubmission();
+            $elementRow.find('.image-cancel').click();
+            $elementRow.find('input').val('');
+        });
     });
 
 });

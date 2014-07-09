@@ -1,15 +1,23 @@
+<?php
+/**
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
+ */
+
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-<!--
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
- */
--->
 <head>
     <title><?php echo JText::_('JBZOO_CART_ADD_TO_CART');?></title>
     <link rel="stylesheet" href="<?php echo $this->app->path->url('jbassets:css/jbzoo.css');?>" type="text/css"/>
@@ -91,25 +99,31 @@
 
         <div class="row">
             <?php
-            if (count($values) > 1) {
-                echo '<strong>' . JText::_('JBZOO_CART_SELECT') . '</strong>';
-            }
+            if (!empty($values)) {
 
-            foreach ($values as $key => $price) {
-
-                $value = $this->app->jbmoney->toFormat($price['value'], $currency);
-
-                echo '<div class="price-row"><label>';
-                echo '<input name="index" class="jsPriceIndex" type="radio" value="' . $key . '" ' . ($key == 0 ? 'checked = "checked"' : '') . ' /> ';
-
-                if (!($price['value'] == 0 && (int)$this->config->get('basket-nopaid', 0))) {
-                    echo '<span class="price-value">' . $value . '</span><br/>';
+                if (count($values) > 1) {
+                    echo '<strong>' . JText::_('JBZOO_CART_SELECT') . '</strong>';
                 }
 
-                if (isset($price['description']) && !empty($price['description'])) {
-                    echo '<span class="price-description">' . $price['description'] . '</span>';
+                foreach ($values as $key => $price) {
+
+                    $value = $this->app->jbmoney->toFormat($price['value'], $currency);
+
+                    echo '<div class="price-row"><label>';
+
+                    echo '<input name="index" class="jsPriceIndex" type="radio" value="' . $key . '" ' . ($key == 0 ? 'checked = "checked"' : '') . ' /> ';
+
+                    if (!($price['value'] == 0 && (int)$this->config->get('basket-nopaid', 0))) {
+                        echo '<span class="price-value">' . $value . '</span><br/>';
+                    }
+
+                    if (isset($price['description']) && !empty($price['description'])) {
+                        echo '<span class="price-description">' . $price['description'] . '</span>';
+                    }
+
+                    echo '</label></div>';
                 }
-                echo '</label></div>';
+
             }
             ?>
             <div class="clear"></div>

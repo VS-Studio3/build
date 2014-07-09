@@ -1,89 +1,89 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
+
+/**
+ * Class JBModelElementItemtag
+ */
 class JBModelElementItemtag extends JBModelElement
 {
 
     /**
      * Set AND element conditions
      * @param JBDatabaseQuery $select
-     * @param string          $elementId
-     * @param string|array    $value
-     * @param int             $i
-     * @param bool            $exact
+     * @param string $elementId
+     * @param string|array $value
+     * @param int $i
+     * @param bool $exact
      * @return JBDatabaseQuery
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return $select->where($this->_getWhere($value));
+        return array($this->_getWhere($value, $elementId, $exact));
     }
 
     /**
      * Set OR element conditions
      * @param JBDatabaseQuery $select
-     * @param string          $elementId
-     * @param string|array    $value
-     * @param int             $i
-     * @param bool            $exact
+     * @param string $elementId
+     * @param string|array $value
+     * @param int $i
+     * @param bool $exact
      * @return array
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return $this->_getWhere($value);
+        return array($this->_getWhere($value, $elementId, $exact));
     }
 
     /**
      * Get conditions for search
      * @param $value
+     * @param $elementId
+     * @param $exact
      * @return array
      */
-    protected function _getWhere($value)
+    protected function _getWhere($value, $elementId, $exact = false)
     {
-        $value   = $this->_prepareValue($value);
-        $itemIds = $this->_getItemIdByTag($value);
+        $values    = $this->_prepareValue($value);
+        $elementId = $this->_jbtables->getFieldName($elementId, 's');
 
-        if (empty($itemIds)) {
-            $itemIds = array(0);
+        $result = array();
+        foreach ($values as $value) {
+            if ($exact) {
+                $result[] = 'tIndex.' . $elementId . ' = ' . $this->_quote($value);
+            } else {
+                $result[] = 'tIndex.' . $elementId . ' LIKE ' . $this->_quote('%' . $value . '%');
+            }
         }
 
-        $conditions = 'tItem.id IN (' . implode(', ', $itemIds) . ')';
-
-        return $conditions;
+        return implode(' OR ', $result);
     }
 
     /**
-     * Get itemId's by tag
-     * @param string|array $name
-     * @return array
+     * @param array|string $value
+     * @param bool $exact
+     * @return array|mixed
      */
-    protected function _getItemIdByTag($name)
+    protected function _prepareValue($value, $exact = false)
     {
-        $select = $this->_getSelect()
-            ->select('tTags.item_id')
-            ->from(ZOO_TABLE_TAG . ' AS tTags')
-            ->group('tTags.item_id');
-
-        if (is_array($name)) {
-            foreach ($name as $oneName) {
-                $select->where('tTags.name LIKE ?', '%' . $oneName . '%', 'OR');
-            }
-
-        } else {
-            $select->where('tTags.name LIKE ?', '%' . $name . '%');
+        if (!is_array($value)) {
+            $value = array($value);
         }
 
-        $items  = $this->fetchAll($select);
-        $result = $this->_groupBy($items, 'item_id');
-
-        return $result;
+        return $value;
     }
 
 }

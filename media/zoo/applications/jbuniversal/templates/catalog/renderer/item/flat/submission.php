@@ -11,13 +11,13 @@ defined('_JEXEC') or die('Restricted access');
 
 ?>
 <fieldset class="pos-content creation-form">
-    <legend>Основная информация</legend>
+    <legend>Summary</legend>
     <?php if ($this->checkPosition('main')) : ?>
         <?php echo $this->renderPosition('main', array('style' => 'submission.block')); ?>
     <?php endif; ?>
 </fieldset>
 <fieldset class="pos-content creation-form">
-    <legend>Параметры квартиры / дома</legend>
+    <legend>Options Apartment / House</legend>
     <?php if ($this->checkPosition('properties')) : ?>
         <?php echo $this->renderPosition('properties', array('style' => 'submission.block')); ?>
     <?php endif; ?>

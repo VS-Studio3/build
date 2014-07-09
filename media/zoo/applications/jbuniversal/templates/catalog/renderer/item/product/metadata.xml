@@ -45,4 +45,9 @@
         <description>Layout for element favorite</description>
     </layout>
 
+    <layout name="quickview" type="related">
+        <name>Quick View</name>
+        <description>Layout for element quickview</description>
+    </layout>    
+    
 </metadata>

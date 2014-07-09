@@ -1,13 +1,18 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 $view = $this->getView();
 $this->app->jbassets->payment();
@@ -21,13 +26,19 @@ echo $view->orderDetails->render(array(
 ));
 
 if ((int)$view->appParams->get('global.jbzoo_cart_config.robox-enabled', 0)) {
-    echo '<div class="width50">';
+    echo '<div class="width33">';
     echo $this->app->jblayout->render('payment_robox', $view->payments['robox']);
     echo '</div>';
 }
 
 if ((int)$view->appParams->get('global.jbzoo_cart_config.ikassa-enabled', 0)) {
-    echo '<div class="width50">';
+    echo '<div class="width33">';
     echo $this->app->jblayout->render('payment_ikassa', $view->payments['ikassa']);
+    echo '</div>';
+}
+
+if ((int)$view->appParams->get('global.jbzoo_cart_config.manual-enabled', 0)) {
+    echo '<div class="width33">';
+    echo $this->app->jblayout->render('payment_manual', $view->payments['manual']);
     echo '</div>';
 }

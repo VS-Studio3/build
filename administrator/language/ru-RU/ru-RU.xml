@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metafile version="2.5" client="administrator">
 	<name>Russian</name>
-	<version>2.5.1.3</version>
-	<creationDate>2012-02-04</creationDate>
+	<version>2.5.22.1</version>
+	<creationDate>2014-06-12</creationDate>
 	<author>Russian Translation Team</author>
 	<authorEmail>smart@joomlaportal.ru</authorEmail>
 	<authorUrl>www.joomlaportal.ru</authorUrl>
-	<copyright>Copyright (C) 2005 - 2012 Open Source Matters. All rights reserved</copyright>
+	<copyright>Copyright (C) 2005 - 2014 Open Source Matters. All rights reserved</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<description>Russian language pack (administrator) for Joomla! 2.5</description>
 	<files>
@@ -33,6 +33,8 @@
 		<filename>ru-RU.com_finder.sys.ini</filename>
 		<filename>ru-RU.com_installer.ini</filename>
 		<filename>ru-RU.com_installer.sys.ini</filename>
+		<filename>ru-RU.com_joomlaupdate.ini</filename>
+		<filename>ru-RU.com_joomlaupdate.sys.ini</filename>
 		<filename>ru-RU.com_languages.ini</filename>
 		<filename>ru-RU.com_languages.sys.ini</filename>
 		<filename>ru-RU.com_login.ini</filename>
@@ -161,8 +163,6 @@
 		<filename>ru-RU.plg_system_cache.sys.ini</filename>
 		<filename>ru-RU.plg_system_debug.ini</filename>
 		<filename>ru-RU.plg_system_debug.sys.ini</filename>
-		<filename>ru-RU.plg_system_finder.ini</filename>
-		<filename>ru-RU.plg_system_finder.sys.ini</filename>
 		<filename>ru-RU.plg_system_highlight.ini</filename>
 		<filename>ru-RU.plg_system_highlight.sys.ini</filename>
 		<filename>ru-RU.plg_system_languagecode.ini</filename>

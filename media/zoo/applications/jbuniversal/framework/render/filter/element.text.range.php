@@ -1,16 +1,22 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
-require_once dirname(__FILE__) . '/element.text.php';
 
+/**
+ * Class JBFilterElementTextRange
+ */
 class JBFilterElementTextRange extends JBFilterElementText
 {
     /**
@@ -21,7 +27,17 @@ class JBFilterElementTextRange extends JBFilterElementText
     {
         $html = array();
 
-        $values = (isset($this->_value['range'])) ? $this->_value['range'] : array('', '');
+        $values = array('', '');
+
+        if (isset($this->_value['range'])) {
+
+            if (!is_array($this->_value['range'])) {
+                $values = explode('/', $this->_value['range']);
+
+            } else if (is_array($this->_value['range'])) {
+                $values = $this->_value['range'];
+            }
+        }
 
         $html[] = '<label for="' . $this->_getId('1') . '">' . JText::_('JBZOO_FROM') . '</label>';
         $html[] = $this->app->jbhtml->text(

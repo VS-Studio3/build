@@ -10,6 +10,11 @@
 		<description>Teaser layout</description>
 	</layout>
 
+    <layout name="favorite">
+        <name>Favorite</name>
+        <description>Layout for element favorite</description>
+    </layout>
+
 	<layout name="related" type="related">
 		<name>Related</name>
 		<description>Related layout</description>

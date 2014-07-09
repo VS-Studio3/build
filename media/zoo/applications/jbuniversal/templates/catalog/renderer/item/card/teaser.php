@@ -1,12 +1,16 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
@@ -19,15 +23,15 @@ $align = $this->app->jbitem->getMediaAlign($item, $layout);
 
 
 <?php if ($this->checkPosition('image')) : ?>
-    <div class="item-image align-<?php echo $align;?>">
-        <?php echo $this->renderPosition('image');?>
+    <div class="item-image align-<?php echo $align; ?>">
+        <?php echo $this->renderPosition('image'); ?>
     </div>
 <?php endif; ?>
 
 
 <?php if ($this->checkPosition('properties')) : ?>
     <ul class="item-properties">
-        <?php echo $this->renderPosition('properties', array('style' => 'list'));?>
+        <?php echo $this->renderPosition('properties', array('style' => 'list')); ?>
     </ul>
 <?php endif; ?>
 
@@ -39,7 +43,7 @@ $align = $this->app->jbitem->getMediaAlign($item, $layout);
 
 <?php if ($this->checkPosition('meta')) : ?>
     <ul class="item-metadata">
-        <?php echo $this->renderPosition('meta', array('style' => 'list'));?>
+        <?php echo $this->renderPosition('meta', array('style' => 'list')); ?>
     </ul>
 <?php endif; ?>
 

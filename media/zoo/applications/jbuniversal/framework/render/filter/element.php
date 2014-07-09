@@ -1,16 +1,24 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
-class JBFilterElement {
+/**
+ * Class JBFilterElement
+ */
+class JBFilterElement
+{
     /**
      * @var App
      */
@@ -57,6 +65,11 @@ class JBFilterElement {
     protected $_isCountShow = true;
 
     /**
+     * @var JBHTMLHelper
+     */
+    protected $_jbhtml = null;
+
+    /**
      * Constructor
      * @param $identifier string
      * @param $value      string|array
@@ -69,8 +82,7 @@ class JBFilterElement {
         $this->_params = $this->app->parameter->create($params);
 
         $this->_identifier = $identifier;
-
-        $this->_value = $this->_getElementValue($value);
+        $this->_value      = $this->_getElementValue($value);
 
         $this->_isOrigTmpl  = (int)$this->_params->get('jbzoo_original_type', 1);
         $this->_isMultiple  = (int)$this->_params->get('jbzoo_filter_multiple', 0);
@@ -78,6 +90,8 @@ class JBFilterElement {
 
         $this->_attrs  = $this->_getAttrs($attrs);
         $this->_config = $this->app->jbfilter->getElement($this->_identifier)->getConfig();
+
+        $this->_jbhtml = $this->app->jbhtml;
     }
 
     /**
@@ -87,17 +101,26 @@ class JBFilterElement {
      */
     protected function _getElementValue($value)
     {
-        if (!$value && $value = $this->_params->get('jbzoo_filter_default', null)) {
+        if ($this->_isValueEmpty($value) && $value = $this->_params->get('jbzoo_filter_default', null)) {
 
             $value = trim($value);
 
             if (strpos($value, '{') !== false && strpos($value, '}') !== false) {
                 $value = json_decode($value, true);
             }
-
         }
 
         return $value;
+    }
+
+    /**
+     * Check is variable empty
+     * @param $value
+     * @return bool
+     */
+    protected function _isValueEmpty($value)
+    {
+        return (empty($value) && ($value !== 0 || $value !== "0"));
     }
 
     /**
@@ -132,7 +155,11 @@ class JBFilterElement {
      */
     protected function _getDbValues()
     {
-        return JBModelValues::model()->getPropsValues($this->_identifier);
+        return JBModelValues::model()->getPropsValues(
+            $this->_identifier,
+            $this->_params->get('item_type', null),
+            $this->_params->get('item_application_id', null)
+        );
     }
 
     /**
@@ -165,7 +192,7 @@ class JBFilterElement {
     {
         $options = $this->_config->get('spin', array());
 
-        foreach ($options as $key=> $option) {
+        foreach ($options as $key => $option) {
             $options[$key]['count'] = null;
         }
 
@@ -192,7 +219,7 @@ class JBFilterElement {
 
     /**
      * @param array $values
-     * @param bool  $showAll
+     * @param bool $showAll
      * @return array
      */
     protected function _createOptionsList($values, $showAll = true)
@@ -200,7 +227,7 @@ class JBFilterElement {
         $options = array();
 
         if (!$this->_isMultiple && $showAll) {
-            $options[] = $this->app->html->_('select.option', '', ' - ' . JText::_('JBZOO_ALL') . ' - ');
+            $options[] = $this->app->html->_('select.option', '', ' - ' . $this->_getPlaceholderSelect() . ' - ');
         }
 
         foreach ($values as $value) {
@@ -219,7 +246,7 @@ class JBFilterElement {
     /**
      * Get element ID attribute
      * @param string $postFix
-     * @param bool   $addUniq
+     * @param bool $addUniq
      * @return string
      */
     protected function _getId($postFix = null, $addUniq = false)
@@ -230,7 +257,7 @@ class JBFilterElement {
             $uniqNumber = 0;
         }
 
-        $id = $this->_attrs['id'];
+        $id = isset($this->_attrs['id']) ? $this->_attrs['id'] : '';
 
         if ($postFix !== null) {
             $id .= '-' . $postFix;
@@ -273,5 +300,35 @@ class JBFilterElement {
             $this->_attrs,
             $this->_getId()
         );
+    }
+
+    /**
+     * Get placeholder text
+     * @return string
+     */
+    protected function _getPlaceholder()
+    {
+        $default     = JText::_('JBZOO_FILTER_PLACEHOLDER_DEFAULT');
+        $placeholder = JString::trim($this->_params->get('jbzoo_filter_placeholder', $default));
+        if (!$placeholder) {
+            $placeholder = $default;
+        }
+
+        return $placeholder;
+    }
+
+    /**
+     * Get placeholder text
+     * @return string
+     */
+    protected function _getPlaceholderSelect()
+    {
+        $default     = JText::_('JBZOO_ALL');
+        $placeholder = JString::trim($this->_params->get('jbzoo_filter_placeholder', $default));
+        if (!$placeholder) {
+            $placeholder = $default;
+        }
+
+        return $placeholder;
     }
 }

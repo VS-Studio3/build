@@ -1,69 +1,64 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
+
+// default params
+$params = array_merge(array(
+    'first'      => 0,
+    'last'       => 0,
+    'showlabel'  => 0,
+    'altlabel'   => '',
+    'element'    => '',
+    'style'      => 'jbblock',
+    'tag'        => 'div',
+    'labelTag'   => 'strong',
+    'wrapperTag' => '',
+    'clear'      => 0,
+    'class'      => '',
+    '_layout'    => '',
+    '_position'  => '',
+    '_index'     => '',
+), $params);
 
 // create label
 $label = '';
-if (isset($params['showlabel']) && $params['showlabel']) {
-    $label = ($params['altlabel']) ? $params['altlabel'] : $element->getConfig()->get('name');
-    $labelTag = isset($params['labelTag']) ? $params['labelTag'] : 'strong';
-
-    $labelClass = array(
-        'element-label',
-        'element-label-' . $element->getElementType()
-    );
-
-    $label = '<' . $labelTag . ' class="' . implode(' ', $labelClass) . '"> ' . $label . '</' . $labelTag . '> ';
+if ($params['showlabel']) {
+    $labelText = ($params['altlabel']) ? $params['altlabel'] : $element->getConfig()->get('name');
+    $label     = '<' . $params['labelTag'] . ' class="element-label"> ' . $labelText . '</' . $params['labelTag'] . '>';
 }
 
-// check tag name
-$tag = isset($params['tag']) ? $params['tag'] : 'div';
-
-// create class attribute
-if (!isset($classes)) {
-    $classes = array();
-}
-
-// basic element classes
-$classes = array_merge(
-    $classes,
-    array(
-        'element-' . $element->getElementType(),
-        str_replace('.', '-', $layout)
-    )
-);
-
-// is first element in position
-if ($params['first']) {
-    $classes[] = 'first';
-}
-
-// is last element in position
-if ($params['last']) {
-    $classes[] = 'last';
-}
-
-// custom classes
-if (isset($params['class']) && $params['class']) {
-    $classes[] = $params['class'];
-}
+$classes = array_filter(array(
+    'index-' . (int)$params['_index'],
+    $params['class'],
+    'element-' . $element->identifier,
+    'element-' . $element->getElementType(),
+    $params['first'] ? 'first' : '',
+    $params['last'] ? 'last' : '',
+));
 
 // add clear after html
-$clear = '';
-if (isset($params['clear']) && $params['clear']) {
-    $clear = '<div class="clear clr"></div>';
+$clear = $params['clear'] ? '<div class="clear clr clearfix"></div>' : '';
+
+// render HTML for  current element
+$render = $element->render($params);
+
+// wrapping the element HTML
+if ($params['wrapperTag']) {
+    $render = '<' . $params['wrapperTag'] . '>' . $render . '</' . $params['wrapperTag'] . '>';
 }
 
-// render result HTML
-echo '<' . $tag . ' class="' . implode(' ', $classes) . '">'
-    . $label
-    . ' ' . $element->render($params)
-    . '</' . $tag . '>'
-    . "\n" . $clear;
+// render result
+echo '<' . $params['tag'] . ' class="' . implode(' ', $classes) . '">', $label,
+    ' ' . $render, '</' . $params['tag'] . '>', "\n" . $clear;

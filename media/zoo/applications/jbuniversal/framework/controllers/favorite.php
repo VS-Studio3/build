@@ -1,39 +1,44 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
-require_once dirname(__FILE__) . '/base.php';
 
-class FavoriteJBUniversalController extends BaseJBUniversalController
+/**
+ * Class FavoriteJBUniversalController
+ */
+class FavoriteJBUniversalController extends JBUniversalController
 {
+
     /**
      * Favorite list of curret user
-     * @throws BasketJBUniversalControllerException
-     * @throws FavoriteJBUniversalControllerException
+     * @throws AppException
      */
     function favorite()
     {
         // init
         $this->app->jbdebug->mark('favorite::init');
-        $this->_init('favorite');
 
-        $type   = $this->_jbreq->get('type');
-        $appId  = $this->_jbreq->get('app_id');
-        $itemId = $this->_jbreq->get('Itemid');
+        $type   = $this->_jbrequest->get('type');
+        $appId  = $this->_jbrequest->get('app_id');
+        $itemId = $this->_jbrequest->get('Itemid');
 
         if (!$appId) {
-            throw new FavoriteJBUniversalControllerException('Type or AppId is no set');
+            throw new AppException('Type or AppId is no set');
         }
 
         if (!JFactory::getUser()->id) {
-            JError::raiseNotice(0, JText::_('JBZOO_FAVORITE_NOTAUTH_NOTICE'));
+            $this->app->jbnotify->notice(JText::_('JBZOO_FAVORITE_NOTAUTH_NOTICE'));
         }
 
         // get items
@@ -47,7 +52,7 @@ class FavoriteJBUniversalController extends BaseJBUniversalController
         $this->itemId = $itemId;
 
         if (!$this->template = $this->application->getTemplate()) {
-            throw new FavoriteJBUniversalControllerException('No template selected');
+            throw new AppException('No template selected');
         }
 
         // set renderer
@@ -71,9 +76,7 @@ class FavoriteJBUniversalController extends BaseJBUniversalController
      */
     public function remove()
     {
-        $this->_init('favorite');
-
-        $itemId = (int)$this->_jbreq->get('item_id');
+        $itemId = (int)$this->_jbrequest->get('item_id');
         $item   = $this->app->table->item->get($itemId);
 
         $this->app->jbfavorite->toggleState($item);
@@ -83,6 +86,3 @@ class FavoriteJBUniversalController extends BaseJBUniversalController
 
 }
 
-class FavoriteJBUniversalControllerException extends AppException
-{
-}

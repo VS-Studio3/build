@@ -1,43 +1,51 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
+
+/**
+ * Class JBModelElementItemauthor
+ */
 class JBModelElementItemauthor extends JBModelElement
 {
 
     /**
      * Set AND element conditions
      * @param JBDatabaseQuery $select
-     * @param string          $elementId
-     * @param string|array    $value
-     * @param int             $i
-     * @param bool            $exact
+     * @param string $elementId
+     * @param string|array $value
+     * @param int $i
+     * @param bool $exact
      * @return JBDatabaseQuery
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return $select->where($this->_getWhere($value));
+        return array($this->_getWhere($value, $elementId));
     }
 
     /**
      * Set OR element conditions
      * @param JBDatabaseQuery $select
-     * @param string          $elementId
-     * @param string|array    $value
-     * @param int             $i
-     * @param bool            $exact
+     * @param string $elementId
+     * @param string|array $value
+     * @param int $i
+     * @param bool $exact
      * @return array
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return $this->_getWhere($value);
+        return array($this->_getWhere($value, $elementId));
     }
 
     /**
@@ -84,20 +92,19 @@ class JBModelElementItemauthor extends JBModelElement
      */
     protected function _getWhere($value)
     {
-        $conditions = array();
-
         if ($this->_isUserExists($value)) {
+            return 'tItem.created_by = ' . (int)$value;
+        }
 
-            $conditions[] = 'tItem.created_by = ' . (int)$value;
+        if (!is_array($value)) {
+            $value = array($value);
+        }
 
-        } elseif (is_array($value)) {
-
-            foreach ($value as $oneValue) {
-                $userIds       = $this->_getUserIdByName($oneValue);
-                $conditions[] = 'tItem.created_by IN (' . implode(', ', $userIds) . ')';
-                $conditions[] = 'tItem.created_by_alias LIKE ' . $this->_db->quote('%' . $oneValue . '%');
-            }
-
+        $conditions = array();
+        foreach ($value as $oneValue) {
+            $userIds      = $this->_getUserIdByName($oneValue);
+            $conditions[] = 'tItem.created_by IN (' . implode(', ', $userIds) . ')';
+            $conditions[] = 'tItem.created_by_alias LIKE ' . $this->_db->quote('%' . $oneValue . '%');
         }
 
         return '( ' . implode(' OR ', $conditions) . ' )';

@@ -1,22 +1,38 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
+
 
 // register ElementRepeatable class
 App::getInstance('zoo')->loader->register('ElementRepeatable', 'elements:repeatable/repeatable.php');
 
+/**
+ * Class ElementJBBasketItems
+ */
 class ElementJBBasketItems extends Element implements iSubmittable
 {
+    public $renderMode = null;
 
-    const ORDER_STATUS_PAID   = 'paid';
-    const ORDER_STATUS_NOPAID = 'nopaid';
+    const ORDER_STATUS_NODATA   = 'nodata';
+    const ORDER_STATUS_PAID     = 'paid';
+    const ORDER_STATUS_NOPAID   = 'nopaid';
+    const ORDER_STATUS_CANCEL   = 'cancel';
+    const ORDER_STATUS_PROGRESS = 'progress';
+
+    const SYSTEM_ROBOX  = 'Robokassa.ru';
+    const SYSTEM_IKASSA = 'Interkassa.com';
+    const SYSTEM_MANUAL = 'Manual';
 
     /**
      * Constructor
@@ -25,6 +41,7 @@ class ElementJBBasketItems extends Element implements iSubmittable
     {
         parent::__construct();
         $this->registerCallback('paymentCallback');
+        $this->registerCallback('ajaxSaveData');
     }
 
     /**
@@ -33,7 +50,7 @@ class ElementJBBasketItems extends Element implements iSubmittable
      */
     public function hasValue($params = array())
     {
-        return count($this->data());
+        return count($this->getOrderItems());
     }
 
     /**
@@ -42,18 +59,21 @@ class ElementJBBasketItems extends Element implements iSubmittable
      */
     public function edit()
     {
-        $basketItems = $this->data();
+        $basketItems   = $this->getOrderItems();
+        $basketItemsId = $this->getOrderItemsId();
+
+        JFactory::getSession()->set('items-' . $this->getItem()->id . '-' . $this->identifier, $this->data(), __CLASS__);
 
         if (!empty($basketItems)) {
 
-            $searchModel = JBModelFilter::model();
-            $items       = $searchModel->getZooItemsByIds(array_keys($basketItems));
+            $items = JBModelFilter::model()->getZooItemsByIds($basketItemsId);
 
             if (!empty($items) && $layout = $this->getLayout('jbbasketitems.php')) {
                 return self::renderLayout($layout, array(
                     'items'       => $items,
                     'basketItems' => $basketItems,
                     'params'      => isset($this->params) ? $this->params : null,
+                    'renderMode'  => $this->renderMode,
                 ));
             }
         }
@@ -70,12 +90,16 @@ class ElementJBBasketItems extends Element implements iSubmittable
     public function render($params = array())
     {
         $params       = $this->app->data->create($params);
-        $this->params = $params;
+        $this->params = $params; // hack for saving
         $template     = $params->get('template', 'default');
 
-        $summa = $this->getTotalPrice();
+        if ($template == 'default') {
+            return $this->edit();
 
-        if ($template == 'default' || $template == 'table') {
+        } else if ($template == 'table') {
+
+            $this->renderMode = 'nopayment';
+
             return $this->edit();
 
         } else if ($template == 'totalprice') {
@@ -85,6 +109,8 @@ class ElementJBBasketItems extends Element implements iSubmittable
             return $this->getPaymentType();
 
         } else if ($template == 'status') {
+
+            $summa = $this->getTotalPrice();
             if ($summa) {
                 return '<span class="order-status ' . $this->getOrderStatus(false) . '">' . $this->getOrderStatus(true) . '</span>';
             } else {
@@ -93,20 +119,21 @@ class ElementJBBasketItems extends Element implements iSubmittable
 
         } else if ($template == 'paymentlink') {
 
+            $summa = $this->getTotalPrice();
             if ($this->getOrderStatus() == self::ORDER_STATUS_NOPAID && $summa) {
 
                 $appId = $this->app->zoo->getApplication()->id;
                 $href  = $this->app->jbrouter->basketPayment($params->get('basket-menuitem'), $appId, $this->getItem()->id);
 
-                $html   = array();
-                $html[] = '<p><input type="button" style="display:inline-block;" class="jsGoToPayment-' . $this->getItem()->id . ' add-to-cart" value="' . JText::_('JBZOO_PAYMENT_LINKTOFORM') . '" /></p>';
-                $html[] = '<script type="text/javascript">';
-                $html[] = 'jQuery(function($){ $(".jsGoToPayment-' . $this->getItem()->id . '").click(function(){ window.location.href = "' . $href . '"; }); });';
-                $html[] = '</script>';
+                $html = '<p><input type="button" style="display:inline-block;" '
+                    . 'data-href="' . $href . '" class="jsGoto add-to-cart" '
+                    . 'value="' . JText::_('JBZOO_PAYMENT_LINKTOFORM') . '" /></p>';
 
-                return implode("\n", $html);
+                return $html;
             }
         }
+
+        return null;
     }
 
     /**
@@ -128,7 +155,6 @@ class ElementJBBasketItems extends Element implements iSubmittable
      */
     public function validateSubmission($value, $params)
     {
-
         $items = $this->app->jbcart->getAllItems();
 
         if (empty($items)) {
@@ -136,11 +162,22 @@ class ElementJBBasketItems extends Element implements iSubmittable
         }
 
         foreach ($items as $key => $item) {
-
             $item = $this->app->table->item->get($item['itemId']);
 
-            $items[$key]['name'] = $item->name;
+            if ($item) {
+                $items[$key]['name'] = $item->name;
+            } else {
+                unset($items[$key]);
+            }
+        }
 
+        $appParams = $this->getItem()->getApplication()->getParams();
+        if ((int)$appParams->get('global.jbzoo_cart_config.is_advance', 0)) {
+            return array(
+                'is_advance' => true,
+                'items'      => $items,
+                'order_info' => array(),
+            );
         }
 
         return $items;
@@ -151,9 +188,9 @@ class ElementJBBasketItems extends Element implements iSubmittable
      */
     public function getTotalPrice($isFormated = false)
     {
-        //return 5;
+        //return 5; // for interkassa debug
 
-        $basketItems = $this->data();
+        $basketItems = $this->getOrderItems();
 
         $i        = 0;
         $summa    = 0;
@@ -162,12 +199,8 @@ class ElementJBBasketItems extends Element implements iSubmittable
 
         if (!empty($basketItems)) {
 
-            $searchModel = JBModelFilter::model();
-            $items       = $searchModel->getZooItemsByIds(array_keys($basketItems));
+            foreach ($basketItems as $basketInfo) {
 
-            foreach ($items as $item) {
-
-                $basketInfo = $basketItems[$item->id];
                 $count += $basketInfo['quantity'];
 
                 $currency = $basketInfo['currency'];
@@ -180,7 +213,7 @@ class ElementJBBasketItems extends Element implements iSubmittable
                 return $this->app->jbmoney->toFormat($summa, $currency);
             }
 
-            return $summa;
+            return round($summa, 2);
         }
 
         return null;
@@ -191,23 +224,32 @@ class ElementJBBasketItems extends Element implements iSubmittable
      */
     public function paymentCallback($date, $system = null, $additionalStatus = null)
     {
-        $id        = $this->_getFirstElementId();
-        $firstData = $this->get($id);
+        $orderInfo = $this->getOrderInfo();
+        $item      = $this->getItem();
+        $appParams = $item->getApplication()->getParams();
 
-        if (!isset($firstData['order_info']['payment_date'])) {
+        $orderInfo = array(
+            'payment_date'      => $date,
+            'payment_system'    => $system,
+            'additional_status' => $additionalStatus,
+        );
 
-            $firstData['order_info'] = array();
-
-            $firstData['order_info']['payment_date']      = $date;
-            $firstData['order_info']['payment_system']    = $system;
-            $firstData['order_info']['status']            = self::ORDER_STATUS_PAID;
-            $firstData['order_info']['additional_status'] = $additionalStatus;
-
-            $this->set($id, $firstData);
-
-            //save item
-            $this->app->table->item->save($this->getItem());
+        if ($system == self::SYSTEM_MANUAL) {
+            $orderInfo['status'] = self::ORDER_STATUS_NOPAID;
+        } else {
+            $orderInfo['status'] = self::ORDER_STATUS_PAID;
         }
+
+        $this->bindOrderInfo($orderInfo);
+
+        // save item
+        $this->app->table->item->save($item);
+
+        // notify Zoo dispatcher
+        $this->app->event->dispatcher->notify($this->app->event->create($item, 'payment:callback', array(
+            'item'      => $item,
+            'appParams' => $appParams
+        )));
     }
 
     /**
@@ -217,11 +259,10 @@ class ElementJBBasketItems extends Element implements iSubmittable
     {
         $basketItems = $this->data();
 
-        $itemsId = array_keys($basketItems);
-        reset($itemsId);
-        $firstElement = current($itemsId);
+        reset($basketItems);
+        $firstKey = key($basketItems);
 
-        return $firstElement;
+        return $firstKey;
     }
 
     /**
@@ -231,13 +272,8 @@ class ElementJBBasketItems extends Element implements iSubmittable
      */
     public function getOrderStatus($isFormated = false)
     {
-        $id        = $this->_getFirstElementId();
-        $firstData = $this->get($id);
-
-        $status = self::ORDER_STATUS_NOPAID;
-        if (isset($firstData['order_info']['status'])) {
-            $status = $firstData['order_info']['status'];
-        }
+        $orderInfo = $this->app->data->create($this->getOrderInfo());
+        $status    = $orderInfo->get('status', self::ORDER_STATUS_NODATA);
 
         if ($isFormated) {
             return JText::_('JBZOO_PAYMENT_STATUS_' . JString::strtoupper($status));
@@ -248,14 +284,12 @@ class ElementJBBasketItems extends Element implements iSubmittable
 
     /**
      * Get payment data
+     * @deprecated
      * @return null
      */
     public function getPaymentData()
     {
-        $id        = $this->_getFirstElementId();
-        $firstData = $this->get($id);
-
-        return isset($firstData['order_info']) ? $firstData['order_info'] : null;
+        return $this->getOrderInfo();
     }
 
     /**
@@ -264,9 +298,190 @@ class ElementJBBasketItems extends Element implements iSubmittable
      */
     public function getPaymentType()
     {
-        $id        = $this->_getFirstElementId();
-        $firstData = $this->get($id);
-
-        return isset($firstData['order_info']['payment_system']) ? $firstData['order_info']['payment_system'] : null;
+        $orderInfo = $this->app->data->create($this->getOrderInfo());
+        return $orderInfo->get('payment_system');
     }
+
+    /**
+     * Bind data on save
+     * Hack for save from admin
+     * @param array $data
+     */
+    public function bindData($data = array())
+    {
+        $saveData = $data;
+
+        if ($this->getItem()) {
+            $newData = JFactory::getSession()->get('items-' . $this->getItem()->id . '-' . $this->identifier, null, __CLASS__);
+        }
+
+        if (!empty($newData)) {
+            $saveData = $newData;
+        }
+
+        // for administator only
+        if (isset($data['order_info_admin'])) {
+
+            $orderInfo = array(
+                'status'      => $data['order_info_status'],
+                'description' => $data['order_info_description'],
+                //'payment_date'      => $this->app->date->create()->toSQL(),
+                //'payment_system'    => 'Admin Edit',
+                //'additional_status' => 'none',
+            );
+
+            if (isset($saveData['is_advance'])) {
+                $saveData['order_info'] = array_merge($saveData['order_info'], $orderInfo);
+
+            } else {
+                reset($saveData);
+                $firstKey = key($saveData);
+
+                if (!isset($saveData[$firstKey]['order_info'])) {
+                    $saveData[$firstKey]['order_info'] = array();
+                }
+
+                $saveData[$firstKey]['order_info'] = array_merge($saveData[$firstKey]['order_info'], $orderInfo);
+            }
+        }
+
+        parent::bindData($saveData);
+    }
+
+    /**
+     * Render HTML for admin edit form
+     * @return null
+     */
+    public function getOrderSubForm()
+    {
+        if ($this->app->jbenv->isSite()) {
+            return null;
+        }
+
+        if ($layout = $this->getLayout('adminform.php')) {
+
+            $orderInfo = $this->getOrderInfo();
+
+            return self::renderLayout($layout, array(
+                'description' => isset($orderInfo['description']) ? $orderInfo['description'] : '',
+                'status'      => $this->getOrderStatus(),
+            ));
+
+        }
+
+        return null;
+    }
+
+    /**
+     * Get status list
+     * @return array
+     */
+    protected function _getStatusList()
+    {
+        return array(
+            self::ORDER_STATUS_NODATA   => JText::_('JBZOO_PAYMENT_STATUS_' . self::ORDER_STATUS_NODATA),
+            self::ORDER_STATUS_CANCEL   => JText::_('JBZOO_PAYMENT_STATUS_' . self::ORDER_STATUS_CANCEL),
+            self::ORDER_STATUS_NOPAID   => JText::_('JBZOO_PAYMENT_STATUS_' . self::ORDER_STATUS_NOPAID),
+            self::ORDER_STATUS_PROGRESS => JText::_('JBZOO_PAYMENT_STATUS_' . self::ORDER_STATUS_PROGRESS),
+            self::ORDER_STATUS_PAID     => JText::_('JBZOO_PAYMENT_STATUS_' . self::ORDER_STATUS_PAID),
+        );
+    }
+
+    /**
+     * Load assets
+     * @return $this
+     */
+    public function loadAssets()
+    {
+        $this->app->jbassets->basketItems();
+        return parent::loadAssets();
+    }
+
+    /**
+     * Check is element in advance mode
+     * @return int
+     */
+    public function isAdvance()
+    {
+        $data = $this->data();
+        return isset($data['is_advance']);
+    }
+
+    /**
+     * Get order items
+     * @return array
+     */
+    public function getOrderItems()
+    {
+        $data = $this->data();
+
+        if ($this->isAdvance() && isset($data['items'])) {
+            return $data['items'];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get order item ID list
+     * @return array
+     */
+    public function getOrderItemsId()
+    {
+        $items = $this->getOrderItems();
+
+        $result = array();
+        if (!empty($items)) {
+            foreach ($items as $item) {
+                $result[] = $item['itemId'];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get information about the order
+     * @return array
+     */
+    public function getOrderInfo()
+    {
+        if ($this->isAdvance()) {
+            $data = $this->data();
+            if (isset($data['order_info'])) {
+                return $data['order_info'];
+            }
+
+        } else {
+            $first = $this->_getFirstElementId();
+            if ($first) {
+                $data = $this->get($first);
+                if (isset($data['order_info'])) {
+                    return $data['order_info'];
+                }
+            }
+        }
+
+        return array();
+    }
+
+    /**
+     * Set new order information
+     * @param array $data
+     */
+    public function bindOrderInfo(array $data)
+    {
+        $orderInfo = array_merge($this->getOrderInfo(), $data);
+
+        if ($this->isAdvance()) {
+            $this->set('order_info', $orderInfo);
+        } else {
+            $id   = $this->_getFirstElementId();
+            $data = $this->data();
+
+            $data[$id]['order_info'] = $orderInfo;
+            $this->set($id, $data[$id]);
+        }
+    }
+
 }

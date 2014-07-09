@@ -1,18 +1,25 @@
 <?php
 /**
- * JBZoo is universal CCK based Joomla! CMS and YooTheme Zoo component
- * @category   JBZoo
- * @author     smet.denis <admin@joomla-book.ru>
- * @copyright  Copyright (c) 2009-2012, Joomla-book.ru
- * @license    http://joomla-book.ru/info/disclaimer
- * @link       http://joomla-book.ru/projects/jbzoo JBZoo project page
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
+
+// no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
 App::getInstance('zoo')->loader->register('ElementRepeatable', 'elements:repeatable/repeatable.php');
 
 
+/**
+ * Class ElementJBSelectCascade
+ */
 class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmittable
 {
     protected $_maxLevel = null;
@@ -48,6 +55,12 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
     protected function _getSearchData()
     {
         $result = $this->_getValuesList();
+        if (!is_array($result)) {
+            $result = array();
+        }
+
+        $result = array_reverse($result);
+
         return (empty($result) ? null : implode("\n", $result));
     }
 
@@ -77,7 +90,7 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
             $html[] = '<div>';
             $html[] = '<label for="' . $attrs['id'] . '">' . $this->_listNames[$i] . '</label><br/>';
             $html[] = '<select ' . $this->app->jbhtml->buildAttrs($attrs) . '>';
-            $html[] = '<option value=""> - </option>';
+            $html[] = '<option value=""> - ' . JText::_('JBZOO_ALL') . ' - </option>';
 
             if ($deepLevelCheck == $deepLevel) {
                 $deepLevelCheck++;
@@ -108,8 +121,8 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
         );
 
         return '<div ' . $this->app->jbhtml->buildAttrs($wrapperAtts) . '>'
-                . implode(" ", $html)
-                . '</div>';
+        . implode(" ", $html)
+        . '</div>';
     }
 
     /**
@@ -139,8 +152,9 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
     /**
      * Validate submission
      * @param JSONData $value
-     * @param array    $params
+     * @param array $params
      * @return array
+     * @throws AppValidatorException
      */
     public function _validateSubmission($value, $params)
     {
@@ -148,11 +162,12 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
 
         $result = array();
         for ($i = 0; $i <= $this->_maxLevel; $i++) {
+            $result['list-' . $i] = $value->get('list-' . $i);
+        }
 
-            $validator = $this->app->validator->create('string', array('required' => $params->get('required')));
-            $tmpVal    = $value->get('list-' . $i);
-
-            $result['list-' . $i] = $validator->clean($tmpVal);
+        $resultCheck = array_filter($result);
+        if (empty($resultCheck) && $params->get('required')) {
+            throw new AppValidatorException('This field is required', AppValidator::ERROR_CODE_REQUIRED);
         }
 
         return $result;
