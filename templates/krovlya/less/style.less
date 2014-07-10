@@ -137,6 +137,7 @@ fieldset{
   }
   .contact{
     padding-top: 25px;
+    position: relative;
     vertical-align: top;
     height: 199px;
     width: 250px;
@@ -643,6 +644,69 @@ fieldset{
       }
     }
 
+  }
+}
+#modal_cities{
+  position: absolute;
+  left: 50%;
+  width: 435px;
+  margin-left: -215px;
+  top: 25%;
+  border: 5px solid #383085;
+  border-radius: 10px;
+  padding: 15px;
+  background: #ffffff;
+  z-index: 40;
+  div:first-child{
+    text-align: center;
+    font-size: 18px;
+    color: #4d4b4b;
+    margin-bottom: 20px;
+  }
+  .cities{
+    ul{
+      margin: 0px;
+      padding: 0px;
+      li{
+        list-style-type: none;
+        font-size: 26px;
+        color: #000000;
+      }
+      li:hover{
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+}
+#list_of_cities_div{
+  background: #ffffff;
+  position: absolute;
+  padding: 15px;
+  z-index: 40;
+  right: 0px;
+  width: 435px;
+  border: 5px solid #383085;
+  border-radius: 10px;
+  a{
+    font-size: 18px;
+    color: #4d4b4b;
+    line-height: 18px;
+    float: right;
+
+  }
+  ul{
+    padding: 25px 0px 0px 0px;
+    margin: 0px;
+    li{
+      list-style-type: none;
+      font-size: 26px;
+      color: #000000;
+    }
+    li:hover{
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 }
 .others{
