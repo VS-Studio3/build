@@ -32,46 +32,27 @@ $task = $_GET['task'];
     <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/jquery.fancybox.css" type="text/css" />
     <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/js/jquery.fancybox.pack.js"></script>
     <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/js/fancyBox/source/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/js/underscore.js"></script>
 
-<script type="text/javascript">
-        var $j = jQuery.noConflict();
-
-        var onCityClick = function(e){
-            var city = $j(e).html();
-
-            //Сохраняем город в cookie
-            var date = new Date().setMonth(new Date().getMonth() + 12);
-            document.cookie="city=" + city +";expires="+date.toGMTString();
-
-            $j('.btn_city, .current_city').html(city);
-            $j('.close').trigger('click');
-        }
-
+    <!--JS-Класс приложения-->
+    <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template; ?>/js/custom.js"></script>
+    <script type="text/javascript">
         $j(document).ready(function () {
-
+            Get3UlMenu.getHTMLFirstMenu();
             $j.getJSON("<?php echo $this->baseurl ?>/media/zoo/applications/jbuniversal/types/product.config", function (data) {
-                var cities = data['elements']['126be91c-d8af-4d0e-807f-6b97e7e42708']['option'];
-                var listOfCities = '<ul>';
-
-                for (field in cities) {
-                    if (cities[field].name[0] == '-') {
-                        listOfCities += '<li class="second_level" onclick="onCityClick(this);">' + cities[field].name.substring(1) + '</li>';
-                    }
-                    else {
-                        listOfCities += '<li class="first_level">' + cities[field].name + '</li>';
-                    }
-                }
-
-                listOfCities += '</ul>';
-
-                $j('#list_of_cities').html(listOfCities);
+                ChangingCity.getModalWindows(data);
             });
         });
     </script>
-    <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template
-    ?>/js/custom.js"></script>
 </head>
 <body  id="<?php echo $pageclass ? htmlspecialchars($pageclass) : 'default'; ?>" class="<?php echo $option.' '.$task. ' '. $view ; ?>">
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ГОРОДА-->
+    <div id="modal_cities">
+        <div>Выберите пожалуйста Ваш город проживания</div>
+        <div class="cities"></div>
+    </div>
+<!---->
+
 <div id="wrapper">
 	<div id="header" class="header">
 
@@ -89,10 +70,10 @@ $task = $_GET['task'];
         <div class="contact">
             <p class="number">+7 (000) 000 00 00</p>
 
-            <div class="btn_city" style="margin-bottom: 20px;">d<?php echo $_COOKIE['city']; ?></div>
+            <div class="btn_city" style="margin-bottom: 20px;"></div>
             <div id="list_of_cities_div">
                 <a href="#" class="close">ЗАКРЫТЬ X</a>
-                <div class="current_city"><?php echo $_COOKIE['city']; ?></div>
+                <div class="current_city"></div>
                 <div id="list_of_cities"></div>
             </div>
 
