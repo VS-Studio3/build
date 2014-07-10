@@ -19,21 +19,9 @@ $j(function(){
     $j('.krovlya').parent().append('<div>' + reformatedList + '</div>');
 
     /**FANCY BOX**/
-    $j('a.btn_zayavka').fancybox({
-        width: 630,
-        height: 695,
-        autoSize: false,
-        fitToView: false,
-        maxWidth: '100%'
-    });
+    $j('a.btn_zayavka').fancybox();
 
-    $j('a.btn_zvonok').fancybox({
-        width: 630,
-        height: 445,
-        autoSize: false,
-        fitToView: false,
-        maxWidth: '100%'
-    });
+    $j('a.btn_zvonok').fancybox();
 
     /**CITY CHANGING**/
     $j('.btn_city').click(function () {
