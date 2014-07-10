@@ -605,7 +605,14 @@ fieldset {
   line-height: 18px;
   color: #382c88;
 }
-.jbzoo-view-item .description p {
+.jbzoo-view-item .description .text_about {
+  font-size: 16px;
+  color: #000000;
+  text-decoration: none!important;
+  font-weight: normal!important;
+  font-style: normal!important;
+}
+.jbzoo-view-item .description .text_about p {
   margin: 0px;
   border-bottom: 12px solid #b4b4b4;
   border-top: 12px solid #b4b4b4;
@@ -615,25 +622,120 @@ fieldset {
   padding: 10px 51px;
   position: relative;
   width: 1000px;
-  left: -51px;
+  left: -45px;
 }
-.foxcontainer_zayavka {
-  position: absolute;
-  background: #ffffff;
-  width: 500px!important;
-  border: 2px solid;
-  left: 50%;
-  margin-left: -250px;
+.others {
+  overflow: hidden;
+  margin: 0px -30px;
+  /* div:hover{
+    cursor: pointer;
+    a{
+      text-decoration: underline;
+    }
+  }
+*/
+}
+.others div {
+  width: 242px;
+  text-align: center;
+  display: inline-block;
+}
+.others div .item-image {
+  float: none!important;
+  margin-bottom: 30px!important;
+}
+.others div .item-image img {
+  width: 142px;
+  height: 142px;
+  float: none;
+}
+.others div .item-title {
+  text-align: left;
+}
+.others div .item-title a {
+  text-decoration: none;
+  color: #4d4a4a;
+  font-size: 20px;
+  line-height: 12px;
+  font-style: italic;
+}
+#middle #zayavka {
   display: none;
 }
-.foxcontainer {
-  position: absolute;
-  background: #ffffff;
-  width: 500px!important;
-  border: 2px solid;
+#middle #zvonok {
   display: none;
-  left: 50%;
-  margin-left: -250px;
+}
+.fox-copyright {
+  display: none;
+}
+.fancybox-inner {
+  width: auto!important;
+  height: 420px!important;
+}
+#zvonok .foxcontainer {
+  margin-top: 65px;
+}
+#zvonok button {
+  text-transform: uppercase;
+  font-size: 17px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  position: relative;
+  margin: 14px 0px 0px!important;
+  border: none;
+  padding: 8px 31px 6px;
+  background: url("../images/button.png") no-repeat;
+  background-size: cover;
+}
+#zvonok button span {
+  font-size: 17px;
+  color: #ffffff;
+  padding: 0px;
+}
+.fancybox-skin {
+  border: 5px solid #393185!important;
+  border-radius: 20px!important;
+  padding: 0px 15px!important;
+}
+.foxform label {
+  text-transform: uppercase;
+  font-size: 20px;
+  color: #372f87;
+  font-weight: bold;
+  float: left;
+  text-align: left;
+  padding-left: 16px;
+}
+.required,
+.asterisk {
+  float: left;
+}
+.foxfield {
+  margin-bottom: 0px!important;
+  padding-left: 4px!important;
+  text-align: center;
+}
+.foxfield input {
+  border-radius: 0px;
+  border-color: #535151;
+  border-width: 2px;
+  height: 48px;
+  margin-bottom: 20px!important;
+}
+.foxfield input:hover,
+.foxfield input:focus {
+  border-radius: 0px;
+  border-color: #535151;
+  border-width: 2px;
+  background-color: none;
+}
+.fancybox-wrap {
+  width: 620px!important;
+}
+.foxform {
+  margin-bottom: 0px!important;
+  padding: 0px 8px 0px 11px;
 }
 .subcategories .rborder.column:hover .subcategory-title a {
   color: #b2b2b2;
