@@ -720,3 +720,13 @@ fieldset {
      z-index: 100;
      background-color: red;
  }
+#modal_cities{
+    position: absolute;
+    z-index: 1000;
+    background-color: red;
+    width:430px;
+    top:25%;
+    left:50%;
+    margin-left: -215px;
+    display: none;
+}
