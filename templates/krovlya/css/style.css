@@ -672,10 +672,12 @@ fieldset {
   width: auto!important;
   height: 420px!important;
 }
-#zvonok .foxcontainer {
+#zvonok .foxcontainer,
+#zayavka .foxcontainer {
   margin-top: 65px;
 }
-#zvonok button {
+#zvonok button,
+#zayavka button {
   text-transform: uppercase;
   font-size: 17px;
   color: #ffffff;
@@ -688,7 +690,8 @@ fieldset {
   background: url("../images/button.png") no-repeat;
   background-size: cover;
 }
-#zvonok button span {
+#zvonok button span,
+#zayavka button span {
   font-size: 17px;
   color: #ffffff;
   padding: 0px;
