@@ -1,11 +1,4 @@
 ﻿<?php
-/**
- * @version    $Id: index.php 20196 2011-01-09 02:40:25Z ian $
- * @package    Joomla.Site
- * @copyright  Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- */
-
 defined('_JEXEC') or die;
 
 /* The following line gets the application object for things like displaying the site name */
@@ -41,25 +34,40 @@ $task = $_GET['task'];
     <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/js/fancyBox/source/jquery.fancybox.pack.js"></script>
 
 <script type="text/javascript">
-	var $j = jQuery.noConflict();
-    $j(document).ready(function(){
-        $j('a.btn_zayavka').fancybox({
-            width: 630,
-            height: 695,
-            autoSize : false,
-            fitToView : false,
-            maxWidth : '100%'
-        });
+        var $j = jQuery.noConflict();
 
-        $j('a.btn_zvonok').fancybox({
-            width: 630,
-            height: 430,
-            autoSize : false,
-            fitToView : false,
-            maxWidth : '100%'
+        var onCityClick = function(e){
+            var city = $j(e).html();
+
+            //Сохраняем город в cookie
+            var date = new Date().setMonth(new Date().getMonth() + 12);
+            document.cookie="city=" + city +";expires="+date.toGMTString();
+
+            $j('.btn_city, .current_city').html(city);
+            $j('.close').trigger('click');
+        }
+
+        $j(document).ready(function () {
+
+            $j.getJSON("<?php echo $this->baseurl ?>/media/zoo/applications/jbuniversal/types/product.config", function (data) {
+                var cities = data['elements']['126be91c-d8af-4d0e-807f-6b97e7e42708']['option'];
+                var listOfCities = '<ul>';
+
+                for (field in cities) {
+                    if (cities[field].name[0] == '-') {
+                        listOfCities += '<li class="second_level" onclick="onCityClick(this);">' + cities[field].name.substring(1) + '</li>';
+                    }
+                    else {
+                        listOfCities += '<li class="first_level">' + cities[field].name + '</li>';
+                    }
+                }
+
+                listOfCities += '</ul>';
+
+                $j('#list_of_cities').html(listOfCities);
+            });
         });
-    });
-</script>
+    </script>
     <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template
     ?>/js/custom.js"></script>
 </head>
@@ -80,6 +88,14 @@ $task = $_GET['task'];
         </div>
         <div class="contact">
             <p class="number">+7 (000) 000 00 00</p>
+
+            <div class="btn_city" style="margin-bottom: 20px;">d<?php echo $_COOKIE['city']; ?></div>
+            <div id="list_of_cities_div">
+                <a href="#" class="close">ЗАКРЫТЬ X</a>
+                <div class="current_city"><?php echo $_COOKIE['city']; ?></div>
+                <div id="list_of_cities"></div>
+            </div>
+
             <p class="online"><a class="btn btn_zayavka" href="#zayavka"><span class="icon"></span>On-line заявка</a></p>
             <p><a class="btn btn_zvonok" href="#zvonok"><span class="icon_two"></span>заказать звонок</a></p>
         </div>

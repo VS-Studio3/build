@@ -17,4 +17,43 @@ $j(function(){
     });
     reformatedList += '</ul>';
     $j('.krovlya').parent().append('<div>' + reformatedList + '</div>');
+
+    /**FANCY BOX**/
+    $j('a.btn_zayavka').fancybox({
+        width: 630,
+        height: 695,
+        autoSize: false,
+        fitToView: false,
+        maxWidth: '100%'
+    });
+
+    $j('a.btn_zvonok').fancybox({
+        width: 630,
+        height: 445,
+        autoSize: false,
+        fitToView: false,
+        maxWidth: '100%'
+    });
+
+    /**CITY CHANGING**/
+    $j('.btn_city').click(function () {
+        $j('#list_of_cities_div').toggle();
+        return false;
+    });
+
+    $j('.close').click(function(){
+        $j('#list_of_cities_div').toggle();
+    });
+
+    //чтение cookie
+    function getCookie(name) {
+        var pattern = "(?:; )?" + name + "=([^;]*);?";
+        var regexp  = new RegExp(pattern);
+
+        if (regexp.test(document.cookie))
+            return decodeURIComponent(RegExp["$1"]);
+
+        return false;
+    }
+
 });
