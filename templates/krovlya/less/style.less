@@ -663,6 +663,7 @@ fieldset{
     }
     .item-title{
       text-align: left;
+      padding: 0px 10px 0px 0px;
       a{
         text-decoration: none;
         color: #4d4a4a;
@@ -699,10 +700,50 @@ fieldset{
 }
 .fancybox-inner{
   width: auto!important;
-  height: 420px!important;
+  height: auto!important;
+}
+#zayavka{
+  padding-top: 50px;
+}
+.for_buttom{
+  text-align: right!important;
+  button{
+    float: right;
+    background: none!important;
+    span{color: #4d4b4b!important;}
+    padding: 5px 10px!important;
+  }
+  button:first-child{
+    float: none;
+    background: url("../images/button.png") no-repeat!important;
+    background-size: cover!important;
+    span{color: #ffffff!important;}
+    padding: 8px 31px 6px!important;
+  }
+}
+.qq-upload-button{
+  background: url("../images/button.png") no-repeat;
+  background-size: cover;
+  float: left;
+  padding: 0px!important;
+  border: none;
+  box-shadow: none;
+  border-radius: 0px;
+  text-shadow: none;
+  width: 264px;
+  height: 40px;
+  margin: 10px 0px!important;
+  span{
+   font-size: 18px;
+    line-height: 18px;
+    color: #ffffff;
+    font-weight: bold;
+    vertical-align: bottom;
+  }
 }
 #zvonok,
 #zayavka {
+  margin-bottom: 15px;
   .foxcontainer{
     margin-top: 65px;
   }
@@ -730,6 +771,12 @@ fieldset{
   border-radius: 20px!important;
   padding: 0px 15px!important;
 }
+.foxform .fox_little_text label{
+  text-transform: none;
+  font-size: 15px;
+  padding-left: 5px;
+  color: #000000;
+}
 .foxform label {
   text-transform: uppercase;
   font-size: 20px;
@@ -753,7 +800,16 @@ fieldset{
     height: 48px;
     margin-bottom: 20px!important;
   }
-  input:hover, input:focus{
+  textarea{
+    border-radius: 0px;
+    border-color: #535151;
+    border-width: 2px;
+    height: 105px;
+    resize: none;
+    margin-top: 10px!important;
+    margin-bottom: 10px!important;
+  }
+  input:hover, input:focus, textarea:hover, textarea:focus{
     border-radius: 0px;
     border-color: #535151;
     border-width: 2px;
