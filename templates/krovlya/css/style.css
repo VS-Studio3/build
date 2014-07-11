@@ -163,6 +163,7 @@ fieldset {
 .header .contact .number {
   font-size: 27px;
   color: #383085;
+  margin-bottom: 2px;
   font-weight: bold;
 }
 .header .contact .btn:hover {
