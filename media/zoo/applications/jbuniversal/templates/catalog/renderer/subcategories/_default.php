@@ -16,8 +16,12 @@ defined('_JEXEC') or die('Restricted access');
 
 $this->app->jbdebug->mark('layout::subcategories::start');
 
+if ((int)$this->getView()->application->params->get('global.config.column_heightfix', 0)) {
+    $this->app->jbassets->heightFix();
+}
+
 // remove empty categories
-if ($vars['params']->get('template.subcategory_items', 0)) {
+if (!$vars['params']->get('template.subcategory_empty', 0)) {
 
     $objects = array();
     foreach ($vars['objects'] as $category) {

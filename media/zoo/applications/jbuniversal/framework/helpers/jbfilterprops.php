@@ -29,10 +29,19 @@ class JBFilterPropsHelper extends AppHelper
     public function elementRender($identifier, $value = null, $params = array())
     {
         //get configs
-        $showCount = (int)$params['moduleParams']->get('count', 1);
-        $isDepend  = (int)$params['moduleParams']->get('depend', 1);
+        $showCount   = (int)$params['moduleParams']->get('count', 1);
+        $isDepend    = (int)$params['moduleParams']->get('depend', 1);
+        $isDependCat = (int)$params['moduleParams']->get('depend_category', 0);
 
-        $elements    = $isDepend ? $this->app->jbrequest->getElements() : array();
+        $elements = $isDepend ? $this->app->jbrequest->getElements() : array();
+
+        if ($isDependCat) {
+            $categoryId = $this->app->jbrequest->getSystem('category');
+            if ($categoryId > 0 && !isset($elements['_itemcategory'])) {
+                $elements['_itemcategory'] = $categoryId;
+            }
+        }
+
         $propsValues = JBModelValues::model()->getPropsValues(
             $identifier,
             $params['moduleParams']->get('type'),
@@ -56,18 +65,15 @@ class JBFilterPropsHelper extends AppHelper
                 }
 
                 // render html list item
-                $html[] = '<li' . $class . '><a href="' . $link . '"'
-                    . ' title="' . $this->_escape($propsValue['value']) . '"'
-                    . ' rel="nofollow"><span>'
+                $html[] = '<li' . $class . '><a href="' . $link . '" title="' . $this->_escape($propsValue['value']) . '" rel="nofollow"><span>'
                     . $this->_escape($propsValue['value']) . ' '
                     . (($showCount) ? '<span class="element-count">(' . $propsValue['count'] . ')</span>' : '')
                     . '</span></a>'
                     . ($class ? '<a rel="nofollow" href="' . $link . '" class="cancel">&nbsp;</a>' : '')
                     . '</li>';
-
             }
 
-            return '<ul class="jbzoo-props-list"><!--noindex-->' . implode("\n", $html) . '<!--/noindex--></ul>';
+            return '<!--noindex--><ul class="jbzoo-props-list">' . implode("\n", $html) . '</ul><!--/noindex-->';
         }
 
         return '';
@@ -81,17 +87,14 @@ class JBFilterPropsHelper extends AppHelper
      */
     protected function _isActive($identifier, $value)
     {
-
         $elements = $this->app->jbrequest->getElements();
 
         if (isset($elements[$identifier])) {
 
             if (is_string($elements[$identifier])) {
                 return JString::strtolower($elements[$identifier]) == JString::strtolower(JString::trim($value));
-
             } else {
                 return in_array($value, $elements[$identifier]);
-
             }
         }
 

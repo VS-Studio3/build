@@ -31,7 +31,7 @@ class JBCSVItemCoreSku extends JBCSVItem
             reset($priceElements);
             $skuElement = current($priceElements);
 
-            $data = $skuElement->getIndexData();
+            $data = $skuElement->getIndexData(true);
             if (!empty($data)) {
                 reset($data);
                 $basic = current($data);

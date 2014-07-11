@@ -44,9 +44,8 @@ class JBCSVItemUserSelect extends JBCSVItem
      */
     public function fromCSV($value, $position = null)
     {
-        $options = $this->_getArray($value, JBCSVItem::SEP_CELL);
-
-        $importData = $this->app->jbsession->getGroup('import');
+        $options    = $this->_getArray($value, JBCSVItem::SEP_CELL);
+        $importData = $this->_lastImportParams->get('previousparams');
 
         foreach ($options as $key => $option) {
 

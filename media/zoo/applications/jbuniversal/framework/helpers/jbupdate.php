@@ -32,9 +32,10 @@ class JBUpdateHelper extends AppHelper
         if ($curApp->getGroup() == JBZOO_APP_GROUP) {
 
             $response = $curApp->checkupd(true);
+            $params   =  $this->app->jbconfig->getList('config.custom');
 
             if (isset($response['update_message']) && !empty($response['update_message'])) {
-                if (defined('JBZOO_CONFIG_SHOWUPDATE') && JBZOO_CONFIG_SHOWUPDATE == '1') {
+                if ($params->get('update_show', 1)) {
                     $this->_showMessage($response['update_message']);
                 }
             }

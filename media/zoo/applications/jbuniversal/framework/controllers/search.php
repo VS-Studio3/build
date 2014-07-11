@@ -26,10 +26,7 @@ class SearchJBUniversalController extends JBUniversalController
     {
         $this->app->jbdebug->mark('filter::init');
 
-        // no index
-        $document = JFactory::getDocument();
-        $document->setMetadata('robots', 'noindex, nofollow');
-        unset($document->_links[array_search(array('relation' => 'canonical', 'relType' => 'rel', 'attribs' => array()), $document->_links)]);
+        $this->app->jbdoc->noindex();
 
         $type     = $this->_jbrequest->get('type');
         $page     = ($page = $this->_jbrequest->get('page', 1)) ? $page : 1;
@@ -48,12 +45,14 @@ class SearchJBUniversalController extends JBUniversalController
 
         // create pagination
         if ($this->_jbrequest->isPost()) {
+            $_POST['option'] = 'com_zoo';
             unset($_POST['page']);
             unset($_POST['view']);
             unset($_POST['layout']);
             $this->pagination_link = 'index.php?' . $this->app->jbrouter->query($_POST);
 
         } else {
+            $_GET['option'] = 'com_zoo';
             unset($_GET['page']);
             unset($_GET['view']);
             unset($_GET['layout']);

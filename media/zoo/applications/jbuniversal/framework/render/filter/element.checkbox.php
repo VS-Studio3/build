@@ -45,11 +45,7 @@ class JBFilterElementCheckbox extends JBFilterElement
      */
     protected function _getValues($type = null)
     {
-        if ($this->_isOrigTmpl) {
-            return $this->_getConfigValues();
-        } else {
-            return $this->_getDbValues();
-        }
+        return $this->_getDbValues();
     }
 
 }

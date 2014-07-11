@@ -20,7 +20,7 @@ require_once dirname(__FILE__) . '/helper.php';
 $categoryHelper = new JBZooCategoryHelper($params);
 $zoo            = App::getInstance('zoo');
 
-$zoo->jbdebug->mark('mod_jbzoo_category::start');
+$zoo->jbdebug->mark('mod_jbzoo_category::start-' . $module->id);
 
 $zoo->jbassets->setAppCSS();
 $zoo->jbassets->setAppJS();
@@ -36,4 +36,4 @@ $renderer = $zoo->renderer->create('item')->addPath(array(
 // render module
 include(JModuleHelper::getLayoutPath('mod_jbzoo_category', $params->get('layout', 'default')));
 
-$zoo->jbdebug->mark('mod_jbzoo_category::finish');
+$zoo->jbdebug->mark('mod_jbzoo_category::finish-' . $module->id);

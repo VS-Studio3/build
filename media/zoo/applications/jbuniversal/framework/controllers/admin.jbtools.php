@@ -100,7 +100,7 @@ class JBToolsJBuniversalController extends JBUniversalController
 
         } else {
 
-            $this->app->jbajax->disableTmpl();
+            $this->app->jbdoc->disableTmpl();
 
             try {
                 $this->results = $this->app->jbcheckfiles->check();
@@ -123,7 +123,7 @@ class JBToolsJBuniversalController extends JBUniversalController
             $this->renderView();
         } else {
 
-            $this->app->jbajax->disableTmpl();
+            $this->app->jbdoc->disableTmpl();
 
             try {
                 $this->results = $this->app->modification->check();

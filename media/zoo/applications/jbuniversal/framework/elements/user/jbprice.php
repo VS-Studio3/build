@@ -59,28 +59,28 @@ class JBCSVItemUserJBPrice extends JBCSVItem
 
         if (count($valuesTmp) == 4) {
             $values = array(
-                'sku'         => $valuesTmp[0],
-                'in_stock'    => $valuesTmp[1],
-                'value'       => $valuesTmp[2],
-                'description' => $valuesTmp[3],
+                'sku'         => $this->_getString($valuesTmp[0]),
+                'in_stock'    => $this->_getString($valuesTmp[1]),
+                'value'       => $this->_getFloat($valuesTmp[2]),
+                'description' => $this->_getString($valuesTmp[3]),
             );
 
         } else if (count($valuesTmp) == 3) {
             $values = array(
-                'sku'         => $valuesTmp[0],
-                'value'       => $valuesTmp[1],
-                'description' => $valuesTmp[2],
+                'sku'         => $this->_getString($valuesTmp[0]),
+                'value'       => $this->_getFloat($valuesTmp[1]),
+                'description' => $this->_getString($valuesTmp[2]),
             );
 
         } else if (count($valuesTmp) == 2) {
             $values = array(
-                'value'       => $valuesTmp[0],
-                'description' => $valuesTmp[1],
+                'value'       => $this->_getFloat($valuesTmp[0]),
+                'description' => $this->_getString($valuesTmp[1]),
             );
 
         } else {
             $values = array(
-                'value' => $valuesTmp[0],
+                'value' => $this->_getFloat($valuesTmp[0]),
             );
         }
 

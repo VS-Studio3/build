@@ -22,6 +22,8 @@ App::getInstance('zoo')->loader->register('ElementRepeatable', 'elements:repeata
  */
 class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmittable
 {
+    const VALIDATE_MODE_ANY = 'any';
+
     protected $_maxLevel = null;
     protected $_uniqid = '';
     protected $_itemList = array();
@@ -88,7 +90,8 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
             );
 
             $html[] = '<div>';
-            $html[] = '<label for="' . $attrs['id'] . '">' . $this->_listNames[$i] . '</label><br/>';
+            $label  = isset($this->_listNames[$i]) ? $this->_listNames[$i] : '';
+            $html[] = '<label for="' . $attrs['id'] . '">' . $label . '</label><br/>';
             $html[] = '<select ' . $this->app->jbhtml->buildAttrs($attrs) . '>';
             $html[] = '<option value=""> - ' . JText::_('JBZOO_ALL') . ' - </option>';
 
@@ -161,13 +164,28 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
         $this->_getValuesList();
 
         $result = array();
-        for ($i = 0; $i <= $this->_maxLevel; $i++) {
-            $result['list-' . $i] = $value->get('list-' . $i);
-        }
 
-        $resultCheck = array_filter($result);
-        if (empty($resultCheck) && $params->get('required')) {
-            throw new AppValidatorException('This field is required', AppValidator::ERROR_CODE_REQUIRED);
+        if ($params->get('mode') == self::VALIDATE_MODE_ANY) {
+
+            for ($i = 0; $i <= $this->_maxLevel; $i++) {
+                $result['list-' . $i] = $value->get('list-' . $i);
+            }
+
+            $resultCheck = array_filter($result);
+            if (empty($resultCheck) && $params->get('required')) {
+                throw new AppValidatorException('This field is required', AppValidator::ERROR_CODE_REQUIRED);
+            }
+
+        } else {
+
+            $val = $value->flattenRecursive();
+
+            for ($i = 0; $i < count($val); $i++) {
+                $validator = $this->app->validator->create('string', array('required' => $params->get('required')));
+
+                $result['list-' . $i] = $validator->clean($value->get('list-' . $i));
+            }
+
         }
 
         return $result;
@@ -192,11 +210,26 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
     protected function _render($params = array())
     {
         $valueList = $this->_getValuesList();
-        if ('last' == $params->get('template', 'default')) {
-            $valueList = array(end($valueList));
+        $result    = $valueList;
+
+        $template = $params->get('template', 'default');
+
+        if ('last' == $template) {
+            $result = array(end($valueList));
+
+        } else if ('label' == $template) {
+
+            $result = array();
+            foreach ($this->_listNames as $key => $title) {
+                if (!empty($title) && !empty($valueList[$key])) {
+                    $result[] = '<span class="jbselect-label jbselect-label-' . $key . '">' . $title . ':<span> '
+                        . '<span class="jbselect-value jbselect-value-' . $key . '">' . $valueList[$key] . '</span>';
+                }
+            }
+
         }
 
-        return $this->app->element->applySeparators($params->get('separated_values_by'), $valueList);
+        return $this->app->element->applySeparators($params->get('separated_values_by'), $result);
     }
 
     /**
@@ -208,23 +241,22 @@ class ElementJBSelectCascade extends ElementRepeatable implements iRepeatSubmitt
         $result = array();
         $params = $this->app->data->create($params);
 
-        switch ($params->get('display', 'all')) {
-            case 'all':
-                foreach ($this as $self) {
-                    $result[] = $this->_render($params);
-                }
-                break;
-            case 'first':
-                $this->seek(0);
+        $display = $params->get('display', 'all');
+        if ('all' == $display) {
+            foreach ($this as $self) {
                 $result[] = $this->_render($params);
-                break;
-            case 'all_without_first':
-                $this->seek(1);
-                while ($this->valid()) {
-                    $result[] = $this->_render($params);
-                    $this->next();
-                }
-                break;
+            }
+
+        } else if ('first' == $display) {
+            $this->seek(0);
+            $result[] = $this->_render($params);
+
+        } else if ('all_without_first' == $display) {
+            $this->seek(1);
+            while ($this->valid()) {
+                $result[] = $this->_render($params);
+                $this->next();
+            }
         }
 
         return $this->app->element->applySeparators($params->get('separated_by'), $result);

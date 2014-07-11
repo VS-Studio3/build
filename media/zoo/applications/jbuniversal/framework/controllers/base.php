@@ -40,6 +40,11 @@ class JBUniversalController extends AppController
     protected $_view = null;
 
     /**
+     * @var JBModelConfig
+     */
+    protected $_config;
+
+    /**
      * @var Application
      */
     public $application;
@@ -86,6 +91,8 @@ class JBUniversalController extends AppController
             $this->app->jbassets->setAppCSS();
             $this->app->jbassets->setAppJS();
         }
+
+        $this->_config = JBModelConfig::model();
     }
 
     /**

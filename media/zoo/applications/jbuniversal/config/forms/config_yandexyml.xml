@@ -11,30 +11,26 @@
 -->
 <form>
     <fields>
-        <fieldset name="configyml" label=""
-                  addfieldpath="/media/zoo/applications/jbuniversal/joomla/fields">
+        <fieldset name="configyml" label="" addfieldpath="/media/zoo/applications/jbuniversal/joomla/fields">
 
-            <field name="JBZOO_CONFIG_YML_SITE_URL" type="text" default="" label="JBZOO_CONFIG_YML_SITE_URL"
+            <field name="site_url" type="text" default="" label="JBZOO_CONFIG_YML_SITE_URL"
                    description="JBZOO_CONFIG_YML_SITE_URL_DESC"/>
 
-            <field name="JBZOO_CONFIG_YML_APP_LIST" type="jbapplist" headhide="1" required="1" default="" multiple="1" label="JBZOO_CONFIG_YML_APP_LIST"
+            <field name="app_list" type="jbapplist" headhide="1" required="1" default="" multiple="1"
+                   label="JBZOO_CONFIG_YML_APP_LIST"
                    description="JBZOO_CONFIG_YML_APP_LIST_DESC"/>
 
-            <field name="JBZOO_CONFIG_YML_SITE_NAME" type="text" default="" label="JBZOO_CONFIG_YML_SITE_NAME"
+            <field name="site_name" type="text" default="" label="JBZOO_CONFIG_YML_SITE_NAME"
                    description="JBZOO_CONFIG_YML_SITE_NAME_DESC"/>
 
-            <field name="JBZOO_CONFIG_YML_COMPANY_NAME" type="text" default="" label="JBZOO_CONFIG_YML_COMPANY_NAME"
+            <field name="company_name" type="text" default="" label="JBZOO_CONFIG_YML_COMPANY_NAME"
                    description="JBZOO_CONFIG_YML_COMPANY_NAME_DESC"/>
 
-            <field name="JBZOO_CONFIG_YML_TYPE" type="jbtype" headhide="1" required="1" multiple="1" default="" label="JBZOO_CONFIG_YML_TYPE"
+            <field name="type_list" type="jbtype" headhide="1" required="1" multiple="1" default=""
+                   label="JBZOO_CONFIG_YML_TYPE"
                    description="JBZOO_CONFIG_YML_TYPE_DESC"/>
 
-            <!--  <field name="JBZOO_CONFIG_YML_DELIVERY" type="jbbool" default="" label="JBZOO_CONFIG_YML_DELIVERY" description="JBZOO_CONFIG_YML_DELIVERY_DESC"/>
-
-                <param name="cash_time" type="text" default="" label="JBZOO_YML_CASH_TIME"
-                        description="JBZOO_YML_CASH_TIME_DESC"/> -->
-
-            <field name="JBZOO_CONFIG_YML_CURRENCY_RATE" type="list" default="" label="JBZOO_CONFIG_YML_CURRENCY_RATE"
+            <field name="currency_rate" type="list" default="" label="JBZOO_CONFIG_YML_CURRENCY_RATE"
                    description="JBZOO_CONFIG_YML_CURRENCY_RATE_DESC">
                 <option value="default">JBZOO_CONFIG_YML_DEFAULT</option>
                 <option value="CBRF">JBZOO_CONFIG_YML_CBRF</option>
@@ -43,10 +39,10 @@
                 <option value="CB">JBZOO_CONFIG_YML_CB</option>
             </field>
 
-            <field name="JBZOO_CONFIG_YML_FILE_PATH" type="text" default="images" label="JBZOO_CONFIG_YML_FILE_PATH"
+            <field name="file_path" type="text" default="images" label="JBZOO_CONFIG_YML_FILE_PATH"
                    description="JBZOO_CONFIG_YML_FILE_PATH_DESC"/>
 
-            <field name="JBZOO_CONFIG_YML_FILE_NAME" type="text" default="yml" label="JBZOO_CONFIG_YML_FILE_NAME"
+            <field name="file_name" type="text" default="yml" label="JBZOO_CONFIG_YML_FILE_NAME"
                    description="JBZOO_CONFIG_YML_FILE_NAME_DESC"/>
 
         </fieldset>

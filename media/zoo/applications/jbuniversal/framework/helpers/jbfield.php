@@ -237,7 +237,13 @@ class JBFieldHelper extends AppHelper
      */
     public function timestamp($name, $value, $controlName, SimpleXMLElement $node, $parent)
     {
-        return '<input type="hidden" name="' . $controlName . '[' . $name . ']" value="' . time() . '" />';
+        $attrs = array(
+            'name'  => $this->_getName($controlName, $name),
+            'type'  => 'hidden',
+            'value' => time(),
+        );
+
+        return '<input ' . $this->app->jbhtml->buildAttrs($attrs) . ' />';
     }
 
     /**
@@ -445,6 +451,53 @@ class JBFieldHelper extends AppHelper
     }
 
     /**
+     * Render colors fields
+     * @param string $name
+     * @param string|array $value
+     * @param string $controlName
+     * @param SimpleXMLElement $node
+     * @param SimpleXMLElement $parent
+     * @return mixed
+     */
+    public function colors($name, $value, $controlName, SimpleXMLElement $node, $parent)
+    {
+        $html  = array();
+        $id    = $this->app->jbstring->getId('jbcolor-input-');
+        $divId = $this->app->jbstring->getId('jbcolor-');
+
+        $attrs = array(
+            'name'  => $this->_getName($controlName, $name),
+            'class' => 'jbcolor-textarea ' . $this->_getAttr($node, 'class'),
+        );
+
+        $colorAttrs = array(
+            'placeholder' => JText::_('JBZOO_COLOR'),
+            'class'       => 'jbcolor-input jbcolor  minicolors-position-bottom',
+            'id'          => $id
+        );
+
+        $html[] = '<div id="' . $divId . '" class="jbzoo-picker">';
+
+        $html[] = '<textarea ' . $this->app->jbhtml->buildAttrs($attrs) . '>' . $value . '</textarea>';
+
+        $html[] = '<div class="jbpicker">';
+        $html[] = '<input type="text" placeholder="'.JText::_('JBZOO_NAME').'"  class="jbcolor-input jbname" />';
+        $html[] = '<input type="text" ' . $this->app->jbhtml->buildAttrs($colorAttrs) . ' />';
+        $html[] = '<span title="'.JText::_('JBZOO_JBCOLOR_ADD_COLOR').'" class="jsColorAdd"></span>';
+        $html[] = '</div></div>';
+
+        $html[] = '<script type="text/javascript">';
+        $html[] = 'jQuery(document).ready(function ($) {';
+        $html[] = '$("#' . $divId . '").JBColorElement({
+                        text: "' . JText::_('JBZOO_JBCOLOR_COLOR_EXISTS') . '"
+                        });
+                   });';
+        $html[] = '</script>';
+
+        return implode("\n", $html);
+    }
+
+    /**
      * Render links for payment system
      * @param string $name
      * @param string|array $value
@@ -588,7 +641,25 @@ class JBFieldHelper extends AppHelper
     public function spacer($name, $value, $controlName, SimpleXMLElement $node, $parent)
     {
         if ($value) {
-            return '<strong style="color:#a00;font-size:1.1em"> - = ' . JText::_($value) . ' = -</strong>';
+                return '<div class="field-jbspacer"><b> -= ' . JText::_($value) . ' =- </b></div>';
+        }
+
+        return null;
+    }
+
+    /**
+     * Render custom description
+     * @param string $name
+     * @param string|array $value
+     * @param string $controlName
+     * @param SimpleXMLElement $node
+     * @param SimpleXMLElement $parent
+     * @return mixed
+     */
+    public function desc($name, $value, $controlName, SimpleXMLElement $node, $parent)
+    {
+        if ($value) {
+            return '<span style="font-size:1.1em">' . JText::_($value) . '</span>';
         }
 
         return null;
@@ -646,6 +717,26 @@ class JBFieldHelper extends AppHelper
             'list.select' => $value,
             'group.items' => null,
         ));
+    }
+
+    /**
+     * Render hidden timestamp
+     * @param string $name
+     * @param string|array $value
+     * @param string $controlName
+     * @param SimpleXMLElement $node
+     * @param SimpleXMLElement $parent
+     * @return mixed
+     */
+    public function password($name, $value, $controlName, SimpleXMLElement $node, $parent)
+    {
+        $attrs = array(
+            'name'  => $this->_getName($controlName, $name),
+            'type'  => 'password',
+            'value' => $value,
+        );
+
+        return '<input ' . $this->app->jbhtml->buildAttrs($attrs) . ' />';
     }
 
     /**
@@ -833,7 +924,10 @@ class JBFieldHelper extends AppHelper
 
         // add std fields
         $coreGrp = JText::_('JBZOO_FIELDS_CORE');
-        $options = array($coreGrp => array($prefix . '_none' => JText::_('JBZOO_FIELDS_CORE_NONE')));
+        $options = array($coreGrp => array(
+            $prefix . '_none' => JText::_('JBZOO_FIELDS_CORE_NONE'),
+            'random'          => JText::_('JBZOO_SORT_ORDER_RANDOM')
+        ));
         foreach ($stdFields as $stdField) {
             $options[$coreGrp][] = $this->_createOption($prefix . $stdField, 'JBZOO_FIELDS_CORE_' . $stdField);
         }
@@ -921,7 +1015,7 @@ class JBFieldHelper extends AppHelper
     {
         $html = array();
         foreach ($optionsList as $key => $option) {
-            $id         = uniqid('radio-');
+            $id         = 'radio-' . $this->app->jbstring->getId();
             $attributes = array(
                 'id'    => $id,
                 'type'  => 'radio',
@@ -956,7 +1050,7 @@ class JBFieldHelper extends AppHelper
     {
         $this->app->document->addScript('fields:global.js');
 
-        $id     = uniqid('listglobal-');
+        $id     = 'listglobal-' . $this->app->jbstring->getId();
         $global = $parent->getValue((string)$name) === null;
 
         $html   = array();

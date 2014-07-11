@@ -31,6 +31,7 @@ class JBModelElementItemcategory extends JBModelElement
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
+        $select->leftJoin(ZOO_TABLE_CATEGORY_ITEM . ' AS tCategoryItem ON tCategoryItem.item_id = tItem.id');
         return $this->_getWhere($value, $elementId);
     }
 
@@ -45,6 +46,7 @@ class JBModelElementItemcategory extends JBModelElement
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
+        $select->leftJoin(ZOO_TABLE_CATEGORY_ITEM . ' AS tCategoryItem ON tCategoryItem.item_id = tItem.id');
         return $this->_getWhere($value, $elementId);
     }
 
@@ -108,16 +110,11 @@ class JBModelElementItemcategory extends JBModelElement
     {
         $values = $this->_prepareValue($value);
 
-        $elementIdStr = $this->_jbtables->getFieldName($elementId, 's');
-        $elementIdNum = $this->_jbtables->getFieldName($elementId, 'n');
-
-        foreach ($values as $valueOne) {
-            if (is_numeric($valueOne)) {
-                return array('tIndex.' . $elementIdNum . ' IN (' . implode(',', $values) . ')');
-            } else {
-                return array('tIndex.' . $elementIdStr . ' IN (' . implode(',', $values) . ')');
-            }
+        if (!empty($values)) {
+            return array('tCategoryItem.category_id IN (' . implode(',', $values) . ')');
         }
+
+        return array();
     }
 
 

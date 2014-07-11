@@ -32,7 +32,7 @@ class JBCartJBuniversalController extends JBUniversalController
         $this->successUrl = $this->app->jbrouter->payment($appId, 'success');
         $this->failUrl    = $this->app->jbrouter->payment($appId, 'fail');
 
-        $this->app->jbajax->disableTmpl();
+        $this->app->jbdoc->disableTmpl();
         $this->renderView();
     }
 

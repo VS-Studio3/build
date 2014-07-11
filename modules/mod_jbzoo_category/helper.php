@@ -51,15 +51,26 @@ class JBZooCategoryHelper
      */
     public function getCategories()
     {
-        $renderCat = array();
+        $renderCat  = array();
+        $appId      = (int)$this->_params->get('application', false);
+        $menuItem   = (int)$this->_params->get('menu_item', 0);
+        $categories = $this->_getCategories();
+        $curCatId   = $this->getCurrentCategory();
 
-        if ((int)$this->_params->get('application', false) && $categories = $this->_getCategories()) {
+        if ($appId && !empty($categories)) {
 
             foreach ($categories as $category) {
 
+                if ($menuItem) {
+                    $catUrl = $this->app->route->category($category, true, $menuItem);
+                } else {
+                    $catUrl = $this->app->route->category($category);
+                }
+
                 $currentCat = array(
+                    'active_class'  => ($curCatId == $category->id) ? 'category-active' : '',
+                    'cat_link'      => $catUrl,
                     'category_name' => $category->name,
-                    'cat_link'      => $this->app->route->category($category),
                     'item_count'    => null,
                     'desc'          => null,
                     'image'         => null,
@@ -71,7 +82,8 @@ class JBZooCategoryHelper
                 }
 
                 if ((int)$this->_params->get('category_display_image', 1) && $image = $category->getImage('content.category_teaser_image')) {
-                    $currentCat['image'] = $this->getImageSettings($image);
+                    $currentCat['image'] = $this->_getImageSettings($image);
+                    $currentCat['attr']  = $this->_getImageSettings($image, true);
                 }
 
                 if ((int)$this->_params->get('display_items', 1)) {
@@ -89,12 +101,13 @@ class JBZooCategoryHelper
         return $renderCat;
     }
 
+
     /**
-     * Render image
      * @param $image
-     * @return mixed
+     * @param bool $attr
+     * @return string
      */
-    protected function getImageSettings($image)
+    protected function _getImageSettings($image, $attr = false)
     {
         $imgAttrs = array(
             'src'    => $image['src'],
@@ -104,8 +117,8 @@ class JBZooCategoryHelper
 
         if ((int)$this->_params->get('category_image_width') || (int)$this->_params->get('category_image_height')) {
 
-            $width  = (int)$this->_params->get('category_image_width', 150);
-            $height = (int)$this->_params->get('category_image_height', 150);
+            $width  = (int)$this->_params->get('category_image_width', 100);
+            $height = (int)$this->_params->get('category_image_height', 100);
             $image  = $this->app->jbimage->resize($image['path'], $width, $height);
 
             $imgAttrs = array_merge($imgAttrs, array(
@@ -115,7 +128,7 @@ class JBZooCategoryHelper
             ));
         }
 
-        return '<img ' . $this->app->jbhtml->buildAttrs($imgAttrs) . ' />';
+        return ($attr) ? $imgAttrs : '<img ' . $this->app->jbhtml->buildAttrs($imgAttrs) . ' />';
     }
 
     /**
@@ -124,7 +137,7 @@ class JBZooCategoryHelper
      */
     protected function _getCategories()
     {
-       $categories = JBModelCategory::model()->getList(
+        $categories = JBModelCategory::model()->getList(
             $this->_params->get('app_id'),
             array(
                 'limit'     => $this->_params->get('category_limit'),
@@ -171,5 +184,13 @@ class JBZooCategoryHelper
         $this->_params->set('app_id', (int)$appId);
         $this->_params->set('cat_id', (int)$catId);
 
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentCategory()
+    {
+        return $this->app->jbrequest->getSystem('category', 0);
     }
 }

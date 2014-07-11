@@ -58,6 +58,8 @@ class JBModelFilter extends JBModel
         $cacheGroup = 'filter';
         $result     = $this->app->jbcache->get($cacheHash, $cacheGroup);
 
+        $this->_setBigSelects();
+
         if (empty($result)) {
             // get seach select
             $select = $this->_getSearchSelect($elements, $logic, $type, $appId, $exact);
@@ -150,7 +152,7 @@ class JBModelFilter extends JBModel
         $select = $this->_getItemSelect($itemType, $appId)
             ->clear('select')
             ->select('DISTINCT tItem.id as id')
-            ->innerJoin($tableName . ' AS tIndex ON tIndex.item_id = tItem.id')
+            ->leftJoin($tableName . ' AS tIndex ON tIndex.item_id = tItem.id')
             ->leftJoin(ZOO_TABLE_JBZOO_SKU . ' AS tSku ON tSku.item_id = tItem.id');
 
         $where = array();
@@ -159,11 +161,17 @@ class JBModelFilter extends JBModel
 
         if (count($elements) > 0) {
             $i = 0;
+
             foreach ($elements as $elementId => $value) {
                 $i++;
 
-                $isRange       = $this->_isRange($value);
+                $isRange = $this->_isRange($value);
+
                 $elementSearch = $this->app->jbentity->getElementModel($elementId, $itemType, $appId, $isRange);
+
+                if (empty($elementSearch)) {
+                    continue;
+                }
 
                 // check excluded user types
                 if (in_array($elementSearch->getElementType(), array('textarea'))) {
@@ -175,12 +183,14 @@ class JBModelFilter extends JBModel
 
                 if ($logic == 'AND') {
                     $tmpConds = $elementSearch->conditionAND($select, $elementId, $value, $i, $exact);
+
                     if (is_array($tmpConds)) {
                         $where = array_merge($tmpConds, $where);
                     }
 
                 } else {
                     $tmpConds = $elementSearch->conditionOR($select, $elementId, $value, $i, $exact);
+
                     if (is_array($tmpConds)) {
                         $where = array_merge($tmpConds, $where);
                     }
@@ -212,6 +222,8 @@ class JBModelFilter extends JBModel
      */
     protected function _addOrder(JBDatabaseQuery $select, $order, $itemType)
     {
+        $select->order('tItem.priority DESC');
+
         if (!empty($order) && is_array($order)) {
 
             $orders = $order;
@@ -305,7 +317,31 @@ class JBModelFilter extends JBModel
      */
     protected function _isRange($value)
     {
-        if (is_array($value) && (isset($value['range']) || isset($value['range-date']))) {
+        if (!is_array($value)) {
+            return false;
+        }
+
+        if (isset($value['range']) || isset($value['range-date'])) {
+            return $this->_isRangeRow($value);
+        }
+
+        foreach ($value as $val) {
+            return $this->_isRangeRow($val);
+        }
+
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    private function _isRangeRow($value)
+    {
+        if (!is_array($value)) {
+            return false;
+        }
+
+        if (isset($value['range']) || isset($value['range-date'])) {
             return true;
         }
 

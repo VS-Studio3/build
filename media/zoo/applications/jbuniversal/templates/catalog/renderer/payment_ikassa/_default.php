@@ -17,6 +17,34 @@ defined('_JEXEC') or die('Restricted access');
 $view = $this->getView();
 $data = $vars['object'];
 
+if ((int)$data->get('isNew', 0)) {
+    $actionURL = 'https://sci.interkassa.com/';
+    $fields    = array(
+        'ik_co_id' => $data->get('shopid'),
+        'ik_pm_no' => $data->get('orderId'),
+        'ik_am'    => $data->get('summ'),
+        'ik_cur'   => $data->get('currency'),
+        'ik_desc'  => 'Order #' . $data->get('orderId') . ' from ' . JUri::getInstance()->getHost(),
+        'ik_enc'   => 'utf-8',
+        'ik_int'   => 'web',
+        'ik_am_t'  => 'invoice',
+    );
+
+    // add hash
+    ksort($fields, SORT_STRING);
+    array_push($fields, $data->get('key'));
+    $fields['ik_sign'] = base64_encode(md5(implode(':', $fields), true));
+
+} else {
+    $actionURL = 'https://www.interkassa.com/lib/payment.php';
+    $fields    = array(
+        'ik_shop_id'        => $data->get('shopid'),
+        'ik_payment_amount' => $data->get('summ'),
+        'ik_payment_id'     => $data->get('orderId'),
+        'ik_payment_desc'   => 'Order #' . $data->get('orderId') . ' from ' . JUri::getInstance()->getHost(),
+    );
+}
+
 ?>
 
 <p style="height:36px;">
@@ -26,14 +54,20 @@ $data = $vars['object'];
     <!--/noindex-->
 </p>
 
-<form name="payment" action="https://www.interkassa.com/lib/payment.php" method="post"
-      enctype="application/x-www-form-urlencoded">
-
-    <input type="hidden" name="ik_shop_id" value="<?php echo $data->get('shopid'); ?>">
-    <input type="hidden" name="ik_payment_amount" value="<?php echo $data->get('summ'); ?>">
-    <input type="hidden" name="ik_payment_id" value="<?php echo $data->get('orderId'); ?>">
-    <input type="hidden" name="ik_payment_desc"
-           value="Order #<?php echo $data->get('orderId'); ?> form <?php echo JUri::getInstance()->getHost(); ?>">
+<form action="<?php echo $actionURL; ?>"
+      name="payment"
+      method="post"
+      enctype="application/x-www-form-urlencoded"
+      enctype="utf-8">
+    <?php
+    $html = array();
+    foreach ($fields as $name => $field) {
+        if ($name && $field) {
+            $html[] = '<input type="hidden" name="' . $name . '" value="' . $field . '"/>';
+        }
+    }
+    echo implode("\r\t", $html);
+    ?>
 
     <input type="submit" style="display:inline-block;" class="add-to-cart"
            value="<?php echo JText::_('JBZOO_PAYMENT_BUTTON'); ?>"/>

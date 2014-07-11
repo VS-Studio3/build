@@ -69,7 +69,13 @@ class JBImageHelper extends AppHelper
         }
 
         // get info
-        if ($this->isExternal($orig)) {
+        if (($width == 0 && $height == 0)) {
+            $info = $this->getImageInfo($orig);
+
+            $info->origUrl = $orig;
+            $info->orig    = $orig;
+
+        } else if ($this->isExternal($orig)) {
             $info = $this->getImageInfo($orig);
 
             $info->width   = $width;
@@ -148,7 +154,7 @@ class JBImageHelper extends AppHelper
             );
         }
 
-        return null;
+        return (object)array();
     }
 
     /**

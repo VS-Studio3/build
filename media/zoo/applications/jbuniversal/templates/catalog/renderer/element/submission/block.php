@@ -19,7 +19,7 @@ $params = $this->app->data->create($params);
 // add tooltip
 $tooltip = '';
 if ($params->get('show_tooltip') && ($description = $element->config->get('description'))) {
-    $tooltip = ' class="hasTip" title="' . $description . '"';
+    $tooltip = ' class="hasTip" title="' . JText::_($description) . '"';
 }
 
 // create label

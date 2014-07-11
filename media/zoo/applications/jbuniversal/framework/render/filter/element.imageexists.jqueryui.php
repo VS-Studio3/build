@@ -28,12 +28,12 @@ class JBFilterElementImageexistsJqueryui extends JBFilterElement
         $options = array(
             array(
                 'text'  => JText::_('JBZOO_YES'),
-                'value' => '__IMAGE_EXISTS__',
+                'value' => JBModelElementJBImage::IMAGE_EXISTS,
                 'count' => null
             ),
             array(
                 'text'  => JText::_('JBZOO_NO'),
-                'value' => '__IMAGE_NO_EXISTS__',
+                'value' => JBModelElementJBImage::IMAGE_NO_EXISTS,
                 'count' => null
             )
         );

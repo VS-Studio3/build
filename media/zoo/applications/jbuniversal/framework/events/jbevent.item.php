@@ -49,7 +49,7 @@ class JBEventItem extends JBEvent
         // update index data
         $app->jbtables->checkSku(true);
 
-        $indexTableName = $app->jbtables->getIndexTable($item->getType()->id);
+        $indexTableName = $app->jbtables->getIndexTable($itemType);
         if ($app->jbtables->isTableExists($indexTableName, true)) {
             JBModelSearchindex::model()->updateByItem($item);
         }
@@ -135,4 +135,26 @@ class JBEventItem extends JBEvent
 
     }
 
+    /**
+     * Before render some item layout (experemental)
+     * @param AppEvent $event
+     */
+    public static function beforeRenderLayout($event)
+    {
+    }
+
+    /**
+     * After render some item layout (experemental)
+     * @param AppEvent $event
+     */
+    public static function afterRenderLayout($event)
+    {
+        $item   = $event->getSubject();
+        $params = $event->getParameters();
+        $app    = self::app();
+
+        if ($params['layout'] == 'full') {
+            $app->jbviewed->add($item);
+        }
+    }
 }

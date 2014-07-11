@@ -64,7 +64,7 @@ class JBModelSku extends JBModel
             if (!empty($priceElements)) {
 
                 foreach ($priceElements as $element) {
-                    $this->_indexPrice($element->getIndexData());
+                    $this->_indexPrice($element->getIndexData(true));
                 }
 
                 return true;
@@ -117,9 +117,10 @@ class JBModelSku extends JBModel
 
         if (!empty($sku)) {
             $select = $this->_getSelect()
-                ->select('item_id')
-                ->from(ZOO_TABLE_JBZOO_SKU)
-                ->where('sku = ?', $sku)
+                ->select('tItem.id')
+                ->from(ZOO_TABLE_ITEM . ' AS tItem')
+                ->innerJoin(ZOO_TABLE_JBZOO_SKU . ' AS tSku ON tSku.item_id = tItem.id')
+                ->where('tSku.sku = ?', $sku)
                 ->limit(1);
 
             if ($row = $this->fetchRow($select)) {

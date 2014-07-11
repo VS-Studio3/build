@@ -20,7 +20,7 @@ require_once dirname(__FILE__) . '/helper.php';
 $propsHelper = new JBZooFilterPropsHelper($params);
 $zoo         = App::getInstance('zoo');
 
-$zoo->jbdebug->mark('mod_jbzoo_props::start');
+$zoo->jbdebug->mark('mod_jbzoo_props::start-' . $module->id);
 
 $zoo->jbassets->setAppCSS();
 $zoo->jbassets->setAppJS();
@@ -48,14 +48,16 @@ if ($type && $application && $itemLayout) {
     $application = $zoo->table->application->get($application);
 
     // set renderer
-    $renderer = $zoo->renderer->create('filterProps')->addPath(array(
-        $zoo->path->path('component.site:'),
-        dirname(__FILE__)
-    ));
+    $renderer = $zoo->renderer->create('filterProps')
+        ->addPath(array(
+            $zoo->path->path('component.site:'),
+            dirname(__FILE__)
+        ))
+        ->setModuleParams($params);
 
     // render
     include(JModuleHelper::getLayoutPath('mod_jbzoo_props', $moduleLayout));
 }
 
 
-$zoo->jbdebug->mark('mod_jbzoo_props::finish');
+$zoo->jbdebug->mark('mod_jbzoo_props::finish-' . $module->id);

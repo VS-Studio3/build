@@ -43,12 +43,12 @@ class JBEntityHelper extends AppHelper
      */
     public function __construct($app)
     {
-        $this->app   = $app;
-        $this->_name = strtolower(basename(get_class($this), 'Helper'));
+        parent::__construct($app);
 
         $this->app->loader->register('Type', 'classes:type.php');
         $this->app->loader->register('FilterElement', 'classes:/filter/element.php');
     }
+
 
     /**
      * Get element by id
@@ -61,7 +61,7 @@ class JBEntityHelper extends AppHelper
     public function getElement($elementId, $type = null, $applicationId = null)
     {
         if (!isset($this->_elements[$elementId])) {
-            $zooType                     = $this->getType($type, $applicationId);
+            $zooType = $this->getType($type, $applicationId);
             $this->_elements[$elementId] = $zooType->getElement($elementId);
         }
 
@@ -81,7 +81,7 @@ class JBEntityHelper extends AppHelper
     public function getType($type, $applicationId)
     {
         if (!isset($this->_types[$type])) {
-            $application         = $this->getApplication($applicationId);
+            $application = $this->getApplication($applicationId);
             $this->_types[$type] = new Type($type, $application);
         }
 
@@ -114,13 +114,13 @@ class JBEntityHelper extends AppHelper
      */
     public function getElementModel($elementId, $type, $applicationId, $isRange = false)
     {
-        $elementType = '';
-
         $element = $this->getElement($elementId, $type, $applicationId);
-        if ($element) {
-            $elementType = strtolower(basename(get_class($element)));
-            $elementType = str_replace('element', '', $elementType);
+        if (!$element) {
+            return null;
         }
+
+        $elementType = strtolower(basename(get_class($element)));
+        $elementType = str_replace('element', '', $elementType);
 
         $modelName = 'JBModelElement' . $elementType;
 
@@ -149,7 +149,7 @@ class JBEntityHelper extends AppHelper
     {
         static $result;
 
-        $groupByType = (int)$groupByType;
+        $groupByType = (int)$groupByType ? 1 : 0;
 
         if (!isset($result[$groupByType])) {
 
@@ -160,20 +160,21 @@ class JBEntityHelper extends AppHelper
             $result[$groupByType] = array();
 
             $typesPath = $this->app->path->path('jbtypes:');
-            $files     = JFolder::files($typesPath, '.config');
+            $files = JFolder::files($typesPath, '.config');
 
             $result[$groupByType] = array();
             foreach ($files as $file) {
                 $fileContent = $this->app->jbfile->read($typesPath . '/' . $file);
-                $typeData    = json_decode($fileContent, true);
-                $typeAlias   = str_replace('.config', '', $file);
+                $typeData = json_decode($fileContent, true);
+                $typeAlias = str_replace('.config', '', $file);
 
-                if ($groupByType) {
-                    $result[$groupByType][$typeAlias] = $typeData['elements'];
-                } else {
-                    $result[$groupByType] = array_merge($result[$groupByType], $typeData['elements']);
+                if (isset($typeData['elements']) && !empty($typeData['elements'])) {
+                    if ($groupByType) {
+                        $result[$groupByType][$typeAlias] = $typeData['elements'];
+                    } else {
+                        $result[$groupByType] = array_merge($result[$groupByType], $typeData['elements']);
+                    }
                 }
-
             }
         }
 

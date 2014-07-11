@@ -66,9 +66,9 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
         $title    = $this->get('title');
 
         if ($isExists) {
-            return $title . "\n__IMAGE_EXISTS__";
+            return $title . "\n" . JBModelElementJBImage::IMAGE_EXISTS;
         } else {
-            return $title . "\n__IMAGE_NO_EXISTS__";
+            return $title . "\n__" . JBModelElementJBImage::IMAGE_NO_EXISTS;
         }
     }
 
@@ -119,7 +119,7 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
 
         } elseif ($template == 'itemlink') {
             if ($this->getItem()->getState()) {
-                $url = JRoute::_($this->app->route->item($this->_item, false), false, 2);
+                $url   = JRoute::_($this->app->route->item($this->_item, false), false, 2);
                 $title = empty($title) ? $this->getItem()->name : $title;
             }
 
@@ -130,9 +130,10 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
                 $rel = 'jbimage-gallery-' . $this->getItem()->id;
             }
 
-            $target      = '_blank';
-            $widthPopup  = (int)$params->get('width_popup', 0);
-            $heightPopup = (int)$params->get('height_popup', 0);
+            $target = '_blank';
+
+            $widthPopup  = (int)$params->get('width_popup');
+            $heightPopup = (int)$params->get('height_popup');
 
             if ($image) {
                 $url = $this->_jbimage->getUrl($this->get('file'));
@@ -147,21 +148,21 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
         if ($image && $layout = $this->getLayout('jbimage-' . $template . '.php')) {
             return $this->renderLayout($layout, array(
                     'imageAttrs' => $this->_buildAttrs(array(
-                        'class'  => 'jbimage',
-                        'alt'    => $alt,
-                        'title'  => $title,
-                        'src'    => $image->url,
-                        'width'  => $image->width,
-                        'height' => $image->height,
-                    )),
+                            'class'  => 'jbimage',
+                            'alt'    => $alt,
+                            'title'  => $title,
+                            'src'    => $image->url,
+                            'width'  => $image->width,
+                            'height' => $image->height,
+                        )),
                     'linkAttrs'  => $this->_buildAttrs(array(
-                        'class'  => 'jbimage-link ' . $appendClass,
-                        'title'  => $title,
-                        'href'   => $url,
-                        'rel'    => $rel,
-                        'target' => $target,
-                        'id'     => uniqid('jbimage-link-'),
-                    )),
+                            'class'  => 'jbimage-link ' . $appendClass,
+                            'title'  => $title,
+                            'href'   => $url,
+                            'rel'    => $rel,
+                            'target' => $target,
+                            'id'     => uniqid('jbimage-link-'),
+                        )),
                     'link'       => $url,
                     'image'      => $image,
                 )
@@ -291,7 +292,7 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
 
     /**
      * Validates the submitted element
-     * @param AppData $value  value
+     * @param AppData $value value
      * @param AppData $params submission parameters
      * @return array
      * @throws AppValidatorException
@@ -476,6 +477,8 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
      */
     protected function _getDefaultImage($params)
     {
+        $params = $this->app->data->create($params);
+
         // init vars
         $width         = (int)$params->get('width', 0);
         $height        = (int)$params->get('height', 0);
@@ -528,6 +531,11 @@ class ElementJBImage extends ElementRepeatable implements iRepeatSubmittable
      */
     public function triggerItemDeleted()
     {
+        $removeWithItem = (int)$this->config->get('remove_with_item');
+        if (!$removeWithItem) {
+            return null;
+        }
+
         $result = array();
 
         $this->seek(0);

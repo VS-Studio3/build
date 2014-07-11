@@ -39,9 +39,9 @@ jQuery(function ($) {
             event.preventDefault();
 
             SqueezeBox.fromElement(this, {
-                handler:"iframe",
-                url    :"index.php?option=com_media&view=images&tmpl=component&e_name=" + id,
-                size   :{x:850, y:500}
+                handler: "iframe",
+                url    : "index.php?option=com_media&view=images&tmpl=component&e_name=" + id,
+                size   : {x: 850, y: 500}
             });
         });
 
@@ -71,7 +71,7 @@ jQuery(function ($) {
     });
 
     if ($.isFunction(window.jInsertEditorText)) {
-        window.insertTextOld = window.jInsertEditorText;
+        window.insertTextOldJBImage = window.jInsertEditorText;
     }
 
     window.jInsertEditorText = function (c, a) {
@@ -90,7 +90,7 @@ jQuery(function ($) {
             $element.val(value);
 
         } else {
-            $.isFunction(window.insertTextOld) && window.insertTextOld(c, a);
+            $.isFunction(window.insertTextOldJBImage) && window.insertTextOldJBImage(c, a);
         }
     };
 

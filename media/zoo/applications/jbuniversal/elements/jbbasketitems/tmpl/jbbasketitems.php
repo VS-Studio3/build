@@ -151,9 +151,8 @@ if (!empty($items)) {
                     $appId = $this->app->zoo->getApplication()->id;
                     $href  = $this->app->jbrouter->basketPayment($params->get('basket-menuitem'), $appId, $this->getItem()->id);
                     ?>
-                    <p><input type="button" style="display:inline-block;" class="jsGoto add-to-cart"
-                              value="<?php echo JText::_('JBZOO_PAYMENT_LINKTOFORM'); ?>"
-                              data-href="<?php echo $href; ?>"/></p>
+                    <p><a style="display:inline-block;" href="<?php echo $href; ?>"
+                          class="jsGoto add-to-cart"><?php echo JText::_('JBZOO_PAYMENT_LINKTOFORM'); ?></a></p>
 
                 <?php endif; ?>
 

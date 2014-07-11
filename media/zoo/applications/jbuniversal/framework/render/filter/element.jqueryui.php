@@ -25,7 +25,7 @@ class JBFilterElementJqueryui extends JBFilterElement
      */
     public function html()
     {
-        $values = $this->_getValues('db');
+        $values = $this->_getValues();
 
         return $this->app->jbhtml->buttonsJqueryUI(
             $this->_createOptionsList($values),
@@ -35,4 +35,14 @@ class JBFilterElementJqueryui extends JBFilterElement
             $this->_getId()
         );
     }
+
+    /**
+     * @param null $type
+     * @return array
+     */
+    protected function _getValues($type = null)
+    {
+        return $this->_getDbValues();
+    }
+
 }

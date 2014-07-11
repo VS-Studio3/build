@@ -95,6 +95,59 @@ class JBTypeHelper extends AppHelper
         return false;
     }
 
+    /**
+     * @param string
+     * @param string $elementId
+     * @param string $typeId
+     * @param int $appId
+     * @return bool
+     */
+    public function checkOptionColor($newOption, $elementId, $typeId, $appId)
+    {
+        $application = $this->app->table->application->get($appId);
+        if ($application) {
+            $type = $application->getType($typeId);
+        }
+
+        if (!isset($type)) {
+            return false;
+        }
+
+        $jbcolor  = $this->app->jbcolor;
+        $elements = $type->config->get('elements', array());
+        $oldItems = $elements[$elementId]['colors'];
+
+        $colors = $jbcolor->parse($oldItems);
+
+        if (strpos($newOption, '#')) {
+            list($label, $color) = explode('#', $newOption);
+        } else {
+            $label = $newOption;
+        }
+
+        $label = JString::trim($label);
+
+        if (empty($label)) {
+            return false;
+        }
+
+        $newItems = $jbcolor->build($newOption, $colors);
+
+        if ($oldItems == $newItems) {
+            return false;
+
+        } else if (!empty($newItems)) {
+
+            $elements[$elementId]['colors'] = $newItems;
+
+            $type->config->set('elements', $elements);
+            $type->bindElements($elements);
+            $type->save();
+
+            return true;
+        }
+
+    }
 
     /**
      * @param $newOption
@@ -116,8 +169,10 @@ class JBTypeHelper extends AppHelper
         }
 
         $elements = $type->config->get('elements', array());
-        $options  = $this->app->jbselectcascade->getItemList($elements[$elementId]['select_names'],
-            $elements[$elementId]['items']);
+        $options  = $this->app->jbselectcascade->getItemList(
+            $elements[$elementId]['select_names'],
+            $elements[$elementId]['items']
+        );
 
         $oldItems = $elements[$elementId]['items'];
 
@@ -127,21 +182,21 @@ class JBTypeHelper extends AppHelper
         $stringItems = implode("\r\n", $newItems);
 
         if ($oldItems == $stringItems) {
-
             return false;
 
-        } else {
+        } else if (!empty($stringItems)) {
 
             $elements[$elementId]['items'] = $stringItems;
 
             $type->config->set('elements', $elements);
-            $type->bindElements($stringItems);
+            $type->bindElements($elements);
             $type->save();
 
             return true;
         }
-    }
 
+        return false;
+    }
 
     /**
      * @param $options

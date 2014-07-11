@@ -22,6 +22,6 @@ class JBFilterElementRating extends JBFilterElement
 
     protected function _getValues($type = null)
     {
-
+        return true;
     }
 }

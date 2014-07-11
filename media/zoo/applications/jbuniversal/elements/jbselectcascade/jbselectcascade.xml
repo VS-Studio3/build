@@ -14,7 +14,7 @@
     <description>Cascading select</description>
     <author>JBZoo.com</author>
     <creationDate>2013 07</creationDate>
-    <copyright>Copyright (C) JBZoo.com,  All rights reserved.</copyright>
+    <copyright>Copyright (C) JBZoo.com, All rights reserved.</copyright>
     <authorEmail>admin@jbzoo.com</authorEmail>
     <authorUrl>http://jbzoo.com</authorUrl>
     <version>1.0</version>
@@ -68,6 +68,14 @@
                description="JBZOO_SELECT_TEMPLATE_DESC">
             <option value="default">JBZOO_SELECT_DEFAULT</option>
             <option value="last">JBZOO_SELECT_LAST</option>
+            <option value="label">JBZOO_SELECT_LABEL</option>
+        </param>
+    </params>
+    <params group="submission">
+        <param name="mode" type="jbselect" default="all" label="JBZOO_CASCADING_SUBMISSION_VALIDATE_MODE"
+               description="JBZOO_CASCADING_SUBMISSION_VALIDATE_MODE_DESC">
+            <option value="all">JBZOO_CASCADING_SUBMISSION_VALIDATE_MODE_ALL</option>
+            <option value="any">JBZOO_CASCADING_SUBMISSION_VALIDATE_MODE_ANY</option>
         </param>
     </params>
 </element>

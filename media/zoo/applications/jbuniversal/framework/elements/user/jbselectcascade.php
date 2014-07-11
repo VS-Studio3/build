@@ -25,7 +25,6 @@ class JBCSVItemUserJBSelectCascade extends JBCSVItem
     public function toCSV()
     {
         $result = array();
-        $params = $this->app->jbuser->getParam('export-items', array());
 
         if (!empty($this->_value)) {
             foreach ($this->_value as $self) {
@@ -33,7 +32,7 @@ class JBCSVItemUserJBSelectCascade extends JBCSVItem
             }
         }
 
-        if ((int)$params->merge_repeatable) {
+        if ((int)$this->_exportParams->get('merge_repeatable')) {
             return implode(JBCSVItem::SEP_ROWS, $result);
         } else {
             return $result;
@@ -47,6 +46,10 @@ class JBCSVItemUserJBSelectCascade extends JBCSVItem
      */
     public function fromCSV($value, $position = null)
     {
+        if(JString::trim($value) === '') {
+            return $this->_item;
+        }
+
         if (strpos($value, JBCSVItem::SEP_ROWS)) {
 
             $tmpData = $this->_getArray($value, JBCSVItem::SEP_ROWS);
@@ -61,7 +64,9 @@ class JBCSVItemUserJBSelectCascade extends JBCSVItem
 
             $data[] = $this->_getValuesData($value);
         }
+
         $this->_element->bindData($data);
+
         return $this->_item;
     }
 
@@ -71,7 +76,7 @@ class JBCSVItemUserJBSelectCascade extends JBCSVItem
      */
     private function _getValuesData($elementData)
     {
-        $importData = $this->app->jbsession->getGroup('import');
+        $importData = $this->_lastImportParams->get('previousparams');
         $valuesTmp  = $this->_getArray($elementData, JBCSVItem::SEP_CELL);
 
         foreach ($valuesTmp as $key => $value) {

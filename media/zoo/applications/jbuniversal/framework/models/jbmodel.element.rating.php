@@ -31,7 +31,7 @@ class JBModelElementRating extends JBModelElement
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return $this->_getWhere($value);
+        return $this->_getWhere($value, $elementId);
     }
 
     /**
@@ -45,7 +45,7 @@ class JBModelElementRating extends JBModelElement
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return $this->_getWhere($value);
+        return $this->_getWhere($value, $elementId);
     }
 
     /**
@@ -56,43 +56,53 @@ class JBModelElementRating extends JBModelElement
      */
     protected function _prepareValue($value, $exact = false)
     {
-        $values    = explode('/', $value);
-        $values[0] = (int)trim($values[0]);
-        $values[1] = (int)trim($values[1]);
+        if (is_array($value)) {
+            reset($value);
+            $value = trim(current($value));
+        }
 
-        return $values;
+        $result = $value;
+        if (is_string($value) && strpos($value, '/')) {
+            $result    = explode('/', $value);
+            $result[0] = trim($result[0]);
+            $result[1] = trim($result[1]);
+        }
+
+        return $result;
     }
 
     /**
      * Get conditions for search
-     * @param string|array $value
-     * @return string
+     * @param $value
+     * @param $elementId
+     * @return array
      */
-    protected function _getWhere($value)
+    protected function _getWhere($value, $elementId)
     {
         $value = $this->_prepareValue($value);
 
-        if ($value[0] == 0 && $this->_config->get('stars') == $value[1]) {
-            return array();
+        $clearElementId = $this->_jbtables->getFieldName($elementId, 'n');
+
+        $where = array();
+        if (is_array($value)) {
+
+            if ($value[0] == 0 && $this->_config->get('stars') == $value[1]) {
+                return $where;
+            }
+
+            if (strlen($value[0]) != 0) {
+                $where[] = 'tIndex.' . $clearElementId . ' >= ' . (float)$value[0];
+            }
+
+            if (strlen($value[1]) != 0) {
+                $where[] = 'tIndex.' . $clearElementId . ' <= ' . (float)$value[1];
+            }
+
+        } else {
+            $where[] = 'tIndex.' . $clearElementId . ' = ' . (float)$value;
         }
 
-        $select = $this->_getItemSelect()
-            ->clear('select')
-            ->select('tItem.id AS id, AVG(value) AS rate')
-            ->innerJoin(ZOO_TABLE_RATING . ' AS tRating ON tRating.item_id = tItem.id')
-            ->where('element_id = ?', $this->_identifier)
-            ->group('tItem.id')
-            ->having('rate >= ?', $value[0])
-            ->having('rate <= ?', $value[1]);
-
-        $result = $this->fetchAll($select);
-        $result = $this->_groupBy($result, 'id');
-
-        if (!empty($result)) {
-            return array('tItem.id IN (' . implode(', ', $result) . ')');
-        }
-
-        return array('tItem.id IN (0)');
+        return $where;
     }
 
 }

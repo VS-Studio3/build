@@ -13,66 +13,66 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-if (JFile::exists($this->app->path->path('jbapp:config') . '/yml_config.php')) {
-    require $this->app->path->path('jbapp:config') . '/yml_config.php';
-}
+
 /**
  * Class JBToolsJBuniversalController
  * JBZoo tools controller for back-end
  */
 class JBConfigJBuniversalController extends JBUniversalController
 {
+
     /**
      * Index page
      */
     public function index()
     {
+        if ($this->app->jbrequest->isPost()) {
+            $this->_config->setGroup('config.custom', $this->app->jbrequest->get('jbzooform'));
+            $this->setRedirect($this->app->jbrouter->admin(), JText::_('JBZOO_CONFIG_SAVED'));
+        }
+
+        $this->configData = $this->_config->getGroup('config.custom', $this->app->jbconfig->getList());
+
         $this->renderView();
     }
 
     /**
-     * Index page
+     * Config for Yandex.Market (YML)
      */
     public function yandexYml()
     {
-        if (JFile::exists($this->app->path->path('jbapp:config') . '/yml_config.php')) {
-            $this->post                              = $this->app->jbconfig->getList();
-            $this->post['JBZOO_CONFIG_YML_TYPE']     = explode(':', $this->post['JBZOO_CONFIG_YML_TYPE']);
-            $this->post['JBZOO_CONFIG_YML_APP_LIST'] = explode(':', $this->post['JBZOO_CONFIG_YML_APP_LIST']);
-        } else {
-            $this->post = '';
+        if ($this->app->jbrequest->isPost()) {
+            $this->_config->setGroup('config.yml', $this->app->jbrequest->get('jbzooform'));
+            $this->setRedirect($this->app->jbrouter->admin(), JText::_('JBZOO_CONFIG_SAVED'));
         }
+
+        $this->configData = $this->_config->getGroup('config.yml', $this->app->jbconfig->getList());
+
         $this->renderView();
     }
 
     /**
-     * Save JBZoo Config file
+     * Config for SEF
      */
-    public function saveConfigYml()
+    public function sef()
     {
-        $configPath = $this->app->path->path('jbapp:config') . '/yml_config.php';
+        if ($this->app->jbrequest->isPost()) {
+            // save new config
+            $this->_config->setGroup('config.sef', $this->app->jbrequest->get('jbzooform'));
 
-        if (empty($_POST['jbzooform']['JBZOO_CONFIG_YML_APP_LIST']) || empty($_POST['jbzooform']['JBZOO_CONFIG_YML_TYPE'])) {
-            $this->setRedirect($this->app->jbrouter->admin(array('task' => 'yandexyml')), JText::_('JBZOO_CONFIG_NO_SAVED'));
+            // save route caching state
+            $cacheState = $this->_config->get('zoo_route_caching', 0, 'config.sef');
+            $this->app->set('cache_routes', $cacheState);
+            $this->app->component->self->save();
+            $this->app->route->clearCache();
+
+            // redirect after submit
+            $this->setRedirect($this->app->jbrouter->admin(), JText::_('JBZOO_CONFIG_SAVED'));
         }
 
-        $_POST['jbzooform']['JBZOO_CONFIG_YML_APP_LIST'] = implode(':', $_POST['jbzooform']['JBZOO_CONFIG_YML_APP_LIST']);
-        $_POST['jbzooform']['JBZOO_CONFIG_YML_TYPE']     = implode(':', $_POST['jbzooform']['JBZOO_CONFIG_YML_TYPE']);
+        $this->configData = $this->_config->getGroup('config.sef');
 
-        $this->app->jbconfig->saveToFile($_POST['jbzooform'], $configPath);
-
-        $this->setRedirect($this->app->jbrouter->admin(array('task' => 'yandexyml')), JText::_('JBZOO_CONFIG_SAVED'));
-    }
-
-    /**
-     * Save JBZoo Config file
-     */
-    public function saveConfig()
-    {
-        $configPath = $this->app->path->path('jbapp:config') . '/config.php';
-        $this->app->jbconfig->saveToFile($_POST['jbzooform'], $configPath);
-
-        $this->setRedirect($this->app->jbrouter->admin(array('task' => 'index')), JText::_('JBZOO_CONFIG_SAVED'));
+        $this->renderView();
     }
 
 }

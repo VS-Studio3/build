@@ -46,11 +46,17 @@ class JBEnvHelper extends AppHelper
     }
 
     /**
-     * Get full current URL
+     * Get full current URL with simple optimization
      */
     public function getCurrentUrl()
     {
-        return JUri::getInstance()->toString();
+        static $url;
+
+        if (!isset($url)) {
+            $url = JUri::getInstance()->toString();
+        }
+
+        return $url;
     }
 
     /**

@@ -31,10 +31,7 @@ class JBFilterElementAuthorText extends JBFilterElementAuthor
         $attrs['maxlength'] = '255';
         $attrs['size']      = '60';
 
-        if ((int)$this->_params->get('jbzoo_filter_autocomplete', 0)) {
-            $attrs['class'][]     = 'jsAutocomplete';
-            $attrs['placeholder'] = $this->_getPlaceholder();
-        }
+        $attrs = $this->_addPlaceholder($attrs);
 
         return $attrs;
     }

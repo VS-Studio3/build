@@ -40,6 +40,11 @@
             function setValue() {
                 var appId = $appSelect.val(),
                     catId = $('.app-' + appId + ' select', $element).val();
+
+                if(typeof catId == 'undefined' || catId == null) {
+                    catId = -1;
+                }
+                console.log(catId);
                 $value.val(appId + ':' + catId);
             }
 

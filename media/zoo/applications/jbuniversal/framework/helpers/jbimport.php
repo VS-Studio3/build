@@ -1,274 +1,663 @@
-<?php //0046b
-if(!extension_loaded('ionCube Loader')){$__oc=strtolower(substr(php_uname(),0,3));$__ln='ioncube_loader_'.$__oc.'_'.substr(phpversion(),0,3).(($__oc=='win')?'.dll':'.so');if(function_exists('dl')){@dl($__ln);}if(function_exists('_il_exec')){return _il_exec();}$__ln='/ioncube/'.$__ln;$__oid=$__id=realpath(ini_get('extension_dir'));$__here=dirname(__FILE__);if(strlen($__id)>1&&$__id[1]==':'){$__id=str_replace('\\','/',substr($__id,2));$__here=str_replace('\\','/',substr($__here,2));}$__rd=str_repeat('/..',substr_count($__id,'/')).$__here.'/';$__i=strlen($__rd);while($__i--){if($__rd[$__i]=='/'){$__lp=substr($__rd,0,$__i).$__ln;if(file_exists($__oid.$__lp)){$__ln=$__lp;break;}}}if(function_exists('dl')){@dl($__ln);}}else{die('The file '.__FILE__." is corrupted.\n");}if(function_exists('_il_exec')){return _il_exec();}echo('Site error: the file <b>'.__FILE__.'</b> requires the ionCube PHP Loader '.basename($__ln).' to be installed by the website operator. If you are the website operator please use the <a href="http://www.ioncube.com/lw/">ionCube Loader Wizard</a> to assist with installation.');exit(199);
+<?php
+/**
+ * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
+ *
+ * @package     jbzoo
+ * @version     2.x Pro
+ * @author      JBZoo App http://jbzoo.com
+ * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
+ * @license     http://jbzoo.com/license-pro.php JBZoo Licence
+ * @coder       Denis Smetannikov <denis@jbzoo.com>
+ */
 
-?>
-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
-CR2xWsR+7W==
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+
+
+/**
+ * Class JBImportHelper
+ */
+class JBImportHelper extends AppHelper
+{
+    const STEP_SIZE = 50;
+
+    const LOSE_NONE    = 0;
+    const LOSE_DISABLE = 1;
+    const LOSE_REMOVE  = 2;
+
+    const KEY_NONE  = 0;
+    const KEY_ID    = 1;
+    const KEY_NAME  = 2;
+    const KEY_ALIAS = 3;
+    const KEY_SKU   = 4;
+
+    const OPTIONS_NO  = 0;
+    const OPTIONS_YES = 1;
+
+    /**
+     * @var JSONData
+     */
+    protected $_data = null;
+
+    /**
+     * @param App $app
+     */
+    public function __construct($app)
+    {
+        parent::__construct($app);
+
+        // make sure the line endings are recognized irrespective of the OS
+        $this->app->jbenv->maxPerformance();
+        ini_set('auto_detect_line_endings', true);
+    }
+
+    /**
+     * Get info for pre import step
+     * @param string $file
+     * @param array $options
+     * @return array
+     */
+    public function getInfo($file, $options)
+    {
+        $options = $this->app->data->create($options);
+
+        $info = array();
+
+        // get applications
+        $applist = JBModelApp::model()->getList();
+        if (!empty($applist)) {
+            $info['applist'] = array();
+            foreach ($applist as $app) {
+                $info['applist'][$app->id] = $app->name;
+            }
+
+            reset($applist);
+            $application = current($applist);
+
+            $info['app'] = current($applist);
+        }
+
+        // get types
+        $info['types'] = array();
+        foreach ($info['app']->getTypes() as $type) {
+            $info['types'][$type->id] = array();
+
+            foreach ($type->getElements() as $element) {
+                // filter elements
+                $info['types'][$type->id][$element->getElementType()][] = $element;
+            }
+
+        }
+
+        $info['item_count'] = 0;
+        $info['columns']    = array();
+
+        // get params
+        $separator       = $options->get('separator', ',') ? $options->get('separator', ',') : ',';
+        $enclosure       = $options->get('enclosure', '"') ? $options->get('enclosure', '"') : '"';
+        $containsHeaders = (int)$options->get('header', 1);
+
+        // get column names and row count
+        $rowCount = 0;
+        if (($handle = fopen($file, "r")) !== false) {
+
+            while (($data = fgetcsv($handle, 0, $separator, $enclosure)) !== false) {
+
+                if ($rowCount == 0) {
+                    if ($containsHeaders) {
+                        $info['columns'] = $data;
+                    } else {
+                        $info['columns'] = array_fill(0, count($data), '');
+                    }
+                }
+
+                $rowCount++;
+            }
+            fclose($handle);
+        }
+
+        $info['count'] = $containsHeaders ? $rowCount - 1 : $rowCount;
+
+        return $info;
+    }
+
+    /**
+     * @param $info
+     * @return array
+     */
+    public function itemsControls($info)
+    {
+        $html       = array();
+        $htmlHelper = $this->app->html;
+
+        $options = array($htmlHelper->_('select.option', '', '- ' . JText::_('JBZOO_SELECT_APP') . ' -'));
+        $options += $info['applist'];
+        $html['apps'] = $htmlHelper->_('select.genericlist', $options, 'appid');
+
+        $options       = array($htmlHelper->_('select.option', '', '- ' . JText::_('JBZOO_SELECT_TYPE') . ' -'));
+        $html['types'] = $htmlHelper->_('zoo.typelist', $info['app'], $options, 'typeid', null, 'value', 'text');
+
+        $html['fields_types'] = array();
+        foreach ($info['types'] as $typeid => $element_types) {
+            $html['fields_types'][$typeid] = $this->_createItemsControl($typeid, $element_types);
+        }
+
+        // lose control
+        $loseOptions  = array(
+            $htmlHelper->_('select.option', self::LOSE_NONE, JText::_('JBZOO_IMPORT_LOSE_NONE')),
+            $htmlHelper->_('select.option', self::LOSE_DISABLE, JText::_('JBZOO_IMPORT_LOSE_DISABLE')),
+            $htmlHelper->_('select.option', self::LOSE_REMOVE, JText::_('JBZOO_IMPORT_LOSE_REMOVE')),
+        );
+        $html['lose'] = $htmlHelper->_('select.genericlist', $loseOptions, 'lose');
+
+        // what field is key
+        $keyOptions  = array(
+            $htmlHelper->_('select.option', self::KEY_NONE, JText::_('JBZOO_IMPORT_KEY_NONE')),
+            $htmlHelper->_('select.option', self::KEY_ID, JText::_('JBZOO_IMPORT_KEY_ID')),
+            $htmlHelper->_('select.option', self::KEY_NAME, JText::_('JBZOO_IMPORT_KEY_NAME')),
+            $htmlHelper->_('select.option', self::KEY_ALIAS, JText::_('JBZOO_IMPORT_KEY_ALIAS')),
+            $htmlHelper->_('select.option', self::KEY_SKU, JText::_('JBZOO_IMPORT_KEY_SKU')),
+        );
+        $html['key'] = $htmlHelper->_('select.genericlist', $keyOptions, 'key');
+
+        $createOptions  = array(
+            $htmlHelper->_('select.option', self::OPTIONS_NO, JText::_('JBZOO_NO')),
+            $htmlHelper->_('select.option', self::OPTIONS_YES, JText::_('JBZOO_YES')),
+        );
+        $html['create'] = $htmlHelper->_('select.genericlist', $createOptions, 'create');
+
+        // check options config
+        $checkOptions         = array(
+            $htmlHelper->_('select.option', self::OPTIONS_NO, JText::_('JBZOO_IMPORT_CHECK_OPTION_NO')),
+            $htmlHelper->_('select.option', self::OPTIONS_YES, JText::_('JBZOO_IMPORT_CHECK_OPTION_YES')),
+        );
+        $html['checkOptions'] = $htmlHelper->_('select.genericlist', $checkOptions, 'checkOptions');
+
+        // create alias option
+        $createAliasOptions  = array(
+            $htmlHelper->_('select.option', self::OPTIONS_NO, JText::_('JBZOO_IMPORT_CREATE_ALIAS_OPTION_NO')),
+            $htmlHelper->_('select.option', self::OPTIONS_YES, JText::_('JBZOO_IMPORT_CREATE_ALIAS_OPTION_YES')),
+        );
+        $html['createAlias'] = $htmlHelper->_('select.genericlist', $createAliasOptions, 'createAlias');
+
+        return $html;
+    }
+
+    /**
+     * @param $info
+     * @return array
+     */
+    public function categoriesControls($info)
+    {
+        $html       = array();
+        $htmlHelper = $this->app->html;
+
+        $options = array($htmlHelper->_('select.option', '', '- ' . JText::_('JBZOO_SELECT_APP') . ' -'));
+        $options += $info['applist'];
+        $html['apps'] = $htmlHelper->_('select.genericlist', $options, 'appid');
+
+        $html['fields_types'] = $this->_createCategoriesControl('categoryFileds');
+
+        // lose control
+        $loseOptions  = array(
+            $htmlHelper->_('select.option', self::LOSE_NONE, JText::_('JBZOO_IMPORT_LOSE_NONE')),
+            $htmlHelper->_('select.option', self::LOSE_DISABLE, JText::_('JBZOO_IMPORT_LOSE_DISABLE')),
+            $htmlHelper->_('select.option', self::LOSE_REMOVE, JText::_('JBZOO_IMPORT_LOSE_REMOVE')),
+        );
+        $html['lose'] = $htmlHelper->_('select.genericlist', $loseOptions, 'lose');
+
+        // what field is key
+        $keyOptions  = array(
+            $htmlHelper->_('select.option', self::KEY_NONE, JText::_('JBZOO_IMPORT_KEY_NONE')),
+            $htmlHelper->_('select.option', self::KEY_ID, JText::_('JBZOO_IMPORT_KEY_ID')),
+            $htmlHelper->_('select.option', self::KEY_NAME, JText::_('JBZOO_IMPORT_KEY_NAME')),
+            $htmlHelper->_('select.option', self::KEY_ALIAS, JText::_('JBZOO_IMPORT_KEY_ALIAS')),
+        );
+        $html['key'] = $htmlHelper->_('select.genericlist', $keyOptions, 'key');
+
+        $createOptions  = array(
+            $htmlHelper->_('select.option', self::OPTIONS_NO, JText::_('JBZOO_NO')),
+            $htmlHelper->_('select.option', self::OPTIONS_YES, JText::_('JBZOO_YES')),
+        );
+        $html['create'] = $htmlHelper->_('select.genericlist', $createOptions, 'create');
+
+        // create alias option
+        $createAliasOptions = array(
+            $htmlHelper->_('select.option', self::OPTIONS_NO, JText::_('JBZOO_IMPORT_CREATE_ALIAS_OPTION_NO')),
+            $htmlHelper->_('select.option', self::OPTIONS_YES, JText::_('JBZOO_IMPORT_CREATE_ALIAS_OPTION_YES')),
+        );
+
+        $html['createAlias'] = $htmlHelper->_('select.genericlist', $createAliasOptions, 'createAlias');
+
+
+        return $html;
+    }
+
+    /**
+     * Create fields control for item
+     * @param $typeid
+     * @param $elementTypes
+     */
+    protected function _createItemsControl($typeid, $elementTypes)
+    {
+        $htmlHelper = $this->app->html;
+
+        $fields  = $this->app->jbcsvmapper->getItemFields($elementTypes);
+        $options = array($htmlHelper->_('select.option', '', ' ** '));
+
+        foreach ($fields as $groupKey => $group) {
+
+            if (strpos($groupKey, '__') === false) {
+                $options[] = $htmlHelper->_('select.option', '<OPTGROUP>', JText::_('JBZOO_ITEM_GROUP_' . $groupKey));
+            } else {
+                list($groupName, $name) = explode('__', $groupKey);
+                $options[] = $htmlHelper->_('select.option', '<OPTGROUP>', JText::_('JBZOO_ITEM_GROUP_' . $groupName) . ' - ' . $name);
+            }
+
+            foreach ($group as $fieldKey => $field) {
+                $options[] = $htmlHelper->_('select.option', $fieldKey, $field);
+            }
+
+            $options[] = $htmlHelper->_('select.option', '</OPTGROUP>');
+        }
+
+        return $htmlHelper->_(
+            'select.genericlist',
+            $options,
+            'assign[' . $typeid . '][__name_placeholder__]',
+            'class="type-select type-select-' . $typeid . '"'
+        );
+    }
+
+    /**
+     * Create fields control for category
+     */
+    protected function _createCategoriesControl()
+    {
+        $htmlHelper = $this->app->html;
+
+        $fields  = $this->app->jbcsvmapper->getCategoryFields();
+        $options = array($htmlHelper->_('select.option', '', ' ** '));
+
+        foreach ($fields as $groupKey => $group) {
+
+            $options[] = $htmlHelper->_('select.option', '<OPTGROUP>', JText::_('JBZOO_ITEM_GROUP_' . strtoupper($groupKey)));
+
+            foreach ($group as $fieldKey => $field) {
+                $options[] = $htmlHelper->_('select.option', $fieldKey, $field);
+            }
+
+            $options[] = $htmlHelper->_('select.option', '</OPTGROUP>');
+        }
+
+        return $htmlHelper->_('select.genericlist', $options, 'assign[]', 'class="type-select"');
+    }
+
+    /**
+     * @return string
+     */
+    public function getTmpFilename()
+    {
+        return $this->app->jbpath->sysPath('tmp', '/' . uniqid('jbimport_') . '.csv');
+    }
+
+    /**
+     * Get import data from session
+     * @return JSONData
+     */
+    protected function _initSessionData()
+    {
+        $data        = $this->app->jbsession->getGroup('import');
+        $this->_data = $this->app->data->create($data);
+
+        return $this->_data;
+    }
+
+    /**
+     * Get last line in CSV file
+     * @param int $step
+     * @return int
+     */
+    protected function _getLastLine($step = 0)
+    {
+        $lastLine = self::STEP_SIZE * $step;
+        if ((int)$this->_data->header) {
+            $lastLine++;
+        }
+
+        return $lastLine;
+    }
+
+    /**
+     * Get lines from CSV file for current step
+     * @param string $file
+     * @param int $lastLine
+     * @return array
+     */
+    protected function _getCSVLines($file, $lastLine)
+    {
+        return $this->app->jbcsv->getLinesfromFile($file, $this->_data, $lastLine, self::STEP_SIZE);
+    }
+
+    /**
+     * Process one Item row
+     * @param array $row
+     * @param int $lineKey
+     * @return int
+     */
+    protected function _processItemRow($row, $lineKey)
+    {
+        // create item
+        $item = $this->_getItemByKey($row, $lineKey);
+
+        if (empty($item)) {
+            return false;
+        }
+
+        $positions = array();
+
+        // bind import data from CSV
+        foreach ($this->_data->assign as $colKey => $itemField) {
+
+            $itemField = JString::trim($itemField);
+            if (!empty($itemField)) {
+
+                $value = isset($row[$colKey]) ? $row[$colKey] : null;
+
+                $fieldInfo = $this->app->jbcsvmapper->itemFieldToMeta($itemField);
+
+                $positionKey = implode('__', $fieldInfo);
+                if (!isset($positions[$positionKey])) {
+                    $positions[$positionKey] = 0;
+                }
+                $positions[$positionKey]++;
+
+                $cellElem = $this->app->jbcsvcell->createItem($fieldInfo['name'], $item, $fieldInfo['group'], $fieldInfo);
+                $cellElem->fromCSV($value, $positions[$positionKey]);
+            }
+        }
+
+        $id = $item->id;
+
+        $item = $this->_checkItemAlias($item);
+
+        // save all changes
+        $item->getParams()->set('jbzoo.no_index', 0);
+        $this->app->table->item->save($item);
+
+        // clean memory
+        unset($item);
+
+        return $id;
+    }
+
+    /**
+     * Process one Category row
+     * @param array $row
+     * @param int $lineKey
+     * @return int
+     */
+    protected function _processCategoryRow($row, $lineKey)
+    {
+        // create item
+        $category = $this->_getCategoryByKey($row, $lineKey);
+        if (empty($category)) {
+            return 0;
+        }
+        // bind import data from CSV
+        foreach ($this->_data->assign as $colKey => $itemField) {
+
+            $itemField = JString::trim($itemField);
+            if (!empty($itemField)) {
+
+                $value = isset($row[$colKey]) ? $row[$colKey] : null;
+
+                $fieldInfo   = $this->app->jbcsvmapper->categoryFieldToMeta($itemField);
+                $positionKey = implode('__', $fieldInfo);
+
+                $cellElem = $this->app->jbcsvcell->createCategory($fieldInfo['name'], $category, $fieldInfo['group'], $fieldInfo);
+                $cellElem->fromCSV($value);
+            }
+        }
+
+        $id = $category->id;
+
+        $category = $this->_checkCategoryAlias($category);
+
+        // save all changes
+        $this->app->table->category->save($category);
+
+        // clean memory
+        unset($category);
+
+        return $id;
+    }
+
+    /**
+     * Add alias to item
+     * @param Item $item
+     * @return Item
+     */
+    protected function _checkItemAlias(Item $item)
+    {
+        $isEnabled = (int)$this->_data->get('createAlias', 0);
+
+        if ($isEnabled && preg_match('#^item\-uid\-#ius', $item->alias)) {
+            $item->alias = $this->app->string->sluggify($item->name);
+            $item->alias = $this->app->alias->item->getUniqueAlias($item->id, $item->alias);
+        }
+
+        return $item;
+    }
+
+    /**
+     * Add alias to category
+     * @param Category $category
+     * @return Item
+     */
+    protected function _checkCategoryAlias(Category $category)
+    {
+        $isEnabled = (int)$this->_data->get('createAlias', 0);
+
+        if ($isEnabled && preg_match('#^category\-uid\-#ius', $category->alias)) {
+            $category->alias = $this->app->string->sluggify($category->name);
+            $category->alias = $this->app->alias->category->getUniqueAlias($category->id, $category->alias);
+        }
+
+        return $category;
+    }
+
+    /**
+     * Get key field value
+     * @param array $row
+     * @param string $lineKey
+     * @return Item
+     */
+    protected function _getItemByKey($row, $lineKey = null)
+    {
+        $item = null;
+
+        if ($this->_data->key != self::KEY_NONE) {
+
+            $itemModel = JBModelItem::model();
+
+            foreach ($this->_data->assign as $csvKey => $fieldName) {
+
+                if ($this->_data->key == self::KEY_ID && $fieldName == 'id') {
+                    $item = $itemModel->getById(JString::trim($row[$csvKey]), $this->_data->appid);
+                    break;
+
+                } else if ($this->_data->key == self::KEY_NAME && $fieldName == 'name') {
+                    $item = $itemModel->getByName(JString::trim($row[$csvKey]), $this->_data->appid);
+                    break;
+
+                } else if ($this->_data->key == self::KEY_ALIAS && $fieldName == 'alias') {
+                    $item = $itemModel->getByAlias(JString::trim($row[$csvKey]), $this->_data->appid);
+                    break;
+
+                } else if ($this->_data->key == self::KEY_SKU && strpos($fieldName, 'rice_sku__') == 1) {
+                    $item = $itemModel->getBySku(JString::trim($row[$csvKey]), $this->_data->appid);
+                    break;
+                }
+            }
+        }
+
+        $isCreateNew = (int)$this->_data->get('create', 0);
+        if (!empty($item)) {
+
+            if ($item->type != $this->_data->get('typeid')) {
+
+                if ($isCreateNew) {
+                    $item = $this->_createEmptyItem($lineKey);
+                } else {
+                    $item = null;
+                }
+
+            }
+
+        } else if ($isCreateNew) {
+            $item = $this->_createEmptyItem($lineKey);
+        }
+
+        return $item;
+    }
+
+    /**
+     * Create and save new empty item
+     * @param string|null $nameSuf
+     * @return Item
+     */
+    protected function _createEmptyItem($nameSuf = null)
+    {
+        $newItem = JBModelItem::model()->createEmpty($this->_data->appid, $this->_data->typeid, $nameSuf);
+        return $newItem;
+    }
+
+    /**
+     * Get key field value
+     * @param array $row
+     * @param string $lineKey
+     * @return Item
+     */
+    protected function _getCategoryByKey($row, $lineKey = null)
+    {
+        $category = null;
+
+        if ($this->_data->key != self::KEY_NONE) {
+            foreach ($this->_data->assign as $csvKey => $fieldName) {
+
+                if ($this->_data->key == self::KEY_ID && $fieldName == 'id') {
+                    $category = JBModelCategory::model()->getById(JString::trim($row[$csvKey]), $this->_data->appid);
+                    break;
+
+                } else if ($this->_data->key == self::KEY_NAME && $fieldName == 'name') {
+                    $category = JBModelCategory::model()->getByName(JString::trim($row[$csvKey]), $this->_data->appid);
+                    break;
+
+                } else if ($this->_data->key == self::KEY_ALIAS && $fieldName == 'alias') {
+                    $category = JBModelCategory::model()->getByAlias(JString::trim($row[$csvKey]), $this->_data->appid);
+                    break;
+                }
+            }
+        }
+
+        $isCreateNew = (int)$this->_data->get('create', 0);
+        if (!$category && $isCreateNew) {
+            $category = JBModelCategory::model()->createEmpty($this->_data->appid, $lineKey);
+        }
+
+        return $category;
+    }
+
+    /**
+     * One step precess for items
+     * @param int $step
+     * @return array
+     */
+    public function itemsProcess($step = 0)
+    {
+        $this->_initSessionData();
+
+        $lastLine = $this->_getLastLine($step);
+        $lines    = $this->_getCSVLines($this->_data->file, $lastLine, $step);
+
+        $lineKey  = 0;
+        $addedIds = ($step == 0) ? array() : $this->app->jbsession->get('ids', 'import-ids');
+
+        if (!empty($lines)) {
+            foreach ($lines as $key => $row) {
+                $lineKey    = $lastLine + $key;
+                $addedIds[] = $this->_processItemRow($row, $lineKey);
+            }
+        }
+
+        $this->app->jbsession->set('ids', $addedIds, 'import-ids');
+
+        return array('progress' => round(($lineKey / $this->_data->count) * 100, 2));
+    }
+
+    /**
+     * One step precess for categories
+     * @param int $step
+     * @return array
+     */
+    public function categoriesProcess($step = 0)
+    {
+        $this->_initSessionData();
+
+        $lastLine = $this->_getLastLine($step);
+        $lines    = $this->_getCSVLines($this->_data->file, $lastLine, $step);
+
+        $lineKey  = 0;
+        $addedIds = ($step == 0) ? array() : $this->app->jbsession->get('ids', 'import-ids');
+
+        if (!empty($lines)) {
+            foreach ($lines as $key => $row) {
+                $lineKey    = $lastLine + $key;
+                $addedIds[] = $this->_processCategoryRow($row, $lineKey);
+            }
+        }
+
+        $this->app->jbsession->set('ids', $addedIds, 'import-ids');
+
+        return array('progress' => round(($lineKey / $this->_data->count) * 100, 2));
+    }
+
+    /**
+     * Call after all items loaded
+     */
+    public function itemsPostProcess()
+    {
+        $addedIds = $this->app->jbsession->get('ids', 'import-ids');
+        $this->_initSessionData();
+
+        if ($this->_data->lose == self::LOSE_DISABLE) {
+            JBModelItem::model()->disableAll($this->_data->appid, $this->_data->typeid, $addedIds);
+
+        } else if ($this->_data->lose == self::LOSE_REMOVE) {
+            JBModelItem::model()->removeAll($this->_data->appid, $this->_data->typeid, $addedIds);
+        }
+
+        $this->app->jbsession->clearGroup('import-ids');
+    }
+
+    /**
+     * Call after all items loaded
+     */
+    public function categoriesPostProcess()
+    {
+        $addedIds = $this->app->jbsession->get('ids', 'import-ids');
+        $this->_initSessionData();
+
+        if ($this->_data->lose == self::LOSE_DISABLE) {
+            JBModelCategory::model()->disableAll($this->_data->appid, $addedIds);
+
+        } else if ($this->_data->lose == self::LOSE_REMOVE) {
+            JBModelCategory::model()->removeAll($this->_data->appid, $addedIds);
+        }
+
+        $this->app->jbsession->clearGroup('import-ids');
+    }
+
+
+}

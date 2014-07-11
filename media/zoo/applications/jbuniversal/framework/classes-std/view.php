@@ -6,6 +6,10 @@
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+
+ 
 if (!class_exists('JViewLegacy', false)) {
     jimport('cms.view.legacy');
     jimport('legacy.view.legacy');

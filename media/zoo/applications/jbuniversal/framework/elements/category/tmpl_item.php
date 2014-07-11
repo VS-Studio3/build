@@ -23,7 +23,7 @@ class JBCSVCategoryTmpl_item extends JBCSVCategory
      */
     public function toCSV()
     {
-        $settings = $this->app->jbuser->getParam('export-categories', array());
+        $settings = JBModelConfig::model()->getGroup('export.categories');
 
         if ($settings->category_item_settings) {
 

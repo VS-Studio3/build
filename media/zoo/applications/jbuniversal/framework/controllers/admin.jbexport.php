@@ -13,9 +13,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-if ($ymlFile = $this->app->path->path('jbapp:config/yml_config.php')) {
-    require $ymlFile;
-}
+
 /**
  * Class JBExportJBuniversalController
  * JBZoo export controller for back-end
@@ -31,6 +29,14 @@ class JBExportJBuniversalController extends JBuniversalController
      * @var JBUserHelper
      */
     protected $_jbuser = null;
+
+    /**
+     * @var array
+     */
+    private $_defaultParams = array(
+        'separator' => ',',
+        'enclosure' => '"'
+    );
 
     /**
      * Constrictor
@@ -84,13 +90,26 @@ class JBExportJBuniversalController extends JBuniversalController
     public function items()
     {
         if (!$this->_jbrequest->isPost()) {
-            $this->exportParams = $this->_jbuser->getParam('export-items', array());
+            $this->exportParams = $this->_config->getGroup('export.items', $this->_jbuser->getParam('export-items'));
+            $this->_setExportParams();
+
             $this->renderView();
 
         } else {
             try {
                 $request = $this->app->data->create($this->_jbrequest->get('jbzooform'));
-                $this->_jbuser->setParam('export-items', $request);
+
+                $data['separator'] = $request->get('separator');
+                $data['enclosure'] = $request->get('enclosure');
+
+                $data['separator'] = empty($data['separator']) ? $this->_defaultParams['separator'] : $data['separator'];
+                $data['enclosure'] = empty($data['enclosure']) ? $this->_defaultParams['enclosure'] : $data['enclosure'];
+
+                $request->remove('separator');
+                $request->remove('enclosure');
+
+                $this->_config->setGroup('export.items', $request);
+                $this->_config->setGroup('export', $data);
 
                 $this->_jbexport->clean();
 
@@ -125,14 +144,27 @@ class JBExportJBuniversalController extends JBuniversalController
     public function categories()
     {
         if (!$this->_jbrequest->isPost()) {
-            $this->exportParams = $this->_jbuser->getParam('export-categories', array());
+            $this->exportParams = $this->_config->getGroup('export.categories', $this->_jbuser->getParam('export-categories'));
+            $this->_setExportParams();
+
             $this->renderView();
 
         } else {
 
             try {
                 $request = $this->app->data->create($this->_jbrequest->get('jbzooform'));
-                $this->_jbuser->setParam('export-categories', $request);
+
+                $data['separator'] = $request->get('separator');
+                $data['enclosure'] = $request->get('enclosure');
+
+                $data['separator'] = empty($data['separator']) ? $this->_defaultParams['separator'] : $data['separator'];
+                $data['enclosure'] = empty($data['enclosure']) ? $this->_defaultParams['enclosure'] : $data['enclosure'];
+
+                $request->remove('separator');
+                $request->remove('enclosure');
+
+                $this->_config->setGroup('export.categories', $request);
+                $this->_config->setGroup('export', $data);
 
                 list($appId) = explode(':', $request->get('category_app', '0:'));
                 $files = $this->_jbexport->categoriesToCSV($appId, $request);
@@ -211,12 +243,10 @@ class JBExportJBuniversalController extends JBuniversalController
     public function yandexYml()
     {
         $this->app->jbyml->init();
-        if (JFile::exists($this->app->path->path('jbapp:config') . '/yml_config.php')) {
-            $this->indexStep = 25;
-            $this->total     = $this->app->jbyml->getTotal();
-        } else {
-            $this->total = 0;
-        }
+
+        $this->indexStep = 25;
+        $this->total     = $this->app->jbyml->getTotal();
+
         $this->renderView();
     }
 
@@ -262,5 +292,16 @@ class JBExportJBuniversalController extends JBuniversalController
             'stepsize' => $limit,
             'ymlcount' => $this->app->jbsession->get('ymlCount', 'yml')
         ));
+    }
+
+    /**
+     * Set export params for Items & Categories
+     */
+    protected function _setExportParams()
+    {
+        $export = $this->_config->getGroup('export');
+
+        $this->exportParams->set('separator', $export->get('separator', $this->_defaultParams['separator']));
+        $this->exportParams->set('enclosure', $export->get('enclosure', $this->_defaultParams['enclosure']));
     }
 }

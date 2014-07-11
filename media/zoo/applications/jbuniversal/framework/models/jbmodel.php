@@ -80,7 +80,8 @@ Class JBModel
      */
     protected function _getSelect()
     {
-        return new JBDatabaseQuery($this->_db);
+        $select = new JBDatabaseQuery($this->_db);
+        return $select;
     }
 
     /**
@@ -103,6 +104,22 @@ Class JBModel
     public function fetchAll(JBDatabaseQuery $select, $toArray = false)
     {
         return $this->_query($select, false, $toArray);
+    }
+
+    /**
+     * @param JBDatabaseQuery $select
+     * @return mixed
+     */
+    public function fetchList(JBDatabaseQuery $select)
+    {
+        $selectSql = (string)$select;
+        $this->app->jbdebug->sql($selectSql);
+
+        $this->_db->setQuery($selectSql);
+        $rows   = $this->_db->loadRowList();
+        $result = $this->_groupBy($rows, '0');
+
+        return $result;
     }
 
     /**
@@ -153,18 +170,22 @@ Class JBModel
      * Get database query object for item
      * @param null|string $type
      * @param null|string|int $applicationId
+     * @param bool $isSearchable
      * @return JBDatabaseQuery
      */
-    protected function _getItemSelect($type = null, $applicationId = null)
+    protected function _getItemSelect($type = null, $applicationId = null, $isSearchable = true)
     {
         $select = $this->_getSelect()
             ->select('tItem.*')
             ->from(ZOO_TABLE_ITEM . ' AS tItem')
-            ->where('tItem.searchable = ?', 1)
             ->where('tItem.' . $this->app->user->getDBAccessString())
             ->where('tItem.state = ?', 1)
             ->where('(tItem.publish_up = ' . $this->_dbNull . ' OR tItem.publish_up <= ' . $this->_dbNow . ')')
             ->where('(tItem.publish_down = ' . $this->_dbNull . ' OR tItem.publish_down >= ' . $this->_dbNow . ')');
+
+        if ($isSearchable) {
+            $select->where('tItem.searchable = ?', 1);
+        }
 
         if (is_array($type)) {
             $select->where('tItem.type IN ("' . implode('", "', $type) . '")');
@@ -292,7 +313,11 @@ Class JBModel
         $preValues = array();
         foreach ($data as $values) {
             foreach ($values as $key => $value) {
-                $values[$key] = $this->_quote($value);
+                if (!is_null($value)) {
+                    $values[$key] = $this->_quote($value);
+                } else {
+                    $values[$key] = 'NULL';
+                }
             }
 
             $preValues[] = "(" . implode(", ", $values) . ")\n";
@@ -301,7 +326,7 @@ Class JBModel
         $insertedValues = implode(",\n", $preValues);
 
         $query = 'INSERT INTO ' . $table . ' ' . $valueTitles . ' VALUES ' . $insertedValues;
-        //dump::sql($query);
+        //jbdump::sql($query);die;
 
         return $this->_dbHelper->query($query);
     }

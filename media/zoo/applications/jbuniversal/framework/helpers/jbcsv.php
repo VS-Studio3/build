@@ -20,6 +20,32 @@ defined('_JEXEC') or die('Restricted access');
 class JBCSVHelper extends AppHelper
 {
     /**
+     * @var array
+     */
+    protected $_trueValues = array();
+
+    /**
+     * @var array|JBModelConfig
+     */
+    protected $_config = array();
+
+    /**
+     * @param App $app
+     */
+    public function __construct($app)
+    {
+        parent::__construct($app);
+
+        $this->_trueValues = array_unique(array('1', 'y', 'yes', 'да', 'on',
+            JString::strtolower(JText::_('YES')),
+            JString::strtolower(JText::_('JYES')),
+            JString::strtolower(JText::_('JBZOO_YES'))
+        ));
+
+        $this->_config = JBModelConfig::model();
+    }
+
+    /**
      * @param $data
      * @param $file
      * @param array $maxima
@@ -123,8 +149,8 @@ class JBCSVHelper extends AppHelper
      */
     protected function _createFile($data, $filename)
     {
-        $file = $this->app->jbpath->sysPath('tmp', "/jbzoo-export/$filename.csv");
-
+        $file    = $this->app->jbpath->sysPath('tmp', "/jbzoo-export/$filename.csv");
+        $config  = $this->_config->getGroup('export');
         $dirName = dirname($file);
 
         if (!JFolder::exists($dirName)) {
@@ -138,7 +164,11 @@ class JBCSVHelper extends AppHelper
         if (($handle = fopen($file, "a")) !== false) {
 
             foreach ($data as $row) {
-                fputcsv($handle, $this->app->data->create($row)->flattenRecursive());
+                fputcsv($handle,
+                        $this->app->data->create($row)->flattenRecursive(),
+                        $config->get('separator', ','),
+                        $config->get('enclosure', '"')
+                );
             }
 
             fclose($handle);
@@ -150,4 +180,11 @@ class JBCSVHelper extends AppHelper
         return $file;
     }
 
+    /**
+     * @return array
+     */
+    public function getTrueValues()
+    {
+        return $this->_trueValues;
+    }
 }

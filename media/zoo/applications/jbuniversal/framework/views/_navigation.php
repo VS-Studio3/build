@@ -56,6 +56,7 @@ $allItems = array(
         'jbzoo' => array(
             'index'     => array('index'),
             'yandexYml' => array('yandexYml'),
+            'sef'       => array('sef'),
         )
     ),
     'jbexport' => array(

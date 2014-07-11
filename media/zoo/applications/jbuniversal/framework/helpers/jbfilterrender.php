@@ -71,11 +71,7 @@ class JBFilterRenderHelper extends AppHelper
      */
     function _buildAttrs($params)
     {
-        $attrs = '';
-        foreach ($params as $key => $param) {
-            $attrs .= ' ' . $key . '="' . $param . '" ';
-        }
-        return $attrs;
+        return $this->app->jbhtml->buildAttrs($params);
     }
 
 }

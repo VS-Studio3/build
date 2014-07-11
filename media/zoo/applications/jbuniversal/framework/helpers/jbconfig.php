@@ -20,25 +20,60 @@ defined('_JEXEC') or die('Restricted access');
 class JBConfigHelper extends AppHelper
 {
     /**
-     * @var string
+     * @var array
      */
-    protected $_configPattern = '#JBZOO_CONFIG_*#i';
+    protected $_oldVersionMap = array(
+        // custom config
+        'JBZOO_CONFIG_SHOWUPDATE'        => 'update_show',
+        'JBZOO_CONFIG_CURRENCY_ONLINE'   => 'currency_mode',
+        'JBZOO_CONFIG_ADMINMENU'         => 'adminmenu_show',
+
+        // yml config
+        'JBZOO_CONFIG_YML_SITE_URL'      => 'site_url',
+        'JBZOO_CONFIG_YML_APP_LIST'      => 'app_list',
+        'JBZOO_CONFIG_YML_SITE_NAME'     => 'site_name',
+        'JBZOO_CONFIG_YML_COMPANY_NAME'  => 'company_name',
+        'JBZOO_CONFIG_YML_TYPE'          => 'type_list',
+        'JBZOO_CONFIG_YML_CURRENCY_RATE' => 'currency_rate',
+        'JBZOO_CONFIG_YML_FILE_PATH'     => 'file_path',
+        'JBZOO_CONFIG_YML_FILE_NAME'     => 'file_name',
+    );
 
     /**
-     * @return array
+     * Compatibility list of params were saved in config files
+     * @param  string|null $group
+     * @return array|object
      */
-    public function getList()
+    public function getList($group = null)
     {
-        $const = get_defined_constants(true);
+        $ymlConfig = $this->app->path->path('jbapp:config') . '/yml_config.php';
+        if (JFile::exists($ymlConfig)) {
+            require_once $ymlConfig;
+        }
+
+        $config = $this->app->path->path('jbapp:config') . '/config.php';
+        if (JFile::exists($config)) {
+            require_once $config;
+        }
 
         $result = array();
-        foreach ($const['user'] as $key => $value) {
-            if (preg_match($this->_configPattern, $key)) {
-                $result[$key] = $value;
+        foreach ($this->_oldVersionMap as $key => $value) {
+            if (!defined($key)) {
+                continue;
+            }
+
+            if (in_array($key, array('JBZOO_CONFIG_YML_TYPE', 'JBZOO_CONFIG_YML_APP_LIST'))) {
+                $result[$value] = explode(':', constant($key));
+            } else {
+                $result[$value] = constant($key);
             }
         }
 
-        return $result;
+        if (!empty($group)) {
+            $result = JBModelConfig::model()->getGroup($group, $result);
+        }
+
+        return $this->app->data->create($result);
     }
 
     /**
@@ -58,7 +93,7 @@ class JBConfigHelper extends AppHelper
             ' * @version     2.x Pro',
             ' * @author      JBZoo App http://jbzoo.com',
             ' * @copyright   Copyright (C) JBZoo.com,  All rights reserved.',
-            ' * @license     http://jbzoo.com/license-pro.php JBZoo Licence',
+            ' * @license     http://jbzoo.com/license JBZoo Licence',
             ' */',
             '',
             '// no direct access',

@@ -40,7 +40,11 @@ $jbform = $this->app->jbform;
 
                 <?php echo $jbform->renderRow($this->controls['key'], 'JBZOO_IMPORT_KEY', 'key'); ?>
 
+                <?php echo $jbform->renderRow($this->controls['create'], 'JBZOO_IMPORT_CATEGORIES_CREATE', 'create'); ?>
+
                 <?php echo $jbform->renderRow($this->controls['lose'], 'JBZOO_IMPORT_LOSE', 'lose'); ?>
+
+                <?php echo $jbform->renderRow($this->controls['createAlias'], 'JBZOO_IMPORT_CREATE_ALIAS', 'createAlias'); ?>
 
                 <hr />
 
@@ -77,10 +81,14 @@ $jbform = $this->app->jbform;
             $form = $('#jbzooimport');
 
         if (prevParams) {
-
             $('#appid').val(prevParams.appid);
             $('#lose').val(prevParams.lose);
-            $('#categoryKey').val(prevParams.itemKey);
+            if (prevParams.create) {
+                $('#create').val(prevParams.create);
+            }
+
+            $('#createAlias').val(prevParams.createalias);
+
             $('#key').val(prevParams.key);
 
             if (prevParams.assign) {

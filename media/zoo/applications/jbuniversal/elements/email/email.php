@@ -12,55 +12,41 @@ defined('_JEXEC') or die('Restricted access');
 // register ElementRepeatable class
 App::getInstance('zoo')->loader->register('ElementRepeatable', 'elements:repeatable/repeatable.php');
 
-/*
-   Class: ElementEmail
-       The email element class
-*/
+/**
+ * Class ElementEmail
+ * The email element class
+ */
 class ElementEmail extends ElementRepeatable implements iRepeatSubmittable
 {
 
-    /*
-        Function: _hasValue
-            Checks if the repeatables element's value is set.
-
-       Parameters:
-            $params - render parameter
-
-        Returns:
-            Boolean - true, on success
-    */
+    /**
+     * Checks if the repeatables element's value is set.
+     * @param array $params
+     * @return bool|int
+     */
     protected function _hasValue($params = array())
     {
         $value = $this->get('value');
         return $this->_containsEmail($value);
     }
 
-    /*
-        Function: getText
-            Gets the email text.
-
-        Returns:
-            String - text
-    */
+    /**
+     * Gets the email text.
+     * @return mixed
+     */
     public function getText()
     {
         $text = $this->get('text', '');
         return empty($text) ? $this->get('value', '') : $text;
     }
 
-    /*
-        Function: render
-            Renders the repeatable element.
-
-       Parameters:
-            $params - render parameter
-
-        Returns:
-            String - html
-    */
+    /**
+     * Renders the repeatable element.
+     * @param array $params
+     * @return string
+     */
     protected function _render($params = array())
     {
-
         // init vars
         $mode    = $this->_containsEmail($this->getText());
         $subject = $this->get('subject', '');
@@ -79,45 +65,39 @@ class ElementEmail extends ElementRepeatable implements iRepeatSubmittable
         return '<a href="mailto:' . $mailto . '" title="Mailto ' . $this->getText() . '">' . $this->getText() . '</a>';
     }
 
-    /*
-       Function: _edit
-           Renders the repeatable edit form field.
-
-       Returns:
-           String - html
-    */
+    /**
+     * Renders the repeatable edit form field.
+     * @return string
+     */
     protected function _edit()
     {
         return $this->_editForm();
     }
 
-    /*
-       Function: _containsEmail
-           Checks for an email address in a text.
-
-       Returns:
-           Boolean - true if text contains email address, else false
-    */
+    /**
+     * Checks for an email address in a text.
+     * @param $text
+     * @return int
+     */
     protected function _containsEmail($text)
     {
         return preg_match('/[\w!#$%&\'*+\/=?`{|}~^-]+(?:\.[!#$%&\'*+\/=?`{|}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}/i', $text);
     }
 
-    /*
-        Function: _renderSubmission
-            Renders the element in submission.
-
-       Parameters:
-            $params - AppData submission parameters
-
-        Returns:
-            String - html
-    */
+    /**
+     * Renders the element in submission.
+     * @param array $params
+     * @return string|void
+     */
     public function _renderSubmission($params = array())
     {
         return $this->_editForm($params->get('trusted_mode'));
     }
 
+    /**
+     * @param bool $trusted_mode
+     * @return string
+     */
     protected function _editForm($trusted_mode = true)
     {
         if ($layout = $this->getLayout('edit.php')) {
@@ -128,17 +108,12 @@ class ElementEmail extends ElementRepeatable implements iRepeatSubmittable
         }
     }
 
-    /*
-        Function: _validateSubmission
-            Validates the submitted element
-
-       Parameters:
-            $value  - AppData value
-            $params - AppData submission parameters
-
-        Returns:
-            Array - cleaned value
-    */
+    /**
+     * Validates the submitted element
+     * @param $value
+     * @param $params
+     * @return array
+     */
     public function _validateSubmission($value, $params)
     {
         $values = $value;
@@ -154,6 +129,5 @@ class ElementEmail extends ElementRepeatable implements iRepeatSubmittable
 
         return compact('value', 'text', 'subject', 'body');
     }
-
 
 }

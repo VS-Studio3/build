@@ -22,8 +22,7 @@ App::getInstance('zoo')->jbassets->jqueryAccordion();
     <?php
     for ($i = 1; $i <= 10; $i++) {
         echo $this->renderPosition('tab-' . $i, array(
-                'moduleParams' => $params,
-                'style'        => 'filterprops.tab',
+                'style' => 'filterprops.tab',
             )
         );
     }

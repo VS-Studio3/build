@@ -58,6 +58,11 @@ class JBDatabaseQuery
     /**
      * @var JBDatabaseQueryElement|null
      */
+    protected $replace = null;
+
+    /**
+     * @var JBDatabaseQueryElement|null
+     */
     protected $from = null;
 
     /**
@@ -117,7 +122,7 @@ class JBDatabaseQuery
 
     /**
      * Class constructor
-     * @param   JDatabase $db  The database connector resource
+     * @param   JDatabase $db The database connector resource
      * @return  JBDatabaseQuery
      */
     public function __construct(JDatabase $db)
@@ -127,8 +132,8 @@ class JBDatabaseQuery
 
     /**
      * Concatenates an array of column names or values.
-     * @param   array $values     An array of values to concatenate.
-     * @param   string $separator  As separator to place between each value.
+     * @param   array $values An array of values to concatenate.
+     * @param   string $separator As separator to place between each value.
      * @return  string
      */
     function concat($values, $separator = null)
@@ -201,7 +206,7 @@ class JBDatabaseQuery
     /**
      * Casts a value to a char.
      * Ensure that the value is properly quoted before passing to the method.
-     * @param   string $value  The value to cast as a char.
+     * @param   string $value The value to cast as a char.
      * @return  string  Returns the cast value.
      */
     public function castAsChar($value)
@@ -210,8 +215,8 @@ class JBDatabaseQuery
     }
 
     /**
-
-    /**
+     *
+     * /**
      * Gets the number of characters in a string.
      * Note, use 'length' to find the number of bytes in a string.
      * @param string $field A value
@@ -224,7 +229,7 @@ class JBDatabaseQuery
 
     /**
      * Adds a column, or array of column names that would be used for an INSERT INTO statement.
-     * @param   mixed $columns  A column name, or array of column names.
+     * @param   mixed $columns A column name, or array of column names.
      * @return  JBDatabaseQuery
      */
     function columns($columns)
@@ -259,7 +264,7 @@ class JBDatabaseQuery
     /**
      * Add a table name to the DELETE clause of the query.
      * Note that you must not mix insert, update, delete and select method calls when building a query.
-     * @param   string $table  The name of the table to delete from.
+     * @param   string $table The name of the table to delete from.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function delete($table = null)
@@ -276,8 +281,8 @@ class JBDatabaseQuery
 
     /**
      * Method to escape a string for usage in an SQL statement.
-     * @param   string $text   The string to be escaped.
-     * @param   bool $extra  Optional parameter to provide extra escaping.
+     * @param   string $text The string to be escaped.
+     * @param   bool $extra Optional parameter to provide extra escaping.
      * @return  string  The escaped string.
      */
     public function escape($text, $extra = false)
@@ -288,8 +293,8 @@ class JBDatabaseQuery
     /**
      * Add a table to the FROM clause of the query.
      * Note that while an array of tables can be provided, it is recommended you use explicit joins.
-     * @param   mixed $tables  A string or array of table names.
-     * @param   mixed $asName  Table name
+     * @param   mixed $tables A string or array of table names.
+     * @param   mixed $asName Table name
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function from($tables, $asName = null)
@@ -304,7 +309,7 @@ class JBDatabaseQuery
 
     /**
      * Add a grouping column to the GROUP clause of the query.
-     * @param   mixed $columns  A string or array of ordering columns.
+     * @param   mixed $columns A string or array of ordering columns.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function group($columns)
@@ -343,7 +348,7 @@ class JBDatabaseQuery
 
     /**
      * Add an INNER JOIN clause to the query.
-     * @param   string $conditions  A string or array of conditions.
+     * @param   string $conditions A string or array of conditions.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function innerJoin($conditions)
@@ -355,7 +360,7 @@ class JBDatabaseQuery
     /**
      * Add a table name to the INSERT clause of the query.
      * Note that you must not mix insert, update, delete and select method calls when building a query.
-     * @param   mixed $table  The name of the table to insert data into.
+     * @param   mixed $table The name of the table to insert data into.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function insert($table)
@@ -367,9 +372,23 @@ class JBDatabaseQuery
     }
 
     /**
+     * Add a table name to the REPLACE clause of the query.
+     * Note that you must not mix insert, update, delete and select method calls when building a query.
+     * @param   mixed $table The name of the table to insert data into.
+     * @return  JBDatabaseQuery  Returns this object to allow chaining.
+     */
+    public function replace($table)
+    {
+        $this->type    = 'replace';
+        $this->replace = new JBDatabaseQueryElement('REPLACE INTO', '`' . $table . '`');
+
+        return $this;
+    }
+
+    /**
      * Add a JOIN clause to the query.
-     * @param   string $type        The type of join. This string is prepended to the JOIN keyword.
-     * @param   string $conditions  A string or array of conditions.
+     * @param   string $type The type of join. This string is prepended to the JOIN keyword.
+     * @param   string $conditions A string or array of conditions.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function join($type, $conditions)
@@ -397,7 +416,7 @@ class JBDatabaseQuery
     /**
      * Get the length of a string in bytes.
      * Note, use 'charLength' to find the number of characters in a string.
-     * @param   string $value  The string to measure.
+     * @param   string $value The string to measure.
      * @return  string
      */
     function length($value)
@@ -407,7 +426,7 @@ class JBDatabaseQuery
 
     /**
      * Get the null or zero representation of a timestamp for the database driver.
-     * @param   boolean $quoted  Optionally wraps the null date in database quotes (true by default).
+     * @param   boolean $quoted Optionally wraps the null date in database quotes (true by default).
      * @return  string  Null or zero representation of a timestamp.
      */
     public function nullDate($quoted = true)
@@ -423,7 +442,7 @@ class JBDatabaseQuery
 
     /**
      * Add a ordering column to the ORDER clause of the query.
-     * @param   mixed $columns  A string or array of ordering columns.
+     * @param   mixed $columns A string or array of ordering columns.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function order($columns)
@@ -439,7 +458,7 @@ class JBDatabaseQuery
 
     /**
      * Add an OUTER JOIN clause to the query.
-     * @param   string $conditions  A string or array of conditions.
+     * @param   string $conditions A string or array of conditions.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function outerJoin($conditions)
@@ -450,8 +469,8 @@ class JBDatabaseQuery
 
     /**
      * Method to quote and optionally escape a string to database requirements for insertion into the database.
-     * @param   string $text    The string to quote.
-     * @param   bool $escape  True to escape the string, false to leave it unchanged.
+     * @param   string $text The string to quote.
+     * @param   bool $escape True to escape the string, false to leave it unchanged.
      * @return  string  The quoted input string.
      */
     public function quote($text, $escape = true)
@@ -469,7 +488,7 @@ class JBDatabaseQuery
     /**
      * Wrap an SQL statement identifier name such as column, table or database names in quotes to prevent injection
      * risks and reserved word conflicts.
-     * @param   string $name  The identifier name to wrap in quotes.
+     * @param   string $name The identifier name to wrap in quotes.
      * @return  string  The quote wrapped name.
      */
     public function quoteName($name)
@@ -479,7 +498,7 @@ class JBDatabaseQuery
 
     /**
      * Add a RIGHT JOIN clause to the query.
-     * @param   string $conditions  A string or array of conditions.
+     * @param   string $conditions A string or array of conditions.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function rightJoin($conditions)
@@ -492,7 +511,7 @@ class JBDatabaseQuery
      * Add a single column, or array of columns to the SELECT clause of the query.
      * Note that you must not mix insert, update, delete and select method calls when building a query.
      * The select method can, however, be called multiple times in the same query.
-     * @param   mixed $columns  A string or an array of field names.
+     * @param   mixed $columns A string or an array of field names.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function select($columns)
@@ -510,8 +529,8 @@ class JBDatabaseQuery
 
     /**
      * Add a single condition string, or an array of strings to the SET clause of the query.
-     * @param mixed $conditions  A string or array of conditions.
-     * @param null $value       Value foe set
+     * @param mixed $conditions A string or array of conditions.
+     * @param null $value Value foe set
      * @return JBDatabaseQuery
      */
     public function set($conditions, $value = null)
@@ -532,7 +551,7 @@ class JBDatabaseQuery
     /**
      * Add a table name to the UPDATE clause of the query.
      * Note that you must not mix insert, update, delete and select method calls when building a query.
-     * @param   mixed $tables  A string or array of table names.
+     * @param   mixed $tables A string or array of table names.
      * @return  JBDatabaseQuery  Returns this object to allow chaining.
      */
     public function update($tables)
@@ -545,19 +564,19 @@ class JBDatabaseQuery
 
     /**
      * Adds a tuple, or array of tuples that would be used as values for an INSERT INTO statement.
-     * @param string $column  A single tuple, or array of tuples.
-     * @param string $value   Value for insert
+     * @param string $column A single tuple, or array of tuples.
+     * @param string $value Value for insert
      * @return JBDatabaseQuery
      */
     function values($column, $value)
     {
         if (is_null($this->values)) {
-            $this->values  = new JBDatabaseQueryElement('()', $value, ', ');
-            $this->columns = new JBDatabaseQueryElement('()', $column);
+            $this->values  = new JBDatabaseQueryElement('()', $this->quote($value), ', ');
+            $this->columns = new JBDatabaseQueryElement('()', '`' . $column . '`');
 
         } else {
             $this->values->append($this->quote($value));
-            $this->columns->append($column);
+            $this->columns->append('`' . $column . '`');
         }
 
         return $this;
@@ -664,6 +683,23 @@ class JBDatabaseQuery
                 }
 
                 break;
+
+            case 'replace':
+                $query .= (string)$this->replace;
+
+                // Set method
+                if ($this->set) {
+                    $query .= (string)$this->set;
+                } elseif ($this->values) {
+                    if ($this->columns) {
+                        $query .= (string)$this->columns;
+                    }
+
+                    $query .= ' VALUES ';
+                    $query .= (string)$this->values;
+                }
+
+                break;
         }
 
         if ($this->limit) {
@@ -677,7 +713,7 @@ class JBDatabaseQuery
 
     /**
      * Clear data from the query or a specific clause of the query.
-     * @param null|string $clause  Optionally, the name of the clause to clear, or nothing to clear the whole query.
+     * @param null|string $clause Optionally, the name of the clause to clear, or nothing to clear the whole query.
      * @return JBDatabaseQuery
      */
     public function clear($clause = null)
@@ -701,6 +737,11 @@ class JBDatabaseQuery
             case 'insert':
                 $this->insert = null;
                 $this->type   = null;
+                break;
+
+            case 'replace':
+                $this->replace = null;
+                $this->type    = null;
                 break;
 
             case 'from':
@@ -749,6 +790,7 @@ class JBDatabaseQuery
                 $this->delete  = null;
                 $this->update  = null;
                 $this->insert  = null;
+                $this->replace = null;
                 $this->from    = null;
                 $this->join    = null;
                 $this->set     = null;

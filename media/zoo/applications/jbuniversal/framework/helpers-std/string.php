@@ -6,6 +6,9 @@
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  */
 
+// no direct access
+defined('_JEXEC') or die('Restricted access');
+
 /**
  * The general String Helper.
  *
@@ -25,7 +28,7 @@ class StringHelper extends AppHelper
      * Map all functions to JString class
      *
      * @param string $method Method name
-     * @param array $args   Method arguments
+     * @param array $args Method arguments
      *
      * @return mixed
      */
@@ -37,8 +40,8 @@ class StringHelper extends AppHelper
     /**
      * Truncates the input string.
      *
-     * @param string $text            input string
-     * @param int $length          the length of the output string
+     * @param string $text input string
+     * @param int $length the length of the output string
      * @param string $truncate_string the truncate string
      *
      * @return string The truncated string
@@ -46,7 +49,6 @@ class StringHelper extends AppHelper
      */
     public function truncate($text, $length = 30, $truncate_string = '...')
     {
-
         if ($text == '') {
             return '';
         }
@@ -103,7 +105,7 @@ class StringHelper extends AppHelper
             'ch'  => array('ч'),
             'sh'  => array('ш'),
             'shh' => array('щ'),
-            ''    => array('ъ', 'ь'),
+            ''    => array('ъ', 'ь', '«', '»'),
             'yu'  => array('ю'),
             'ya'  => array('я'),
         );
@@ -113,7 +115,7 @@ class StringHelper extends AppHelper
      * Sluggifies the input string.
      *
      * @param string $string input string
-     * @param bool $force_safe    Do we have to enforce ASCII instead of UTF8 (default: false)
+     * @param bool $force_safe Do we have to enforce ASCII instead of UTF8 (default: false)
      *
      * @return string sluggified string
      * @since 2.0
@@ -137,14 +139,11 @@ class StringHelper extends AppHelper
 
     /**
      * Apply Joomla text filters based on the user's groups
-     *
      * @param  string $string The string to clean
-     *
      * @return string         The cleaned string
      */
     public function applyTextFilters($string)
     {
-
         // Apply the textfilters (let's reuse Joomla's ContentHelper class)
         if (!class_exists('ContentHelper')) {
             require_once JPATH_SITE . '/administrator/components/com_content/helpers/content.php';

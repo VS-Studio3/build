@@ -19,7 +19,7 @@ require_once dirname(__FILE__) . DS . 'helper.php';
 
 $zoo = App::getInstance('zoo');
 
-$zoo->jbdebug->mark('mod_jbzoo_basket::start');
+$zoo->jbdebug->mark('mod_jbzoo_basket::start-' . $module->id);
 
 $zoo->jbassets->setAppCSS();
 $zoo->jbassets->setAppJS();
@@ -27,4 +27,4 @@ $zoo->jbassets->setAppJS();
 // render module
 include(JModuleHelper::getLayoutPath('mod_jbzoo_basket', $params->get('layout', 'default')));
 
-$zoo->jbdebug->mark('mod_jbzoo_basket::finish');
+$zoo->jbdebug->mark('mod_jbzoo_basket::finish-' . $module->id);

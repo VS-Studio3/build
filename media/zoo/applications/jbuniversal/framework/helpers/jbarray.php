@@ -183,7 +183,7 @@ class JBArrayHelper extends AppHelper
      * @param $haystack
      * @return bool|int|string
      */
-    function recursiveSearch($needle, $haystack)
+    public function recursiveSearch($needle, $haystack)
     {
         foreach ($haystack as $key => $value) {
             $currentKey = $key;
@@ -194,6 +194,21 @@ class JBArrayHelper extends AppHelper
         }
 
         return false;
+    }
+
+    /**
+     * Convert assoc array to comment style
+     * @param array $data
+     * @return string
+     */
+    public function toFormatedString(array $data)
+    {
+        $result = array();
+        foreach ($data as $key => $value) {
+            $result[] = $key . ": \t " . $value;
+        }
+
+        return implode("\n", $result);
     }
 
 }

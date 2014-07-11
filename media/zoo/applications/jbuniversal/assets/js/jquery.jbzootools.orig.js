@@ -783,6 +783,10 @@ function jbdump(vars, name, showTrace) {
                         if (data.status) {
                             $favorite.removeClass('unactive').addClass('active');
                         } else {
+                            if (data.message) {
+                                alert(data.message);
+                            }
+
                             $favorite.removeClass('active').addClass('unactive');
                         }
                     }
@@ -1040,10 +1044,14 @@ function jbdump(vars, name, showTrace) {
                 $newObj = $this.find('.jbcascadeselect:eq(' + newIndex + ')');
 
             $('select', $newObj).each(function (n, obj) {
+                var $sel = $(obj);
                 if (n != 0) {
-                    _clear($(obj));
+                    _clear($sel);
                 } else {
-                    $(obj).val('');
+                    $sel.val('');
+                    $('option', $sel).each(function (n, option) {
+                        $(option).attr('value', $(option).text());
+                    });
                 }
             });
             _init($newObj, newIndex);
@@ -1681,13 +1689,16 @@ function jbdump(vars, name, showTrace) {
                     'fitToView' : true,
                     'autoHeight': true,
                     'autoResize': true,
+
                     'iframe'    : {
                         'scrolling': 'no',
+
                         'preload'  : true
                     },
                     'helpers'   : {
                         'overlay': {
                             'locked': false,
+
                             'css'   : {
                                 'background': 'rgba(119, 119, 119, 0.4)'
                             }
@@ -1747,6 +1758,123 @@ function jbdump(vars, name, showTrace) {
                 $obj.addClass(options.isInCart ? 'in-cart' : 'not-in-cart');
                 togglePrices(options.params.currencyDefault);
             }());
+
+        });
+    };
+
+    /**
+     * @param options
+     */
+    $.fn.JBZooViewed = function (options) {
+
+        var options = $.extend({},{
+                'message' : 'Do you really want to delete the history?',
+                'app_id'  : ''
+            }, options);
+        var $this = $(this);
+
+        if($this.hasClass('module-items-init')) {
+            return $this;
+        } else {
+            $this.addClass('module-items-init');
+        }
+
+        return $this.find('.jsRecentlyViewedClear').on('click', function () {
+            var ok = confirm(options.message);
+
+            if (ok) {
+                jbzooAjax({
+                    'data'    : {
+                        'controller': 'viewed',
+                        'task'      : 'clear',
+                        'app_id'    : options.app_id
+                    },
+                    'dataType': 'html',
+                    'success' : function() {
+                        $this.slideUp('slow');
+                    }
+                });
+            }
+
+            return false;
+        });
+    }
+
+    /**
+     * Height fix plugin
+     */
+    $.fn.JBZooHeightFix = function () {
+
+        var $this = $(this), maxHeight = 0;
+
+        setTimeout(function(){
+            $('.column', $this).each(function (n, obj) {
+                var tmpHeight = parseInt($(obj).height(), 10);
+                if (maxHeight < tmpHeight) {
+                    maxHeight = tmpHeight;
+                }
+            }).css({height:maxHeight});
+        }, 300);
+    }
+
+    /**
+     * jQuery helper plugin for color element
+     * @param options
+     */
+    $.fn.JBColorHelper = function (options) {
+
+        var options = $.extend({}, {
+            'multiple': true
+        }, options);
+
+        return $(this).each(function () {
+
+            var $this = $(this);
+
+            $this.find('input[type=' + options.type + ']:checked').next().addClass('checked');
+
+            if ($this.hasClass('jbcolor-initialized')) {
+                return $this;
+            } else {
+                $this.addClass('jbcolor-initialized');
+            }
+
+            $('.jbcolor-input', $this).on('click', function () {
+                var $obj = $(this);
+                if (!options.multiple) {
+                    if ($obj.hasClass('checked')) {
+                        $obj
+                            .attr('checked', false)
+                            .addClass('unchecked')
+                            .removeClass('checked')
+                            .next()
+                            .removeClass('checked');
+                    } else {
+                        $('.jbcolor-input', $this).removeClass('checked');
+                        $('.jbcolor-label', $this).removeClass('checked');
+                        $obj
+                            .attr('checked', true)
+                            .addClass('checked')
+                            .removeClass('unchecked')
+                            .next()
+                            .addClass('checked');
+                    }
+                } else {
+
+                    if ($obj.hasClass('checked')) {
+                        $obj
+                            .removeClass('checked')
+                            .next()
+                            .removeClass('checked');
+                    } else {
+                        $obj
+                            .addClass('checked')
+                            .next()
+                            .addClass('checked');
+                    }
+
+                }
+            });
 
         });
     };

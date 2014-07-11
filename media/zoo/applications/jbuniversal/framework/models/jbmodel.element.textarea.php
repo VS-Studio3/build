@@ -31,7 +31,7 @@ class JBModelElementTextarea extends JBModelElement
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return array($this->_getWhere($value, $elementId, $exact));
+        return $this->_getWhere($value, $elementId, $exact);
     }
 
     /**
@@ -45,7 +45,7 @@ class JBModelElementTextarea extends JBModelElement
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return array($this->_getWhere($value, $elementId, $exact));
+        return $this->_getWhere($value, $elementId, $exact);
     }
 
     /**
@@ -63,11 +63,14 @@ class JBModelElementTextarea extends JBModelElement
 
         $result = array();
         foreach ($values as $value) {
-            //$result[] = '( ' . $elementCondition . ' AND tZooIndex.value LIKE ' . $this->_quote('%' . $value . '%') . ')';
             $result[] = '( (' . $elementCondition . ') AND (' . $this->_buildLikeBySpaces($value, 'tZooIndex.value') . ') )';
         }
 
-        return '(' . implode(' OR ', $result) . ')';
+        if (!empty($result)) {
+            return array('(' . implode(' OR ', $result) . ')');
+        }
+
+        return array('tItem.id IN (0)');
     }
 
     /**

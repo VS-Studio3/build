@@ -6,19 +6,19 @@
     @version     2.x Pro
     @author      JBZoo App http://jbzoo.com
     @copyright   Copyright (C) JBZoo.com,  All rights reserved.
-    @license     http://jbzoo.com/license-pro.php JBZoo Licence
+    @license     http://jbzoo.com/license JBZoo Licence
     @coder       Denis Smetannikov <denis@jbzoo.com>
 -->
 <application>
     <name>JBZoo App</name>
     <group>jbuniversal</group>
-    <version>2.1.1 Pro</version>
-    <creationDate>2013 12</creationDate>
+    <version>2.1.4 Pro (build 14)</version>
+    <creationDate>2014 06</creationDate>
     <author>JBZoo.com</author>
     <authorEmail>admin@jbzoo.com</authorEmail>
     <authorUrl>http://jbzoo.com</authorUrl>
     <copyright>Copyright (C) JBZoo.com, All rights reserved.</copyright>
-    <license>http://jbzoo.com/license-pro.php JBZoo Licence</license>
+    <license>http://jbzoo.com/license JBZoo Licence</license>
     <description>JBZoo App is universal Joomla CCK, application for YooTheme Zoo component</description>
 
     <params group="application-config">

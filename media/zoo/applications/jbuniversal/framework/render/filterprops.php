@@ -25,6 +25,7 @@ class FilterPropsRenderer extends AppRenderer
     protected $_application = null;
     protected $_config_file = 'positions.config';
     protected $_xml_file = 'positions.xml';
+    protected $_moduleParams = null;
 
     /**
      * Render element
@@ -90,6 +91,7 @@ class FilterPropsRenderer extends AppRenderer
                         'item_type'           => $this->_type,
                         'item_template'       => $this->_template,
                         'item_application_id' => $this->_application->id,
+                        'moduleParams'        => $this->_moduleParams,
                     ),
                     $data,
                     $args
@@ -98,6 +100,10 @@ class FilterPropsRenderer extends AppRenderer
                 $value = $this->getElementRequest($element->identifier);
 
                 $elementHTML = $this->app->jbfilterprops->elementRender($element->identifier, $value, $params);
+
+                if (empty($elementHTML)) {
+                    continue;
+                }
 
                 if ($style) {
                     $output[$i] = parent::render($style, array(
@@ -111,7 +117,6 @@ class FilterPropsRenderer extends AppRenderer
 
                 } else {
                     $output[$i] = $elementHTML;
-
                 }
             }
         }
@@ -163,6 +168,17 @@ class FilterPropsRenderer extends AppRenderer
     public function pathExists($dir)
     {
         return (bool)$this->_getPath($dir);
+    }
+
+    /**
+     * Set Joomla module params
+     * @param $params
+     * @return $this
+     */
+    public function setModuleParams($params)
+    {
+        $this->_moduleParams = $params;
+        return $this;
     }
 
     /**

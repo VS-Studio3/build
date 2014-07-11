@@ -240,7 +240,14 @@ class JBAssetsHelper extends AppHelper
 
         if (!isset($isAdded)) {
             $isAdded = true;
-            $this->_include(array('libraries:jquery/jquery.js'), 'js');
+            if (!$this->app->joomla->version->isCompatible('3.0')) {
+                if (!$this->app->system->application->get('jquery')) {
+                    $this->app->system->application->set('jquery', true);
+                    $this->app->system->document->addScript($this->app->path->url('libraries:jquery/jquery.js'));
+                }
+            } else {
+                JHtml::_('jquery.framework');
+            }
         }
     }
 
@@ -377,33 +384,12 @@ class JBAssetsHelper extends AppHelper
         $this->jQuery();
 
         if (!isset($isAdded)) {
+
             $isAdded = true;
             $this->addScript('jQuery(function($){
-                setTimeout(function(){
-                    var maxHeight = tmpHeight = 0;
-                    $(".jbzoo .items .column").each(function(n, obj){
-                        var tmpHeight = parseInt($(obj).height(), 10);
-                        if (maxHeight < tmpHeight) {
-                            maxHeight = tmpHeight;
-                        }
-                    }).css({height:maxHeight});
-
-                    var maxHeight = tmpHeight = 0;
-                    $(".jbzoo .subcategories .column").each(function(n, obj){
-                        var tmpHeight = parseInt($(obj).height(), 10);
-                        if (maxHeight < tmpHeight) {
-                            maxHeight = tmpHeight;
-                        }
-                    }).css({height:maxHeight});
-
-                    var maxHeight = tmpHeight = 0;
-                    $(".jbzoo .related-items .column").each(function(n, obj){
-                        var tmpHeight = parseInt($(obj).height(), 10);
-                        if (maxHeight < tmpHeight) {
-                            maxHeight = tmpHeight;
-                        }
-                    }).css({height:maxHeight});
-                }, 300);
+                $(".jbzoo .items").JBZooHeightFix();
+                $(".jbzoo .subcategories").JBZooHeightFix();
+                $(".jbzoo .related-items").JBZooHeightFix();
             });');
         }
     }
@@ -551,6 +537,75 @@ class JBAssetsHelper extends AppHelper
     }
 
     /**
+     * Init color widget
+     * @param string $queryElement
+     * @param boolean  $type
+     */
+    public function initJBColorHelper($queryElement, $type = true)
+    {
+        $this->jQuery();
+
+        // included in the back-end. Do not delete.
+        $this->_include(array('jbassets:css/jbzoo.css'), 'css');
+        $this->tools();
+
+        if($queryElement) {
+            $this->addScript('jQuery(function($){
+                $("#'. $queryElement .'").JBColorHelper({multiple: "' . (boolean) $type . '"});
+            });');
+        }
+    }
+
+    /**
+     * Init color widget
+     * @param string $queryElement
+     * @param string $text
+     */
+    public function initJBColorElement($queryElement, $text = null)
+    {
+        $this->jQuery();
+
+        if($queryElement) {
+            $this->addScript('jQuery(document).ready(function($){
+                $("'. $queryElement .'").JBColorElement({message: "' .$text. '"});
+            });');
+        }
+    }
+
+    /**
+     * Init tooltip
+     */
+    public function initTooltip()
+    {
+        static $isAdded;
+
+        $this->jQueryUI();
+
+        if (!isset($isAdded)) {
+            $isAdded = true;
+            $this->addScript('jQuery(document).ready(function($){
+                $(".jbzoo .jbtooltip").tooltip();
+            });');
+        }
+    }
+
+    public function initJBDelimiter($queryElement, $version = null)
+    {
+        $this->jQuery();
+
+        if(empty($version)) {
+            $version = JString::substr($this->app->jbversion->joomla(), 0, 1);
+        }
+
+        $this->addScript('jQuery(document).ready(function($){
+                $("' . $queryElement . '").JBZooDelimiter({
+                    "version": "' . $version . '"
+                });
+            });'
+        );
+    }
+
+    /**
      * Add script to document
      * @param string $script
      */
@@ -607,6 +662,10 @@ class JBAssetsHelper extends AppHelper
      */
     protected function _include(array $files, $type)
     {
+        if ($this->app->jbrequest->is('format', 'feed')) {
+            return;
+        }
+
         static $includedFiles;
 
         if (!isset($includedFiles)) {

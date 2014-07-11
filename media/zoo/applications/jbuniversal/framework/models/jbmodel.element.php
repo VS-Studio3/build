@@ -111,13 +111,19 @@ class JBModelElement extends JBModel
         $values    = $this->_prepareValue($value, $exact);
         $fieldName = $this->_jbtables->getFieldName($elementId, 's');
 
-        if (empty($values)) {
+        if (empty($values) && is_array($values)) {
             return array();
+        }elseif($values === null){
+            return array('tItem.id IN (0)');
         }
 
         $conditions = array();
         foreach ($values as $valueOne) {
-            $conditions[] = 'tIndex.' . $fieldName . ' = ' . $this->_quote($valueOne);
+            if ($this->app->jbdate->isDate($valueOne)) {
+                $conditions[] = 'tIndex.' . $fieldName . ' LIKE ' . $this->_quote('%' . $valueOne . '%');
+            } else {
+                $conditions[] = 'tIndex.' . $fieldName . ' = ' . $this->_quote($valueOne);
+            }
         }
 
         $where = ' (' . implode(' OR ', $conditions) . ') ';
@@ -127,7 +133,13 @@ class JBModelElement extends JBModel
             ->from($this->_jbtables->getIndexTable($this->_itemType) . ' AS tIndex')
             ->where($where);
 
-        return array('tItem.id IN (' . $subSelect->__toString() . ')');
+        $rows = $this->fetchList($subSelect);
+
+        if (!empty($rows)) {
+            return array('tItem.id IN (' . implode(',', $rows) . ')');
+        }
+
+        return array('tItem.id IN (0)');
     }
 
     /**
@@ -142,8 +154,10 @@ class JBModelElement extends JBModel
         $values    = $this->_prepareValue($value, $exact);
         $fieldName = $this->_jbtables->getFieldName($elementId, 's');
 
-        if (empty($values)) {
+        if (empty($values) && is_array($values)) {
             return array();
+        }elseif($values === null){
+            return array('tItem.id IN (0)');
         }
 
         $conditions = array();
@@ -158,7 +172,13 @@ class JBModelElement extends JBModel
             ->from($this->_jbtables->getIndexTable($this->_itemType) . ' AS tIndex')
             ->where($where);
 
-        return array('tItem.id IN (' . $subSelect->__toString() . ')');
+        $rows = $this->fetchList($subSelect);
+
+        if (!empty($rows)) {
+            return array('tItem.id IN (' . implode(',', $rows) . ')');
+        }
+
+        return array('tItem.id IN (0)');
     }
 
     /**

@@ -31,8 +31,7 @@ if ($isDebug) {
         <input type="hidden" name="MrchLogin" value="<?php echo $data->get('login'); ?>">
         <input type="hidden" name="OutSum" value="<?php echo $data->get('summ'); ?>">
         <input type="hidden" name="InvId" value="<?php echo $data->get('orderId'); ?>">
-        <input type="hidden" name="Desc"
-               value="Order #<?php echo $data->get('orderId'); ?> form <?php echo JUri::getInstance()->getHost(); ?>">
+        <input type="hidden" name="Desc" value="Order #<?php echo $data->get('orderId'); ?> from <?php echo JUri::getInstance()->getHost(); ?>">
         <input type="hidden" name="SignatureValue" value="<?php echo $data->get('hash'); ?>">
 
         <input type="submit" style="display:inline-block;" class="add-to-cart"

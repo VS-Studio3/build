@@ -31,4 +31,14 @@ class JBFilterElementAuthor extends JBFilterElement
 
         return JBModelValues::model()->getAuthorValues($applicationId);
     }
+
+    /**
+     * @return bool
+     */
+    public function hasValue()
+    {
+        $data = $this->_getValues();
+        return !empty($data);
+    }
+
 }

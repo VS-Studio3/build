@@ -24,49 +24,13 @@ class JBModelElementJBImage extends JBModelElement
     const IMAGE_NO_EXISTS = '__IMAGE_NO_EXISTS__';
 
     /**
-     * Set AND element conditions
-     * @param JBDatabaseQuery $select
-     * @param string $elementId
      * @param array|string $value
-     * @param int $i
      * @param bool $exact
-     * @return JBDatabaseQuery
+     * @return array|mixed
      */
-    public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
+    protected function _prepareValue($value, $exact = false)
     {
-        return $this->_getWhere($value, $elementId);
-    }
-
-    /**
-     * Set OR element conditions
-     * @param JBDatabaseQuery $select
-     * @param string $elementId
-     * @param string|array $value
-     * @param int $i
-     * @param bool $exact
-     * @return array
-     */
-    public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
-    {
-        return $this->_getWhere($value, $elementId);
-    }
-
-    /**
-     * @param $value
-     * @param $elementId
-     * @return array
-     */
-    private function _getWhere($value, $elementId)
-    {
-        $result = array();
-
-        if (self::IMAGE_EXISTS == $value || self::IMAGE_NO_EXISTS == $value) {
-            $elementId = $this->_jbtables->getFieldName($elementId);
-
-            $result[] = 'tIndex.' . $elementId . ' = ' . $this->_quote($value);
-        }
-
-        return $result;
+        return parent::_prepareValue($value, $exact);
     }
 
 }

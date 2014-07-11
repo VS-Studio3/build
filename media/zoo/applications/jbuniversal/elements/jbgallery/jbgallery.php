@@ -153,30 +153,23 @@ class ElementJBGallery extends Element implements iSubmittable
         foreach ($files as $file) {
 
             $filename = basename($file);
-            $thumb    = $this->app->zoo->resizeImage($file, $width, $height);
+            $thumb    = $this->app->jbimage->resize($file, $width, $height);
 
-            // if thumbnail exists, add it to return value
-            if (file_exists($thumb)) {
-
-                // set image name or title if exsist
-                $name = '';
-                if (isset($desc_array[$filename])) {
-                    $name = $desc_array[$filename];
-                }
-
-                // get image info
-                list($thumb_width, $thumb_height) = @getimagesize($thumb);
-
-                $thumbs[] = array(
-                    'name'         => htmlspecialchars($this->getItem()->name),
-                    'filename'     => $filename,
-                    'img'          => $this->_getRelativePath($file),
-                    'img_file'     => $file,
-                    'thumb'        => $this->_getRelativePath($thumb),
-                    'thumb_width'  => $thumb_width,
-                    'thumb_height' => $thumb_height
-                );
+            // set image name or title if exsist
+            $name = '';
+            if (isset($desc_array[$filename])) {
+                $name = $desc_array[$filename];
             }
+
+            $thumbs[] = array(
+                'name'         => htmlspecialchars($this->getItem()->name),
+                'filename'     => $filename,
+                'img'          => $this->app->jbimage->getUrl($file),
+                'img_file'     => JPath::clean($file),
+                'thumb'        => $thumb->url,
+                'thumb_width'  => $thumb->width,
+                'thumb_height' => $thumb->height
+            );
         }
 
         return $thumbs;
@@ -210,7 +203,7 @@ class ElementJBGallery extends Element implements iSubmittable
      */
     protected function _getRelativePath($file)
     {
-        return str_replace('//', '/', $this->app->path->relative($file));
+        return JPath::clean(str_replace('//', '/', $this->app->path->relative($file)));
     }
 
     /**

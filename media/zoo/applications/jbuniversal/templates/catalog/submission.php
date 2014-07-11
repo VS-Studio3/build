@@ -13,6 +13,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+$this->app->jbdoc->noindex();
 
 // add page title
 $page_title = sprintf(($this->item->id ? JText::_('Edit %s') : JText::_('Add %s')), '');

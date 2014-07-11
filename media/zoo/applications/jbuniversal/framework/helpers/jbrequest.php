@@ -117,7 +117,7 @@ class JBRequestHelper extends AppHelper
      */
     public function isPost()
     {
-        return 'POST' == JFactory::getApplication()->input->getMethod(false, false);
+        return 'POST' == strtoupper(JFactory::getApplication()->input->getMethod(false, false));
     }
 
     /**
@@ -250,4 +250,48 @@ class JBRequestHelper extends AppHelper
     {
         return $this->getCtrl('') === strtolower($check);
     }
+
+    /**
+     * @param string $type
+     * @param int $default
+     * @return int
+     */
+    public function getSystem($type, $default = null)
+    {
+        $menuParam = $requestVar = null;
+        if ($type == 'item') {
+            $requestVar = 'item_id';
+            $menuParam  = 'item_id';
+
+        } else if ($type == 'category') {
+            $requestVar = 'category_id';
+            $menuParam  = 'category';
+
+        } else if ($type == 'app') {
+            $requestVar = 'app_id';
+            $menuParam  = 'application';
+        }
+
+        if (empty($requestVar)) {
+            return $default;
+        }
+
+        $varId = (int)$this->app->jbrequest->get($requestVar);
+        if ($varId > 0) {
+            return $varId;
+        }
+
+        $activeMenu = JFactory::getApplication()->getMenu()->getActive();
+        $result = 0;
+        if ($activeMenu && $activeMenu->params) {
+            $result = (int)$activeMenu->params->get($menuParam);
+        }
+
+        if (empty($result)) {
+            $result = (int)$default;
+        }
+
+        return $result;
+    }
+
 }

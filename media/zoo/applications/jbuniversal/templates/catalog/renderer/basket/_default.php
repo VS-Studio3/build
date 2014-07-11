@@ -35,12 +35,24 @@ $this->app->jbassets->initJBPrice();
             $j('.order_form').show();
         });
 
+        //Переход на способ оплаты
         $j('#go_to_paying').click(function(){
-            $j('#pay_for_products').addClass('active').removeClass('un_active');
-            $j('#order_form').removeClass('active').addClass('un_active');
+            var isDataValid = false;
 
-            $j('.order_form').hide();
-            $j('.pay_for_products').show();
+            if($j('.order_form input[type="text"]').eq(0).val().length == 0
+                || $j('.order_form input[type="text"]').eq(2).val().length == 0
+                || $j('.order_form input[type="text"]').eq(3).val().length == 0){
+
+                alert('Заполните поля, отмеченные *');
+            }
+
+            if(isDataValid){
+                $j('#pay_for_products').addClass('active').removeClass('un_active');
+                $j('#order_form').removeClass('active').addClass('un_active');
+
+                $j('.order_form').hide();
+                $j('.pay_for_products').show();
+            }
         });
     });
 </script>

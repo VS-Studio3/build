@@ -71,51 +71,56 @@ class JBModelElementJBPriceAdvance extends JBModelElement
     protected function _getWhere(JBDatabaseQuery $select, $elementId, $value, $exact = false)
     {
         $value = $this->_prepareValue($value, $exact);
+
         $isUse = false;
         $where = array();
+        $i     = 0;
 
-        // by SKU value
-        if (!empty($value['sku'])) {
-            $isUse = true;
-            if ($exact) {
-                $where[] = 'tSku.sku = ' . $this->_quote($value['sku']);
-            } else {
-                $where[] = $this->_buildLikeBySpaces($value['sku'], 'tSku.sku');
+        foreach ($value as $val) {
+
+            // by SKU value
+            if (!empty($val['sku'])) {
+                $isUse = true;
+                if ($exact) {
+                    $where[] = 'tSku.sku = ' . $this->_quote($val['sku']);
+                } else {
+                    $where[] = $this->_buildLikeBySpaces($val['sku'], 'tSku.sku');
+                }
+            }
+
+            // by balance
+            if (!empty($val['balance'])) {
+                $isUse   = true;
+                $where[] = 'tSku.balance <> 0';
+            }
+
+            if (!empty($val['new'])) {
+                $isUse   = true;
+                $where[] = 'tSku.is_new = 1';
+            }
+
+            if (!empty($val['hit'])) {
+                $isUse   = true;
+                $where[] = 'tSku.is_hit = 1';
+            }
+
+            if (!empty($val['sale'])) {
+                $isUse   = true;
+                $where[] = 'tSku.is_sale = 1';
+            }
+
+            if (!empty($val['val']) || !empty($val['val_min']) || !empty($val['val_max']) || !empty($val['range'])) {
+                $isUse   = true;
+                $where[] = '(' . implode(' AND ', $this->_conditionValue($val)) . ')';
+            }
+
+            if ($isUse && $i <= 0) {
+                $select->where('tSku.element_id = ?', $elementId);
+                $i++;
             }
         }
 
-        // by balance
-        if (!empty($value['balance'])) {
-            $isUse   = true;
-            $where[] = 'tSku.balance <> 0';
-        }
-
-        if (!empty($value['new'])) {
-            $isUse   = true;
-            $where[] = 'tSku.is_new = 1';
-        }
-
-        if (!empty($value['hit'])) {
-            $isUse   = true;
-            $where[] = 'tSku.is_hit = 1';
-        }
-
-        if (!empty($value['sale'])) {
-            $isUse   = true;
-            $where[] = 'tSku.is_sale = 1';
-        }
-
-        if (!empty($value['val']) || !empty($value['val_min']) || !empty($value['val_max']) || !empty($value['range'])) {
-            $isUse   = true;
-            $where[] = '(' . implode(' AND ', $this->_conditionValue($value)) . ')';
-        }
-
-        if ($isUse) {
-            $select->where('tSku.element_id = ?', $elementId)
-                ->where('tSku.type = ?', 1);
-        }
-
-        return $where;
+        return array(implode(' AND ', $where));
     }
 
     /**
@@ -136,18 +141,27 @@ class JBModelElementJBPriceAdvance extends JBModelElement
             $max = ceil($val);
 
             if ($valType == 1) {
+
                 $where[] = 'tSku.price >= ' . $this->_quote($min);
-                $where[] = 'tSku.price <= ' . $this->_quote($max);
+                if ($max > 0) {
+                    $where[] = 'tSku.price <= ' . $this->_quote($max);
+                }
 
             } else if ($valType == 2) {
+
                 $where[] = 'tSku.total >= ' . $this->_quote($min);
-                $where[] = 'tSku.total <= ' . $this->_quote($max);
+                if ($max > 0) {
+                    $where[] = 'tSku.total <= ' . $this->_quote($max);
+                }
 
             } else {
+
                 $where[] = 'tSku.price >= ' . $this->_quote($min);
-                $where[] = 'tSku.price <= ' . $this->_quote($max);
                 $where[] = 'tSku.total >= ' . $this->_quote($min);
-                $where[] = 'tSku.total <= ' . $this->_quote($max);
+                if ($max > 0) {
+                    $where[] = 'tSku.price <= ' . $this->_quote($max);
+                    $where[] = 'tSku.total <= ' . $this->_quote($max);
+                }
             }
         }
 
@@ -165,17 +179,23 @@ class JBModelElementJBPriceAdvance extends JBModelElement
 
             if ($valType == 1) {
                 $where[] = 'tSku.price >= ' . $this->_quote($min);
-                $where[] = 'tSku.price <= ' . $this->_quote($max);
+                if ($max > 0) {
+                    $where[] = 'tSku.price <= ' . $this->_quote($max);
+                }
 
             } else if ($valType == 2) {
                 $where[] = 'tSku.total >= ' . $this->_quote($min);
-                $where[] = 'tSku.total <= ' . $this->_quote($max);
+                if ($max > 0) {
+                    $where[] = 'tSku.total <= ' . $this->_quote($max);
+                }
 
             } else {
                 $where[] = 'tSku.price >= ' . $this->_quote($min);
-                $where[] = 'tSku.price <= ' . $this->_quote($max);
                 $where[] = 'tSku.total >= ' . $this->_quote($min);
-                $where[] = 'tSku.total <= ' . $this->_quote($max);
+                if ($max > 0) {
+                    $where[] = 'tSku.price <= ' . $this->_quote($max);
+                    $where[] = 'tSku.total <= ' . $this->_quote($max);
+                }
             }
 
         }
@@ -183,6 +203,7 @@ class JBModelElementJBPriceAdvance extends JBModelElement
         $priceType = (int)$value['price_type'];
         if ($priceType == 1) {
             $where[] = 'tSku.type = 1';
+
         } else if ($priceType == 2) {
             $where[] = 'tSku.type = 2';
         }
@@ -198,7 +219,9 @@ class JBModelElementJBPriceAdvance extends JBModelElement
     protected function _prepareValue($value, $exact = false)
     {
         if (is_array($value)) {
-            $value = array_merge(array(
+
+            $data   = array();
+            $result = array(
                 'sku'        => '',
                 'balance'    => '',
                 'sale'       => '',
@@ -211,12 +234,55 @@ class JBModelElementJBPriceAdvance extends JBModelElement
                 'currency'   => '',
                 'val_type'   => 0,
                 'price_type' => 0,
-            ), $value);
+            );
 
-            return $value;
+            if (isset($value['range']) ||
+                isset($value['val']) ||
+                isset($value['val_min']) ||
+                isset($value['currency']) ||
+                isset($value['sku']) ||
+                isset($value['val_max']) ||
+                isset($value['sale']) ||
+                isset($value['balance']) ||
+                isset($value['hit']) ||
+                isset($value['new'])
+            ) {
+                $value = $this->_setMinMax($value);
+
+                return array(array_merge($result, $value));
+            }
+
+            foreach ($value as $val) {
+                $val    = $this->_setMinMax($val);
+                $data[] = array_merge($result, $val);
+            }
+
+            return $data;
         }
 
         return parent::_prepareValue($value, $exact);
+    }
+
+
+    /**
+     * Get min/max value
+     * @param array $value
+     * @return array $result
+     */
+    protected function _setMinMax($value)
+    {
+        if (isset($value['range'])) {
+
+            if (strpos($value['range'], '/') !== false) {
+                list($min, $max) = explode('/', $value['range']);
+
+                $value['val_min'] = $min;
+                $value['val_max'] = $max;
+            }
+
+        }
+
+        return $value;
     }
 
 }

@@ -120,7 +120,11 @@ class JBFilterHelper extends AppHelper
         }
 
         $render = new $className($identifier, $value, $params, $attrs);
-        return $render->html();
+        if ($render->hasValue()) {
+            return $render->html();
+        }
+
+        return null;
     }
 
     /**

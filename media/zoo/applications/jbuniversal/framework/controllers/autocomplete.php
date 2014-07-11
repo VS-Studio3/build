@@ -57,6 +57,9 @@ class AutocompleteJBUniversalController extends JBUniversalController
                 } else if ($elementType == 'textarea') {
                     $rows = $autocomleteDb->textarea($query, $elementName, $type, $appId);
 
+                } else if ($elementType == 'jbcomments') {
+                    $rows = $autocomleteDb->comments($query, $type, $appId);
+
                 } else {
                     $rows = $autocomleteDb->field($query, $elementName, $type, $appId);
 

@@ -41,6 +41,10 @@ class JBCSVCellHelper extends AppHelper
      */
     public function createItem($element, $item, $group, $options = array())
     {
+        if(empty($item)) {
+            return false;
+        }
+
         if (is_string($element)) {
             $type = $element;
         } else {

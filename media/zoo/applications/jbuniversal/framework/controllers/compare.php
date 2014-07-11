@@ -29,6 +29,8 @@ class CompareJBUniversalController extends JBUniversalController
         // init
         $this->app->jbdebug->mark('compare::init');
 
+        $this->app->jbdoc->noindex();
+
         $type   = $this->_jbrequest->get('type');
         $appId  = $this->_jbrequest->get('app_id');
         $itemId = $this->_jbrequest->get('Itemid');
