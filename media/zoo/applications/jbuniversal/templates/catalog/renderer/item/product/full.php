@@ -12,9 +12,29 @@ defined('_JEXEC') or die('Restricted access');
 $align = $this->app->jbitem->getMediaAlign($item, $layout);
 $tabsId = uniqid('jbzoo-tabs-');
 ?>
+<script type="text/javascript">
+    $j(function(){
+        $j('.little_img img').attr({'width' : 50, 'height' : 50});
+        $j('.little_img .preview_img').click(function(){
+            $j('.prev_img_container').show();
+            $j('.img_sourse').html($j('.first_img img').clone().attr({'width' : 500, 'height' : 500}));
+        });
+        $j('.close_img').click(function(){
+            $j('.prev_img_container').hide();
+        });
+    });
+</script>
+<div class="prev_img_container">
+    <div class="close_img">Закрыть</div>
+    <div class="img_sourse"></div>
+</div>
 <div id="full_product_description">
     <?php if ($this->checkPosition('image')) : ?>
-        <div class="item-image align-<?php echo $align; ?>">
+        <div class="little_img">
+            <?php echo $this->renderPosition('image'); ?>
+            <div class="preview_img">Preview</div>
+        </div>
+        <div class="first_img item-image align-<?php echo $align; ?>">
             <?php echo $this->renderPosition('image'); ?>
         </div>
     <?php endif; ?>

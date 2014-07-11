@@ -832,3 +832,18 @@ fieldset {
     margin-left: -215px;
     display: none;
 }
+.prev_img_container{
+    position: absolute;
+    background-color: red;
+    width: 500px;
+    height: 500px;
+    z-index: 1000;
+    top:25%;
+    left:50%;
+    margin-left: -250px;
+    display: none;
+}
+.close_img{
+    position: absolute;
+    z-index: 1100;
+}
