@@ -66,9 +66,10 @@ $task = $_GET['task'];
                 <a href="#"><span class="facebook"></span></a>
                 <a href="#"><span class="vk"></span></a>
             </div>
-            <div class="basket">
-                <p>bla bla bla</p>
+            <div id="search_wrapper">
+                <jdoc:include type="modules" name="search_module" style="xhtml"/>
             </div>
+            <div class="basket"></div>
         </div>
         <div class="contact">
             <p class="number">+7 (000) 000 00 00</p>
