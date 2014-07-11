@@ -102,7 +102,6 @@ ChangingCity = {
         $j('#list_of_cities, .cities').html(listOfCities);
 
         if (CookieObject.find('city') == null) {
-            //ВЫВОД�?М МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ГОРОДА
             $j('#modal_cities').show();
         }
         else {

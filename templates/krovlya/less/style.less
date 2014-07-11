@@ -657,6 +657,7 @@ fieldset{
   padding: 15px;
   background: #ffffff;
   z-index: 40;
+  display:none;
   div:first-child{
     text-align: center;
     font-size: 18px;
@@ -670,21 +671,108 @@ fieldset{
       li{
         list-style-type: none;
         font-size: 26px;
-        color: #000000;
+        color: #383085;
       }
-      li:hover{
+      li.second_level:hover{
         text-decoration: underline;
         cursor: pointer;
+      }
+      li.first_level{
+        color: #4d4b4b;
+        margin-bottom: 20px;
       }
     }
   }
 }
+.preview_img:hover{
+  cursor: pointer;
+}
+.prev_img_container{
+  position: absolute;
+  width: 510px;
+  height: 538px;
+  z-index: 35;
+  left: 50%;
+  margin-left: -250px;
+  top: 50%;
+  margin-top: -250px;
+  border: 5px solid #383085;
+  border-radius: 10px;
+  display: none;
+  .close_img{
+    text-align: right;
+    padding-right: 10px;
+    padding-top: 10px;
+    background: #ffffff;
+    margin: 0px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .close_img:hover{
+    cursor: pointer;
+  }
+  .img_sourse{
+    background: #ffffff;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+}
+.little_img{
+  float: left;
+  height: 346px;
+  position: relative;
+  min-width: 50px;
+  margin-right: 10px;
+  img{
+    top: 50%;
+    position: absolute;
+    margin-top: -25px;
+  }
+  .preview_img{
+    position: absolute;
+    top: 50%;
+    margin-top: 25px;
+  }
+}
+.current_city{
+  font-size: 26px;
+  color: #000000;
+  margin-top: 30px;
+}
+.only_for_btn{
+  position: relative;
+  text-align: right;
+  .btn_city:hover{
+    cursor: pointer;
+  }
+  .btn_city{
+    font-size: 17px;
+    color: #4d4b4b;
+    text-align: right;
+    position: relative;
+    margin-right: 35px;
+    display: inline-block;
+    border-bottom: 1px dashed #4d4b4b;
+  }
+
+}
+.only_for_btn:before{
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  height: 10px;
+  width: 20px;
+  background: url("../images/down.png") no-repeat;
+}
 #list_of_cities_div{
+  display: none;
   background: #ffffff;
   position: absolute;
   padding: 15px;
   z-index: 40;
   right: 0px;
+  top: 100px;
   width: 435px;
   border: 5px solid #383085;
   border-radius: 10px;
@@ -701,11 +789,15 @@ fieldset{
     li{
       list-style-type: none;
       font-size: 26px;
-      color: #000000;
+      color: #383085;
     }
-    li:hover{
+    li.second_level:hover{
       text-decoration: underline;
       cursor: pointer;
+    }
+    li.first_level{
+      color: #4d4b4b;
+      margin-bottom: 20px;
     }
   }
 }
