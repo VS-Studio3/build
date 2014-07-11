@@ -37,11 +37,11 @@ if (!empty($basketItems)) {
     $emptyUrl  = $basketHelper->getBasketEmptyUrl();
 
     if ((int)$params->get('items_show', 1)) {
-        echo '<p>' . JText::_('JBZOO_CART_TOTAL_COUNT') . ': <span class="total-items">' . $count . ' ' . JText::_('JBZOO_CART_COUNT_ABR') . '</span></p>';
+        echo '<p>' . JText::_('JBZOO_CART_TOTAL_COUNT') . ': <span class="total-items">' . $count .  '</span></p>';
     }
 
     if ((int)$params->get('lots_show', 1)) {
-        echo '<p>' . JText::_('JBZOO_CART_TOTAL_SKU') . ': <span class="total-items">' . $countSku . ' ' . JText::_('JBZOO_CART_COUNT_ABR') . '</span></p>';
+        echo '<p>' . JText::_('JBZOO_CART_TOTAL_SKU') . ': <span class="total-items">' . $countSku . '</span></p>';
     }
 
     if ((int)$params->get('summa_show', 1)) {
