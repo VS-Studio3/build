@@ -129,7 +129,10 @@ $j(function () {
     /**
      * FANCY BOX -> вывод модальных окон для заказа завяки и звонка
      * **/
-    $j('a.btn_zayavka, a.btn_zvonok').fancybox();
+    $j('a.btn_zayavka, a.btn_zvonok').fancybox({
+        scrolling: 'no',
+        autoScale: false
+    });
 
     /**Выводит список доступных городов**/
     $j('.btn_city').click(function () {
@@ -141,4 +144,7 @@ $j(function () {
     $j('.close').click(function () {
         $j('#list_of_cities_div').toggle();
     });
+
+    $j('#zayavka .foxform .foxfield:eq(3), #zayavka .foxform .foxfield:eq(4)').addClass('fox_little_text');
+    $j('#zayavka .foxform .foxfield:eq(5)').addClass('for_buttom');
 });

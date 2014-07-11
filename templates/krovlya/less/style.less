@@ -137,6 +137,7 @@ fieldset{
   }
   .contact{
     padding-top: 25px;
+    position: relative;
     vertical-align: top;
     height: 199px;
     width: 250px;
@@ -645,6 +646,161 @@ fieldset{
 
   }
 }
+#modal_cities{
+  position: absolute;
+  left: 50%;
+  width: 435px;
+  margin-left: -215px;
+  top: 25%;
+  border: 5px solid #383085;
+  border-radius: 10px;
+  padding: 15px;
+  background: #ffffff;
+  z-index: 40;
+  display:none;
+  div:first-child{
+    text-align: center;
+    font-size: 18px;
+    color: #4d4b4b;
+    margin-bottom: 20px;
+  }
+  .cities{
+    ul{
+      margin: 0px;
+      padding: 0px;
+      li{
+        list-style-type: none;
+        font-size: 26px;
+        color: #383085;
+      }
+      li.second_level:hover{
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      li.first_level{
+        color: #4d4b4b;
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+.preview_img:hover{
+  cursor: pointer;
+}
+.prev_img_container{
+  position: absolute;
+  width: 510px;
+  height: 538px;
+  z-index: 35;
+  left: 50%;
+  margin-left: -250px;
+  top: 50%;
+  margin-top: -250px;
+  border: 5px solid #383085;
+  border-radius: 10px;
+  display: none;
+  .close_img{
+    text-align: right;
+    padding-right: 10px;
+    padding-top: 10px;
+    background: #ffffff;
+    margin: 0px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .close_img:hover{
+    cursor: pointer;
+  }
+  .img_sourse{
+    background: #ffffff;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+}
+.little_img{
+  float: left;
+  height: 346px;
+  position: relative;
+  min-width: 50px;
+  margin-right: 10px;
+  img{
+    top: 50%;
+    position: absolute;
+    margin-top: -25px;
+  }
+  .preview_img{
+    position: absolute;
+    top: 50%;
+    margin-top: 25px;
+  }
+}
+.current_city{
+  font-size: 26px;
+  color: #000000;
+  margin-top: 30px;
+}
+.only_for_btn{
+  position: relative;
+  text-align: right;
+  .btn_city:hover{
+    cursor: pointer;
+  }
+  .btn_city{
+    font-size: 17px;
+    color: #4d4b4b;
+    text-align: right;
+    position: relative;
+    margin-right: 35px;
+    display: inline-block;
+    border-bottom: 1px dashed #4d4b4b;
+  }
+
+}
+.only_for_btn:before{
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  height: 10px;
+  width: 20px;
+  background: url("../images/down.png") no-repeat;
+}
+#list_of_cities_div{
+  display: none;
+  background: #ffffff;
+  position: absolute;
+  padding: 15px;
+  z-index: 40;
+  right: 0px;
+  top: 100px;
+  width: 435px;
+  border: 5px solid #383085;
+  border-radius: 10px;
+  a{
+    font-size: 18px;
+    color: #4d4b4b;
+    line-height: 18px;
+    float: right;
+
+  }
+  ul{
+    padding: 25px 0px 0px 0px;
+    margin: 0px;
+    li{
+      list-style-type: none;
+      font-size: 26px;
+      color: #383085;
+    }
+    li.second_level:hover{
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    li.first_level{
+      color: #4d4b4b;
+      margin-bottom: 20px;
+    }
+  }
+}
 .others{
   overflow: hidden;
   margin: 0px -30px;
@@ -663,6 +819,7 @@ fieldset{
     }
     .item-title{
       text-align: left;
+      padding: 0px 10px 0px 0px;
       a{
         text-decoration: none;
         color: #4d4a4a;
@@ -699,9 +856,50 @@ fieldset{
 }
 .fancybox-inner{
   width: auto!important;
-  height: 420px!important;
+  height: auto!important;
 }
-#zvonok{
+#zayavka{
+  padding-top: 50px;
+}
+.for_buttom{
+  text-align: right!important;
+  button{
+    float: right;
+    background: none!important;
+    span{color: #4d4b4b!important;}
+    padding: 5px 10px!important;
+  }
+  button:first-child{
+    float: none;
+    background: url("../images/button.png") no-repeat!important;
+    background-size: cover!important;
+    span{color: #ffffff!important;}
+    padding: 8px 31px 6px!important;
+  }
+}
+.qq-upload-button{
+  background: url("../images/button.png") no-repeat;
+  background-size: cover;
+  float: left;
+  padding: 0px!important;
+  border: none;
+  box-shadow: none;
+  border-radius: 0px;
+  text-shadow: none;
+  width: 264px;
+  height: 40px;
+  margin: 10px 0px!important;
+  span{
+   font-size: 18px;
+    line-height: 18px;
+    color: #ffffff;
+    font-weight: bold;
+    vertical-align: bottom;
+  }
+}
+#zvonok,
+#zayavka {
+  margin-bottom: 15px;
   .foxcontainer{
     margin-top: 65px;
   }
@@ -729,6 +927,12 @@ fieldset{
   border-radius: 20px!important;
   padding: 0px 15px!important;
 }
+.foxform .fox_little_text label{
+  text-transform: none;
+  font-size: 15px;
+  padding-left: 5px;
+  color: #000000;
+}
 .foxform label {
   text-transform: uppercase;
   font-size: 20px;
@@ -752,7 +956,16 @@ fieldset{
     height: 48px;
     margin-bottom: 20px!important;
   }
-  input:hover, input:focus{
+  textarea{
+    border-radius: 0px;
+    border-color: #535151;
+    border-width: 2px;
+    height: 105px;
+    resize: none;
+    margin-top: 10px!important;
+    margin-bottom: 10px!important;
+  }
+  input:hover, input:focus, textarea:hover, textarea:focus{
     border-radius: 0px;
     border-color: #535151;
     border-width: 2px;
