@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<renderer>
+
+    <positions layout="order">
+        <position name="fio">ФИО*</position>
+        <position name="company">Компания</position>
+        <position name="telephone">Мобильный телефон*</position>
+        <position name="email">E-mail*</position>
+
+        <position name="sposob_dostavki">Способ доставки</position>
+
+        <position name="city">Город*</position>
+        <position name="street">Улица*</position>
+        <position name="house">Дом, корпус, квартира*</position>
+        <position name="data_dostavki">Дата доставки</position>
+        <position name="vremya_dostavki">Время доставки</position>
+        <position name="comments">Комментарий к заказу</position>
+
+        <position name="sposob_oplati">Способ оплаты</position>
+    </positions>
+</renderer>

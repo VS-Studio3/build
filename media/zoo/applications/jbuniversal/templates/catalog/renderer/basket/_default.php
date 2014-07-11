@@ -18,7 +18,38 @@ $view = $this->getView();
 $this->app->jbassets->basket();
 $this->app->jbassets->initJBPrice();
 ?>
-<table class="jbbasket-table jsJBZooBasket">
+<script type="text/javascript">
+    $j(function(){
+        $j('#basket').addClass('active');
+        $j('#order_form, #pay_for_products').addClass('un_active');
+
+        $j('.order_form, .pay_for_products, .required-info, #yoo-zoo h1').hide();
+        $j('#item-submission').prev('h2').hide();
+
+        //Переход на способ доставки
+        $j('#go_to_order').click(function(){
+            $j('#order_form').addClass('active').removeClass('un_active');
+            $j('#basket').removeClass('active').addClass('un_active');
+
+            $j('.basket').hide();
+            $j('.order_form').show();
+        });
+
+        $j('#go_to_paying').click(function(){
+            $j('#pay_for_products').addClass('active').removeClass('un_active');
+            $j('#order_form').removeClass('active').addClass('un_active');
+
+            $j('.order_form').hide();
+            $j('.pay_for_products').show();
+        });
+    });
+</script>
+<div id="basket">Покупки</div>
+<div id="order_form">Оформление заказа</div>
+<div id="pay_for_products">Оплата</div>
+
+<div class="basket">
+    <table class="jbbasket-table jsJBZooBasket">
     <thead>
     <tr>
         <th>#</th>
@@ -113,6 +144,8 @@ $this->app->jbassets->initJBPrice();
     </tr>
     </tfoot>
 </table>
+    <div id="go_to_order">Продолжить</div>
+</div>
 
 <script type="text/javascript">
     jQuery(function ($) {
