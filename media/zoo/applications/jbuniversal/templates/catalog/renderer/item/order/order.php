@@ -4,8 +4,11 @@
     <?php echo $this->renderPosition("telephone"); ?>
     <?php echo $this->renderPosition("email"); ?>
 
-    <?php echo $this->renderPosition("sposob_dostavki"); ?>
+    <div id="joomla_template_dostavka">
+        <?php echo $this->renderPosition("sposob_dostavki"); ?>
+    </div>
 
+    <div id="joomla_template_dostavka">
     Адрес доставки:
     <?php echo $this->renderPosition("city"); ?>
     <?php echo $this->renderPosition("street"); ?>

@@ -25,6 +25,12 @@ echo $view->orderDetails->render(array(
     'template'       => 'table',
 ));
 
+if ((int)$view->appParams->get('global.jbzoo_cart_config.paypal-enabled', 0)) {
+    echo '<div class="width33">';
+    echo $this->app->jblayout->render('payment_paypal', $view->payments['paypal']);
+    echo '</div>';
+}
+
 if ((int)$view->appParams->get('global.jbzoo_cart_config.robox-enabled', 0)) {
     echo '<div class="width33">';
     echo $this->app->jblayout->render('payment_robox', $view->payments['robox']);

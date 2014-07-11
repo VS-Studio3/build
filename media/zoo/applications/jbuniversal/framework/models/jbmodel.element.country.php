@@ -30,11 +30,20 @@ class JBModelElementCountry extends JBModelElement
     {
         $values = $value;
 
+        if (empty($values)) {
+            return array();
+        }
+
         if ($exact) {
+
+            if (!is_array($values)) {
+                $values = array($values);
+            }
+
             return $values;
 
         } else {
-            $options = $this->_getCountries();
+            $countryMap = $this->_getCountries();
 
             $result = array();
             if (!is_array($values)) {
@@ -42,8 +51,8 @@ class JBModelElementCountry extends JBModelElement
             }
 
             foreach ($values as $value) {
-                if (isset($options[$value])) {
-                    $result[] = $options[$value];
+                if ($key = array_search(JText::_($value), $countryMap)) {
+                    $result[] = JText::_($this->app->country->isoToName($key));
                 }
             }
 
@@ -57,15 +66,16 @@ class JBModelElementCountry extends JBModelElement
      */
     private function _getCountries()
     {
-        $selectable_countries = $this->_config->get('selectable_country', array());
-        $countries            = $this->app->country->getIsoToNameMapping();
-        $keys                 = array_flip($selectable_countries);
-        $countries            = array_intersect_key($countries, $keys);
+        $selectableCountries = $this->_config->get('selectable_country', array());
+
+        $countries = $this->app->country->getIsoToNameMapping();
+        $keys      = array_flip($selectableCountries);
+        $countries = array_intersect_key($countries, $keys);
 
         $result = array();
-        foreach ($countries as $country) {
-            $translated          = JText::_($country);
-            $result[$translated] = $translated;
+        foreach ($countries as $key => $country) {
+            $translite    = JText::_($country);
+            $result[$key] = $translite;
         }
 
         return $result;

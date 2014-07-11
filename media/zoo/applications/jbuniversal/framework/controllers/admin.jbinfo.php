@@ -53,7 +53,7 @@ class JBInfoJBUniversalController extends JBUniversalController
             $this->renderView();
 
         } else {
-            $this->app->jbajax->disableTmpl();
+            $this->app->jbdoc->disableTmpl();
 
             try {
 
@@ -147,22 +147,20 @@ class JBInfoJBUniversalController extends JBUniversalController
             $this->setRedirect($this->app->jbrouter->admin(array('task' => 'performance')));
         }
 
-        if ($this->_jbrequest->isPost() && function_exists('file_get_contents')) {
-
-            $data = array(
-                'hosting' => $this->_jbrequest->getArray('jbzooform'),
-                'tests'   => $prevData,
-                'host'    => JUri::root(),
-                'jbuser'  => JBZOO_USERNAME,
-            );
+        if ($this->_jbrequest->isPost()) {
 
             $sendData = array(
-                'data'   => $data,
+                'data'   => array(
+                    'hosting' => $this->_jbrequest->getArray('jbzooform'),
+                    'tests'   => $prevData,
+                    'host'    => JUri::root(),
+                    'jbuser'  => JBZOO_USERNAME,
+                ),
                 'method' => 'add-hosting',
-                'hash'   => JBZoo::getHash($data),
             );
 
-            file_get_contents('http://stats.jbzoo.com/api?' . $this->app->jbrouter->query($sendData));
+            $jhttp = JHttpFactory::getHttp();
+            $jhttp->get('http://stats.jbzoo.com/api?' . $this->app->jbrouter->query($sendData));
 
             $this->setRedirect($this->app->jbrouter->admin(array('task' => 'performance')), JText::_('JBZOO_PERFORMANCE_REPORT_THANK_YOU'));
         }

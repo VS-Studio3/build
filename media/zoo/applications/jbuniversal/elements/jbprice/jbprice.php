@@ -61,8 +61,12 @@ class ElementJBPrice extends ElementRepeatable implements iRepeatSubmittable
     {
         $value = $this->get('value', $this->config->get('default'));
         $value = $this->app->jbmoney->clearValue($value);
+        
+        if ($value > 0) {
+            return $value;
+        }
 
-        return $value;
+        return NULL;
     }
 
     /**

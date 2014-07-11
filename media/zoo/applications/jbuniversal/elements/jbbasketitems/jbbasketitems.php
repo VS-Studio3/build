@@ -125,9 +125,8 @@ class ElementJBBasketItems extends Element implements iSubmittable
                 $appId = $this->app->zoo->getApplication()->id;
                 $href  = $this->app->jbrouter->basketPayment($params->get('basket-menuitem'), $appId, $this->getItem()->id);
 
-                $html = '<p><input type="button" style="display:inline-block;" '
-                    . 'data-href="' . $href . '" class="jsGoto add-to-cart" '
-                    . 'value="' . JText::_('JBZOO_PAYMENT_LINKTOFORM') . '" /></p>';
+                $html = '<p><a style="display:inline-block;" href="' . $href . '" class="jsGoto add-to-cart">'
+                    . JText::_('JBZOO_PAYMENT_LINKTOFORM') . '</a></p>';
 
                 return $html;
             }
@@ -222,16 +221,21 @@ class ElementJBBasketItems extends Element implements iSubmittable
     /**
      * Ajax call - paymentCallback
      */
-    public function paymentCallback($date, $system = null, $additionalStatus = null)
+    public function paymentCallback($date, $system = null, $additionalStatus = null, $comment = null)
     {
         $orderInfo = $this->getOrderInfo();
         $item      = $this->getItem();
         $appParams = $item->getApplication()->getParams();
 
+        if (!isset($orderInfo['description'])) {
+            $orderInfo['description'] = '';
+        }
+
         $orderInfo = array(
             'payment_date'      => $date,
             'payment_system'    => $system,
             'additional_status' => $additionalStatus,
+            'description'       => $orderInfo['description'] . "\n\n" . $comment,
         );
 
         if ($system == self::SYSTEM_MANUAL) {

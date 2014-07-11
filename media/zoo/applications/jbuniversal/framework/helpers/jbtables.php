@@ -123,7 +123,6 @@ class JBTablesHelper extends AppHelper
         if (!isset($checked) || $force) {
 
             $this->createTable(ZOO_TABLE_JBZOO_SKU, array(
-                '`id` INT(11) NOT NULL AUTO_INCREMENT',
                 '`item_id` INT(11) NOT NULL',
                 '`element_id` VARCHAR(50) NOT NULL',
                 '`sku` VARCHAR(100) NOT NULL',
@@ -138,7 +137,6 @@ class JBTablesHelper extends AppHelper
                 '`hash` VARCHAR(150) NULL DEFAULT NULL',
                 '`params` TEXT NULL'
             ), array(
-                'PRIMARY KEY (`id`)',
                 'INDEX `hash` (`hash`)',
                 'INDEX `item_id` (`item_id`)',
                 'INDEX `type` (`type`)',
@@ -156,14 +154,42 @@ class JBTablesHelper extends AppHelper
     }
 
     /**
+     * Check and create config table
+     */
+    public function checkConfig()
+    {
+        static $checked;
+
+        if (!isset($checked)) {
+
+            $this->createTable(ZOO_TABLE_JBZOO_CONFIG, array(
+                '`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT',
+                '`group` VARCHAR(50) NULL DEFAULT NULL',
+                '`key` VARCHAR(50) NULL DEFAULT NULL',
+                '`value` TEXT NULL',
+                '`type` VARCHAR(10) NULL DEFAULT \'string\''
+            ), array(
+                'PRIMARY KEY (`id`)',
+                'UNIQUE INDEX `group_key` (`group`, `key`)',
+                'INDEX `group` (`group`)',
+                'INDEX `key` (`key`)'
+            ));
+        }
+
+        $checked = true;
+    }
+
+    /**
      * Drop & create indexes table
      */
     public function createIndexes()
     {
         $types = $this->app->jbtype->getSimpleList();
 
-        foreach ($types as $type => $typeName) {
-            $this->createIndexTable($type);
+        if (!empty($types)) {
+            foreach ($types as $type => $typeName) {
+                $this->createIndexTable($type);
+            }
         }
     }
 
@@ -193,7 +219,13 @@ class JBTablesHelper extends AppHelper
     {
         $itemType = str_replace('-', '_', $itemType);
         $itemType = strtolower(preg_replace('#[^0-9a-z\_]#ius', '', $itemType));
-        return $this->_indexTablePrefix . $itemType;
+        $itemType = $this->_indexTablePrefix . $itemType;
+
+        if (strlen($itemType) > 50) {
+            $itemType = substr($itemType, 0, 50);
+        }
+
+        return $itemType;
     }
 
     /**
@@ -284,14 +316,14 @@ class JBTablesHelper extends AppHelper
         }
 
         // std fileds and indexes
-        $tblFields = array('`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT', '`item_id` INT(11) UNSIGNED NOT NULL');
-        $tblIndex  = array('PRIMARY KEY (`id`)', 'INDEX `item_id` (`item_id`)');
+        $tblFields = array('`item_id` INT(11) UNSIGNED NOT NULL');
+        $tblIndex  = array('INDEX `item_id` (`item_id`)');
 
         foreach ($fields as $field) {
 
             // only for frontpage mark (for perfomance optimization)
             if ($field == '_itemfrontpage') {
-                $tblFields[] = '`' . $this->getFieldName($field, 'n') . '` TINYINT(1) NOT NULL DEFAULT \'0\'';
+                $tblFields[] = '`' . $this->getFieldName($field, 'n') . '` TINYINT(1) NULL DEFAULT \'0\'';
                 $tblIndex[]  = 'INDEX `' . $this->getFieldName($field, 'n') . '` (`' . $this->getFieldName($field, 'n') . '`)';
                 continue;
             }
@@ -299,9 +331,7 @@ class JBTablesHelper extends AppHelper
             // add fields
             $tblFields[] = '`' . $this->getFieldName($field, 's') . '` VARCHAR(50) NULL DEFAULT NULL COLLATE \'utf8_general_ci\'';
             $tblFields[] = '`' . $this->getFieldName($field, 'n') . '` DOUBLE NULL DEFAULT NULL';
-            if (!in_array($field, $stdIndexFields, true)) {
-                $tblFields[] = '`' . $this->getFieldName($field, 'd') . '` DATETIME NULL DEFAULT NULL';
-            }
+            $tblFields[] = '`' . $this->getFieldName($field, 'd') . '` DATETIME NULL DEFAULT NULL';
 
             // add indexes
             if (count($tblIndex) < 63) {
@@ -503,15 +533,21 @@ class JBTablesHelper extends AppHelper
         static $result;
 
         if (!isset($result)) {
+            $result = array();
+        }
+
+        if (!isset($result[$table])) {
             $indexes = $this->app->database->queryAssocList('DESCRIBE ' . $table);
 
-            $result = array();
-            foreach ($indexes as $index) {
-                $result[] = $index['Field'];
+            $result[$table] = array();
+            if (!empty($indexes)) {
+                foreach ($indexes as $index) {
+                    $result[$table][] = $index['Field'];
+                }
             }
         }
 
-        return $result;
+        return $result[$table];
     }
 
     /**

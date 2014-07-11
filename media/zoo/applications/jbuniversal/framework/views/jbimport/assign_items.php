@@ -43,11 +43,15 @@ $jbform = $this->app->jbform;
 
                 <?php echo $jbform->renderRow($this->controls['key'], 'JBZOO_IMPORT_KEY', 'key'); ?>
 
+                <?php echo $jbform->renderRow($this->controls['create'], 'JBZOO_IMPORT_ITEMS_CREATE', 'create'); ?>
+
                 <?php echo $jbform->renderRow($this->controls['checkOptions'], 'JBZOO_IMPORT_CHECK_OPTIONS', 'checkOptions'); ?>
 
                 <?php echo $jbform->renderRow($this->controls['lose'], 'JBZOO_IMPORT_LOSE', 'lose'); ?>
 
-                <hr />
+                <?php echo $jbform->renderRow($this->controls['createAlias'], 'JBZOO_IMPORT_CREATE_ALIAS', 'createAlias'); ?>
+
+                <hr/>
 
                 <ul id="fields-assign">
                     <?php foreach ($this->info['columns'] as $key => $column) : ?>
@@ -98,16 +102,17 @@ $jbform = $this->app->jbform;
             showSelects($(this).val())
         });
 
-        if (prevParams && prevParams.previousParams) {
+        if (prevParams && prevParams.previousparams) {
 
-            var prev = prevParams.previousParams;
+            var prev = prevParams.previousparams;
 
             $('#appid').val(prev.appid);
+            $('#typeid').val(prev.typeid).trigger('change');
             $('#lose').val(prev.lose);
             $('#key').val(prev.key);
-            $('#itemKey').val(prev['itemKey']);
-            $('#checkOptions').val(prev['checkOptions']);
-            $('#typeid').val(prev.typeid).trigger('change');
+            $('#create').val(prev.create);
+            $('#checkOptions').val(prev.checkOptions);
+            $('#createAlias').val(prev.createAlias);
 
             if (prev.typeid) {
                 var typeid = prev.typeid;

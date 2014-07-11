@@ -697,11 +697,22 @@ class JBPerformHelper extends AppHelper
      */
     protected function _testSessionInit()
     {
-        $requestUrl = JUri::root() . 'media/zoo/applications/jbuniversal/tools/test-session.php';
+        $uri = new JUri(JUri::root());
+        if (isset($_SERVER['PHP_AUTH_PW']) && $_SERVER['PHP_AUTH_PW']) {
+            $uri->setPass($_SERVER['PHP_AUTH_PW']);
+        }
+
+        if (isset($_SERVER['PHP_AUTH_USER']) && $_SERVER['PHP_AUTH_USER']) {
+            $uri->setUser($_SERVER['PHP_AUTH_USER']);
+        }
+
+        $requestUrl = $uri->toString() . 'media/zoo/applications/jbuniversal/tools/test-session.php';
+        $jhttp      = JHttpFactory::getHttp();
 
         $values = array();
         for ($j = 0; $j < 10; $j++) {
-            $values[] = (float)file_get_contents($requestUrl . '?nocache=' . mt_rand());
+            $response = $jhttp->get($requestUrl . '?nocache=' . mt_rand());
+            $values[] = (float)$response->body;
         }
 
         return array_sum($values) / doubleval(count($values));

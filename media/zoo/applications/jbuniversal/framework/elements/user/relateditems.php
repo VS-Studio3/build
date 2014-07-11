@@ -52,9 +52,9 @@ class JBCSVItemUserRelateditems extends JBCSVItem
             if ($item = JBModelItem::model()->getByAlias($alias, $this->_item->application_id)) {
                 $result[] = $item->id;
             }
-
-            $result = array_unique($result);
         }
+
+        $result = array_unique($result);
 
         $this->_element->bindData(array('item' => $result));
     }

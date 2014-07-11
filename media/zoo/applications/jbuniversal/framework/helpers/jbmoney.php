@@ -19,13 +19,21 @@ defined('_JEXEC') or die('Restricted access');
  */
 class JBMoneyHelper extends AppHelper
 {
+    const BASE_CURRENCY = 'EUR'; // don't touch!
 
-    static $currencyList = null;
-    static $formatList = null;
+    static $curList = array();
+    static $formatList = array();
 
-    protected $_serviceUrl = 'http://rate-exchange.appspot.com/currency';
+    protected $_serviceGoogle = 'http://rate-exchange.appspot.com/currency';
+    protected $_serviceCBR = 'http://www.cbr.ru/scripts/XML_daily.asp';
+    protected $_servicePrivatBank = 'https://privat24.privatbank.ua/p24/accountorder?oper=prp&PUREXML&apicour&country=ua&full';
+    protected $_serviceEuropecb = 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
 
-    const BASE_CURRENCY = 'EUR';
+    const MODE_NONE       = 'manual';
+    const MODE_GOOGLE     = 'google';
+    const MODE_CBR        = 'cbr';
+    const MODE_PRIVATBANK = 'privatbank';
+    const MODE_EUROPECB   = 'europecb';
 
     /**
      * @var array
@@ -38,6 +46,8 @@ class JBMoneyHelper extends AppHelper
     public function __construct($app)
     {
         parent::__construct($app);
+
+        $this->_config = JBModelConfig::model();
         $this->_init();
     }
 
@@ -46,15 +56,25 @@ class JBMoneyHelper extends AppHelper
      */
     protected function _init()
     {
-        if (is_null(self::$currencyList)) {
+        $mode = $this->getMode();
+
+        $this->app->jbdebug->mark('jbmoney::init::' . $mode . '-start');
+
+        if (!empty(self::$curList)) {
+            return false;
+        }
+
+        $cacheKey = implode('|', array(
+            'mode-' . $mode,
+            //'date-' . date('d-m-Y'),
+        ));
+
+        $cachedData = $this->app->jbcache->get($cacheKey, 'currency', true);
+        if (empty($cachedData)) {
 
             $xml = simplexml_load_file($this->app->path->path('jbconfig:jbcurrency.xml'));
 
-            $this->_config = array(
-                'load_from_google' => (int)(defined('JBZOO_CONFIG_CURRENCY_ONLINE') ? JBZOO_CONFIG_CURRENCY_ONLINE : 0),
-            );
-
-            self::$formatList = array();
+            // load format list
             foreach ($xml->formatlist->children() as $name => $format) {
                 self::$formatList[$name] = array();
                 foreach ($format->attributes() as $key => $value) {
@@ -62,68 +82,205 @@ class JBMoneyHelper extends AppHelper
                 }
             }
 
-            self::$currencyList = array();
+            // load currency list
             foreach ($xml->curencylist->children() as $code => $currency) {
 
                 $code = JString::strtoupper($code);
 
-                self::$currencyList[$code] = array(
-                    'name' => JText::_('JBZOO_JBCURRENCY_' . $code),
-                );
+                self::$curList[$code] = array('name' => JText::_('JBZOO_JBCURRENCY_' . $code));
 
                 foreach ($currency->attributes() as $key => $value) {
-                    self::$currencyList[$code][$key] = (string)$value;
+                    self::$curList[$code][$key] = (string)$value;
                 }
 
-                self::$currencyList[$code]['value'] = $this->clearValue(self::$currencyList[$code]['value']);
+                self::$curList[$code]['value'] = $this->clearValue(self::$curList[$code]['value']);
             }
 
-
             $this->_mergeWithOnline();
+
+            $data = array('cur' => self::$curList, 'formats' => self::$formatList);
+            $this->app->jbcache->set($cacheKey, $data, 'currency', true);
+
+        } else {
+            self::$curList    = $cachedData['cur'];
+            self::$formatList = $cachedData['formats'];
         }
+
+        $this->app->jbdebug->mark('jbmoney::init::' . $mode . '-finish');
+    }
+
+    /**
+     * Load currency values from service
+     * Used hack for parse CBR xml. simplexml_load_string sometimes doesn't work
+     * @return mixed
+     */
+    protected function _loadFromCBR()
+    {
+        $result    = array();
+        $url       = $this->_serviceCBR . '?date_req=' . date("d.m.Y");
+        $xmlString = $this->_loadByUrl($url);
+        if (empty($xmlString)) {
+            return array();
+        }
+
+        $xmlString = JString::trim(iconv("WINDOWS-1251", "UTF-8//TRANSLIT", $xmlString));
+
+        preg_match_all('#<Valute(.*?)<\/Valute>#ius', $xmlString, $out);
+        if (!empty($out) && isset($out[1])) {
+            foreach ($out[1] as $row) {
+
+                preg_match("#<Value>(.*?)</Value>#ius", $row, $value);
+                preg_match("#<CharCode>(.*?)</CharCode>#ius", $row, $code);
+                preg_match("#<Nominal>(.*?)</Nominal>#ius", $row, $nominal);
+
+                $value   = (float)$this->clearValue($value[1]);
+                $nominal = trim(strtoupper($nominal[1]));
+                $code    = trim(strtoupper($code[1]));
+
+                $result[$code] = $value / $nominal;
+            }
+
+            $result['RUB'] = 1;
+            $baseValue     = $result[$this->getDefaultCur()];
+
+            foreach ($result as $code => $value) {
+                $result[$code] = $baseValue / $value;
+            }
+        }
+
+        return $result;
     }
 
     /**
      * Load currency values from service
      * @return mixed
      */
-    protected function _mergeWithOnline()
+    protected function _loadFromPrivateBank()
     {
-        if (!(int)$this->_config['load_from_google']) {
-            return false;
+        $result    = array();
+        $xmlString = $this->_loadByUrl($this->_servicePrivatBank);
+        if (empty($xmlString)) {
+            return array();
         }
 
-        $cacheKey = 'currency-' . date('d-m-Y');
-        $result   = $this->app->jbcache->get($cacheKey, 'currency', true);
+        if ($xml = simplexml_load_string($xmlString)) {
 
-        if (empty($result)) {
+            foreach ($xml as $row) {
+                $row = (array)$row;
+                $row = $row['@attributes'];
 
-            $result = array(self::BASE_CURRENCY => 1);
-            foreach (self::$currencyList as $code => $currency) {
-
-                if ($code == self::BASE_CURRENCY) {
+                if (!isset($row['ccy'])) {
                     continue;
                 }
 
-                $response = $this->app->http->get($this->_serviceUrl . '?' . $this->app->jbrouter->query(array(
-                    'from' => self::BASE_CURRENCY,
+                $unit  = trim($row['unit']) * 100;
+                $value = $this->clearValue($row['buy']) / $unit;
+                $code  = strtoupper(trim($row['ccy']));
+
+                $result[$code] = $value;
+            }
+
+            $result['RUB'] = $result['RUR'];
+            $baseValue     = $result[$this->getDefaultCur()];
+
+            foreach ($result as $code => $value) {
+                $result[$code] = $baseValue / $value;
+            }
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Load currency values from service
+     * @return mixed
+     */
+    protected function _loadFromEuropeCB()
+    {
+        $result    = array();
+        $xmlString = $this->_loadByUrl($this->_serviceEuropecb);
+        if (empty($xmlString)) {
+            return array();
+        }
+
+        if ($xml = simplexml_load_string($xmlString)) {
+            foreach ($xml->Cube->Cube->Cube as $row) {
+                $value = $this->clearValue($row['rate']);
+                $code  = strtoupper(trim($row['currency']));
+
+                $result[$code] = $value;
+            }
+
+            $result['EUR'] = 1;
+            foreach ($result as $code => $value) {
+                $result[$code] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Load currency rate from Google serve
+     * @return array
+     */
+    protected function _loadFromGoogle()
+    {
+        $defaultCur = $this->getDefaultCur();
+        $result     = array($defaultCur => 1);
+
+        foreach (self::$curList as $code => $currency) {
+
+            $code = strtoupper($code);
+            if ($code == $defaultCur) {
+                continue;
+            }
+
+            $response = $this->_loadByUrl($this->_serviceGoogle . '?' . $this->app->jbrouter->query(array(
+                    'from' => $defaultCur,
                     'to'   => $code,
                 )));
 
-                if ($response['body']) {
-                    $data          = $this->app->data->create(json_decode($response['body']));
-                    $result[$code] = (float)$this->clearValue($data->get('rate', 0));
-                }
-
+            if ($response) {
+                $data          = $this->app->data->create(json_decode($response));
+                $result[$code] = (float)$this->clearValue($data->get('rate', 0));
             }
 
-            $this->app->jbcache->set($cacheKey, $result, 'currency', true);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Load currency values from service
+     * @return bool
+     */
+    protected function _mergeWithOnline()
+    {
+        $onlineMode = $this->getMode();
+        if ($onlineMode == self::MODE_NONE) {
+            return false;
+        }
+
+        if ($onlineMode == self::MODE_GOOGLE) {
+            $result = $this->_loadFromGoogle();
+
+        } else if ($onlineMode == self::MODE_CBR) {
+            $result = $this->_loadFromCBR();
+
+        } else if ($onlineMode == self::MODE_PRIVATBANK) {
+            $result = $this->_loadFromPrivateBank();
+
+        } else if ($onlineMode == self::MODE_EUROPECB) {
+            $result = $this->_loadFromEuropeCB();
         }
 
         if (!empty($result) && is_array($result)) {
             foreach ($result as $code => $value) {
+                $code = trim(strtoupper($code));
                 if ($value > 0) {
-                    self::$currencyList[$code]['value'] = $value;
+                    self::$curList[$code]['value'] = $value;
                 }
             }
         }
@@ -136,7 +293,6 @@ class JBMoneyHelper extends AppHelper
      */
     public function clearValue($value)
     {
-        return $value;
         $value = (string)$value;
         $value = JString::trim($value);
         $value = preg_replace('#[^0-9\,\.\-\+]#ius', '', $value);
@@ -168,10 +324,11 @@ class JBMoneyHelper extends AppHelper
 
         $result = 0;
 
-        if (isset(self::$currencyList[$to]) && isset(self::$currencyList[$from])) {
-            $normValue = $value / self::$currencyList[$from]['value'];
-            $result    = $normValue * self::$currencyList[$to]['value'];
+        if (isset(self::$curList[$to]) && isset(self::$curList[$from])) {
+            $normValue = $value / self::$curList[$from]['value'];
+            $result    = $normValue * self::$curList[$to]['value'];
         }
+
         return $result;
     }
 
@@ -183,7 +340,7 @@ class JBMoneyHelper extends AppHelper
     public function getCurrencyList($isShort = false)
     {
         $result = array();
-        foreach (self::$currencyList as $code => $currency) {
+        foreach (self::$curList as $code => $currency) {
 
             if ($isShort) {
                 $result[$code] = $code;
@@ -213,22 +370,30 @@ class JBMoneyHelper extends AppHelper
         $code = JString::trim(JString::strtoupper($code));
         if ($code == '%') {
 
-            $formated = abs(number_format($value, $format['decimals'], $format['dec_point'], $format['thousands_sep']));
-            $sign     = '';
+            $formated = 0;
+            if (!empty($value)) {
+                $formated = abs(number_format($value, $format['decimals'], $format['dec_point'], $format['thousands_sep']));
+            }
+
+            $sign = '';
             if ($value[0] == '+' || $value[0] == '-') {
                 $sign = $value[0];
             }
 
             return $sign . $formated . '%';
 
-        } else if (isset(self::$currencyList[$code])) {
+        } else if (isset(self::$curList[$code])) {
 
-            $params = self::$currencyList[$code];
+            $params = self::$curList[$code];
 
             $formatNum = $params['format'];
 
             if (isset(self::$formatList['format_' . $formatNum])) {
                 $format = self::$formatList['format_' . $formatNum];
+            }
+
+            if (empty($value)) {
+                $value = 0;
             }
 
             $formated = number_format($value, $format['decimals'], $format['dec_point'], $format['thousands_sep']);
@@ -256,7 +421,7 @@ class JBMoneyHelper extends AppHelper
             return '%';
         }
 
-        if (isset(self::$currencyList[$currency])) {
+        if (isset(self::$curList[$currency])) {
             return $currency;
         }
 
@@ -341,4 +506,62 @@ class JBMoneyHelper extends AppHelper
         $value = $this->clearValue($value);
         return number_format($value, 0, '.', ' ');
     }
+
+    /**
+     * Get base currency
+     * @return string
+     */
+    public function getDefaultCur()
+    {
+        return self::BASE_CURRENCY;
+    }
+
+    /**
+     * Get current config mode
+     * @return int
+     */
+    public function getMode()
+    {
+        $params = $this->app->jbconfig->getList('config.custom');
+        $mode   = $params->get('currency_mode', 'manual');
+
+        return $mode;
+    }
+
+    /**
+     * Check if exists currency
+     * @param  $currency
+     * @return bool|string
+     */
+    public function checkCurrency($currency)
+    {
+        $currency = strtoupper(trim($currency));
+        if (array_key_exists($currency, self::$curList)) {
+            return $currency;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $url
+     * @return null|string
+     */
+    protected function _loadByUrl($url)
+    {
+        $httpClient = JHttpFactory::getHttp();
+
+        try {
+            $responce = $httpClient->get($url);
+        } catch (Exception  $e) {
+            return null;
+        }
+
+        if ($responce && $responce->code == 200) {
+            return $responce->body;
+        }
+
+        return null;
+    }
+
 }

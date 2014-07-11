@@ -70,6 +70,47 @@ a.jbajaxlink:hover {
     margin-bottom: 12px;
 }
 
+.jsJKeyValueRemove {
+    position: relative;
+    top: 4px;
+    left: 10px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJdSURBVDjLpZP7S1NhGMf9W7YfogSJboSEUVCY8zJ31trcps6zTI9bLGJpjp1hmkGNxVz4Q6ildtXKXzJNbJRaRmrXoeWx8tJOTWptnrNryre5YCYuI3rh+8vL+/m8PA/PkwIg5X+y5mJWrxfOUBXm91QZM6UluUmthntHqplxUml2lciF6wrmdHriI0Wx3xw2hAediLwZRWRkCPzdDswaSvGqkGCfq8VEUsEyPF1O8Qu3O7A09RbRvjuIttsRbT6HHzebsDjcB4/JgFFlNv9MnkmsEszodIIY7Oaut2OJcSF68Qx8dgv8tmqEL1gQaaARtp5A+N4NzB0lMXxon/uxbI8gIYjB9HytGYuusfiPIQcN71kjgnW6VeFOkgh3XcHLvAwMSDPohOADdYQJdF1FtLMZPmslvhZJk2ahkgRvq4HHUoWHRDqTEDDl2mDkfheiDgt8pw340/EocuClCuFvboQzb0cwIZgki4KhzlaE6w0InipbVzBfqoK/qRH94i0rgokSFeO11iBkp8EdV8cfJo0yD75aE2ZNRvSJ0lZKcBXLaUYmQrCzDT6tDN5SyRqYlWeDLZAg0H4JQ+Jt6M3atNLE10VSwQsN4Z6r0CBwqzXesHmV+BeoyAUri8EyMfi2FowXS5dhd7doo2DVII0V5BAjigP89GEVAtda8b2ehodU4rNaAW+dGfzlFkyo89GTlcrHYCLpKD+V7yeeHNzLjkp24Uu1Ed6G8/F8qjqGRzlbl2H2dzjpMg1KdwsHxOlmJ7GTeZC/nesXbeZ6c9OYnuxUc3fmBuFft/Ff8xMd0s65SXIb/gAAAABJRU5ErkJggg==');
+}
+
+.jbjkeyvalue-row .chzn-container {
+    float: left;
+}
+
+.jbjkeyvalue-row strong {
+    position: relative;
+    top: 4px;
+    margin-right: 5px;
+}
+
+.jsJKeyValueAdd {
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+}
+
+.jsJKeyValue {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.jsJKeyValue, .jbjkeyvalue-row strong {
+    float: left;
+}
+
+.jbjkeyvalue-row {
+    margin-bottom: 8px;
+    height: 25px;
+
+}
+
 .jbzoo-itemorder .jbzoo-itemorder-row {
     padding-bottom: 6px;
     margin-bottom: 4px;
@@ -345,7 +386,7 @@ a.jbajaxlink:hover {
     margin-left: 6px
 }
 
-#nav .jbzoo >a> span {
+#nav .jbzoo > a > span {
     padding: 0 3px 0 3px !important;
 }
 
@@ -586,3 +627,89 @@ a.jbajaxlink:hover {
     position: relative;
     text-overflow: ellipsis
 }
+
+/*********************************** Joomla admin UI fixes ************************************************************/
+.box-bottom #item-type li {
+    margin-bottom: 12px;
+}
+
+.box-bottom #item-type li a {
+    font-size: 16px;
+}
+
+ul.parameter-form li .field input[type='password'] {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    margin: 0;
+    height: auto;
+    line-height: normal;
+    font-size: 10px;
+    width: 110px;
+    padding: 1px 0px;
+}
+
+.field-jbspacer {
+    color: #a00;
+    line-height: 1.8em;
+    background: #eaeaea;
+    font-weight: bold;
+    padding-left: 6px;
+}
+
+/****************************************** JBColor styles *******************************************/
+
+.jbzoo-picker .jbpicker {
+    padding-top: 15px;
+    clear: both;
+}
+
+div.jbzoo-picker .jbpicker .jbcolor-input {
+    padding: 4px 6px !important;
+    font-size: 14px !important;
+    height: 19px !important;
+    width: 105px !important;
+    margin: 0 !important;
+}
+
+.jbzoo-picker .jbpicker .jbcolor {
+    text-indent: 20px;
+}
+
+.jbzoo-picker .jbcolor-textarea {
+    font-family: 'Courier New';
+    width: 400px;
+    height: 300px;
+}
+
+div.jbzoo-picker .jbpicker span.jsColorAdd {
+    background: url('../../../../assets/images/add.png') no-repeat;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    left: 10px;
+}
+
+.jbzoo-picker .error {
+    border: 1px solid #FF0000;
+}
+
+.jbzoo-picker .error:focus {
+    outline: none;
+    border: 1px solid #FF0000;
+    -webkit-box-shadow: 0 0;
+    -moz-box-shadow: 0 0;
+    box-shadow: 0 0;
+}
+
+.jbdelimiter {
+    width: 100%;
+    float: left;
+    color:#a00;
+    font-size:1.1em;
+}
+
+

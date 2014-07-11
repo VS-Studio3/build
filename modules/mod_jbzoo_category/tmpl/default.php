@@ -16,28 +16,20 @@ defined('_JEXEC') or die('Restricted access');
 
 $borderClass = (int)$params->get('category_display_border', 0) ? 'jbzoo-rborder' : '';
 $uniqId = uniqid('jbzoo-');
-$classes = array(
-    'yoo-zoo',
-    'jbzoo',
-    $borderClass,
-    'jbzoo-category-module',
-    'jbcategory-layout-tab'
-);
+$classes = array('yoo-zoo', 'jbzoo', 'jbzoo-category-module', 'jbcategory-layout-tab', $borderClass);
 
 ?>
 <?php if (!empty($categories)): ?>
     <div id="<?php echo $uniqId ?>" class='<?php echo implode(' ', $classes); ?>'>
 
         <?php foreach ($categories as $catId => $category): ?>
-            <div class="wrapper-category">
+            <div class="category-wrapper <?php echo $category['active_class']; ?>">
 
                 <div class="jbcategory rborder">
                     <?php if (!empty($category['image'])): ?>
                         <div class="jbcategory-image align-<?php echo $params->get('category_image_align', 'left') ?>">
                             <a href="<?php echo $category['cat_link'] ?>"
-                               title="<?php echo $category['category_name'] ?>">
-                                <?php echo $category['image'] ?>
-                            </a>
+                               title="<?php echo $category['category_name'] ?>"><?php echo $category['image'] ?></a>
                         </div>
                     <?php endif; ?>
 

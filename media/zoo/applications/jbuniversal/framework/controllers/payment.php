@@ -20,9 +20,12 @@ defined('_JEXEC') or die('Restricted access');
 class paymentJBUniversalController extends JBUniversalController
 {
 
-    const TYPE_ROBOX  = 'Robokassa.ru';
-    const TYPE_IKASSA = 'Interkassa.com';
-    const TYPE_MANUAL = 'Manual';
+    const TYPE_PAYPAL   = 'PayPal';
+    const TYPE_ROBOX    = 'Robokassa.ru';
+    const TYPE_IKASSA   = 'Interkassa.com';
+    const TYPE_IKASSA_2 = 'Interkassa.com V2';
+    const TYPE_MANUAL   = 'Manual';
+
     /**
      * @var Int
      */
@@ -84,6 +87,8 @@ class paymentJBUniversalController extends JBUniversalController
      */
     protected function _init()
     {
+        $this->app->jbdoc->noindex();
+
         $this->orderId = (int)$this->_jbrequest->get('order_id');
         $this->appId   = (int)$this->_jbrequest->get('app_id');
 
@@ -96,6 +101,18 @@ class paymentJBUniversalController extends JBUniversalController
         } else if ($ikPaymentId = (int)$this->_jbrequest->get('ik_payment_id')) {
             $this->systemType = self::TYPE_IKASSA;
             $this->orderId    = $ikPaymentId;
+
+        } else if ($ikPaymentId = (int)$this->_jbrequest->get('ik_pm_no')) {
+            $this->systemType = self::TYPE_IKASSA_2;
+            $this->orderId    = $ikPaymentId;
+
+        } else if ($paypalOrderId = (int)$this->_jbrequest->get('item_number')) {
+            $this->systemType = self::TYPE_PAYPAL;
+            $this->orderId    = $paypalOrderId;
+
+        } else if ($orderId = (int)$this->_jbrequest->get('order_id')) {
+            $this->systemType = self::TYPE_MANUAL;
+            $this->orderId    = $orderId;
         }
 
         if (!$this->appId) {
@@ -110,7 +127,7 @@ class paymentJBUniversalController extends JBUniversalController
             throw new AppException('Application is not a basket');
         }
 
-        if ((int)$this->appParams->get('global.jbzoo_cart_config.payment-enabled') == 0) {
+        if ((int)$this->appParams->get('global.jbzoo_cart_config.payment-enabled') == 0 && !isset($orderId)) {
             throw new AppException('Payment is not enabled');
         }
 
@@ -127,8 +144,7 @@ class paymentJBUniversalController extends JBUniversalController
         }
 
         if (!$this->orderDetails) {
-            throw new AppException('Order not found');
-            die;
+            //throw new AppException('Order not found');
         }
 
         // set renderer
@@ -143,10 +159,6 @@ class paymentJBUniversalController extends JBUniversalController
      */
     function index()
     {
-        if ((int)JFactory::getConfig()->get('debug') == 0) {
-            //error_reporting(0);
-        }
-
         $this->_init();
 
         $totalSumm         = $this->orderDetails->getTotalPrice();
@@ -180,11 +192,33 @@ class paymentJBUniversalController extends JBUniversalController
         if ((int)$appParams->get('ikassa-enabled', 0)) {
             $params               = new stdClass();
             $params->shopid       = JString::trim($appParams->get('ikassa-shopid'));
+            $params->key          = JString::trim($appParams->get('ikassa-key'));
+            $params->currency     = JString::trim(strtoupper($appParams->get('currency', 'EUR')));
+            $params->isNew        = (int)($appParams->get('ikassa-new'));
             $params->summ         = $totalSumm;
             $params->orderId      = $this->orderId;
             $params->summFormated = $totalSummFormated;
+            $params->url_success  = $this->app->jbrouter->payment($this->appId, 'success');
+            $params->url_fail     = $this->app->jbrouter->payment($this->appId, 'fail');
+            $params->url_callback = $this->app->jbrouter->payment($this->appId, 'callback');
 
             $this->payments['ikassa'] = $this->app->data->create($params);
+        }
+
+        // paypal
+        if ((int)$appParams->get('paypal-enabled', 0)) {
+            $params               = new stdClass();
+            $params->email        = JString::trim($appParams->get('paypal-email'));
+            $params->debug        = (int)$appParams->get('paypal-debug', 0);
+            $params->summ         = $totalSumm;
+            $params->orderId      = $this->orderId;
+            $params->summFormated = $totalSummFormated;
+            $params->url_success  = $this->app->jbrouter->payment($this->appId, 'success');
+            $params->url_fail     = $this->app->jbrouter->payment($this->appId, 'fail');
+            $params->url_callback = $this->app->jbrouter->payment($this->appId, 'callback');
+            $params->currency     = JString::trim(strtoupper($appParams->get('currency', 'USD')));
+
+            $this->payments['paypal'] = $this->app->data->create($params);
         }
 
         // manual
@@ -202,6 +236,8 @@ class paymentJBUniversalController extends JBUniversalController
     }
 
     /**
+     * Action for robot from payment system
+     * Validate and check order as success
      * @throws AppException
      */
     public function paymentCallback()
@@ -214,6 +250,7 @@ class paymentJBUniversalController extends JBUniversalController
 
         $totalsumm = $this->orderDetails->getTotalPrice();
 
+        /////////////////////////////////////////// ROBOKASSA SYSTEM
         if ($this->systemType == self::TYPE_ROBOX) {
 
             if ((float)$totalsumm != (float)$_REQUEST['OutSum']) {
@@ -242,7 +279,61 @@ class paymentJBUniversalController extends JBUniversalController
                 throw new AppException('No valid hash');
             }
 
+        } else if ($this->systemType == self::TYPE_IKASSA_2) {
+
+            /////////////////////////////////////////// INTERKASSA V2 SYSTEM
+
+            $appParams = $this->app->data->create($this->appParams->get('global.jbzoo_cart_config.', array()));
+
+            $shopid    = trim(strtoupper($appParams->get('ikassa-shopid')));
+            $reqShopid = trim(strtoupper($this->_jbrequest->get('ik_co_id')));
+            if ($reqShopid !== $shopid) {
+                throw new AppException('Not correct shopid');
+            }
+
+            $status = trim(strtoupper($this->_jbrequest->get('ik_inv_st')));
+            if ($status !== 'SUCCESS') {
+                throw new AppException('Not correct status');
+            }
+
+            $totalSumm     = $this->app->jbmoney->clearValue($this->orderDetails->getTotalPrice());
+            $requestAmount = $this->app->jbmoney->clearValue($this->_jbrequest->get('ik_am'));
+            if ($totalSumm !== $requestAmount) {
+                throw new AppException('Not correct sum');
+            }
+
+            $real = $this->_checkIKv2Hash($_POST, $appParams->get('ikassa-key'));
+            $test = $this->_checkIKv2Hash($_POST, $appParams->get('ikassa-key-test'));
+            if ($real || $test) {
+
+                $commentData = array(
+                    'Invoice Id'      => $this->_jbrequest->get('ik_inv_id'),
+                    'Payway Via'      => $this->_jbrequest->get('ik_pw_via'),
+                    'Trans ID'        => $this->_jbrequest->get('ik_trn_id'),
+                    'Create Date'     => $this->_jbrequest->get('ik_inv_crt'),
+                    'Proc Date'       => $this->_jbrequest->get('ik_inv_prc'),
+                    'Summa'           => $this->_jbrequest->get('ik_am'),
+                    'Checkout Refund' => $this->_jbrequest->get('ik_co_rfn'),
+                    'Paysystem Price' => $this->_jbrequest->get('ik_ps_price'),
+                    'Currency'        => $this->_jbrequest->get('ik_cur'),
+                );
+
+                $success = 'Success';
+                if ($test) {
+                    $success = 'Success test';
+                }
+
+                $this->orderDetails->callback('paymentCallback', array(
+                    'date'            => $this->app->date->create()->toSQL(),
+                    'system'          => $this->systemType,
+                    'additionalState' => $success,
+                    'commet'          => $this->app->jbarray->toFormatedString($commentData),
+                ));
+            }
+
         } else if ($this->systemType == self::TYPE_IKASSA) {
+
+            /////////////////////////////////////////// INTERKASSA SYSTEM
 
             $myCrcData = implode(':', array(
                 $this->_jbrequest->get('ik_shop_id', ''),
@@ -272,7 +363,8 @@ class paymentJBUniversalController extends JBUniversalController
                 $args = array(
                     'date'            => $this->app->date->create()->toSQL(),
                     'system'          => $this->systemType,
-                    'additionalState' => $this->_jbrequest->get('ik_payment_state')
+                    'additionalState' => $this->_jbrequest->get('ik_payment_state'),
+                    //'commet'          => $this->app->jbarray->toFormatedString($commentData),                    
                 );
 
                 // execute callback method
@@ -282,6 +374,74 @@ class paymentJBUniversalController extends JBUniversalController
 
             } else {
                 throw new AppException('No valid hash');
+            }
+
+        } else if ($this->systemType == self::TYPE_PAYPAL) {
+
+            /////////////////////////////////////////// PAYPAL SYSTEM
+
+            $appParams = $this->app->data->create($this->appParams->get('global.jbzoo_cart_config.', array()));
+            $jbmoney   = $this->app->jbmoney;
+
+            $totalSumm     = $jbmoney->clearValue($this->orderDetails->getTotalPrice());
+            $requestAmount = $jbmoney->clearValue($this->_jbrequest->get('mc_gross'));
+
+            // check summ
+            if ($totalSumm && $requestAmount) {
+                throw new AppException('Not correct sum');
+            }
+
+            // check currency
+            $currency = strtoupper($this->_jbrequest->get('mc_currency'));
+            $cartCur  = strtoupper($appParams->get('currency'));
+            if ($currency != $cartCur) {
+                throw new AppException('Not correct currency');
+            }
+
+            // check simple status
+            $status = strtoupper($this->_jbrequest->get('payment_status'));
+            if ($status != 'COMPLETED') {
+                throw new AppException('Not correct status');
+            }
+
+            // get debug mode
+            $checkUrl = 'https://www.paypal.com/cgi-bin/webscr';
+            if ((int)$appParams->get('paypal-debug', 0)) {
+                $checkUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+            }
+
+            // check via PayPal service
+            $checkParam = array_merge(array('cmd' => '_notify-validate'), $_POST);
+            $response   = JHttpFactory::getHttp()->post($checkUrl, $checkParam);
+            if (strtoupper(trim($response->body)) != 'VERIFIED') {
+                throw new AppException('No valid checked status');
+            } else {
+
+                // everything is OK!
+                $commentData = array(
+                    'Order ID'       => $this->orderId,
+                    'Payment Status' => $this->_jbrequest->get('payment_status'),
+                    'Pending Reason' => $this->_jbrequest->get('pending_reason'),
+                    'Payment Type'   => $this->_jbrequest->get('payment_type'),
+                    'Payer Email'    => $this->_jbrequest->get('payer_email'),
+                    'Payer Name'     => $this->_jbrequest->get('first_name') . ' ' . $this->_jbrequest->get('last_name'),
+                    'Payer Id'       => $this->_jbrequest->get('payer_id'),
+                    'Payment Date'   => $this->_jbrequest->get('payment_date'),
+                    'IPN Track Id'   => $this->_jbrequest->get('ipn_track_id'),
+                    'Txn Id'         => $this->_jbrequest->get('txn_id'),
+                    'Txn type'       => $this->_jbrequest->get('txn_type'),
+                    'Currency'       => $this->_jbrequest->get('mc_currency'),
+                );
+
+                // get request vars && execute callback method
+                $this->orderDetails->callback('paymentCallback', array(
+                    'date'            => $this->app->date->create()->toSQL(),
+                    'system'          => $this->systemType,
+                    'additionalState' => $commentData['IPN Track Id'] . ' / ' . $commentData['Txn Id'],
+                    'commet'          => $this->app->jbarray->toFormatedString($commentData),
+                ));
+
+                jexit('OK' . $this->orderId);
             }
 
         } else {
@@ -296,6 +456,17 @@ class paymentJBUniversalController extends JBUniversalController
     {
         $this->_init();
 
+        $appParams = $this->app->data->create($this->appParams->get('global.jbzoo_cart_config.', array()));
+
+        // check custom success page
+        $successPage = JString::trim($appParams->get('payment-page-success'));
+        if (!empty($successPage)) {
+            $successPage = $this->app->jbrouter->addParamsToUrl($successPage, array('order_id' => $this->order->id));
+            $this->setRedirect($successPage);
+
+            return;
+        }
+
         // display
         $this->getview('payment_success')->addtemplatepath($this->template->getpath())->setlayout('payment_success')->display();
     }
@@ -308,6 +479,15 @@ class paymentJBUniversalController extends JBUniversalController
         $this->_init();
 
         $appParams = $this->app->data->create($this->appParams->get('global.jbzoo_cart_config.', array()));
+
+        // check custom success page
+        $successPage = JString::trim($appParams->get('payment-page-success'));
+        if (!empty($successPage)) {
+            $successPage = $this->app->jbrouter->addParamsToUrl($successPage, array('order_id' => $this->order->id));
+            $this->setRedirect($successPage);
+
+            return;
+        }
 
         if ((int)$appParams->get('manual-enabled', 0)) {
 
@@ -340,10 +520,67 @@ class paymentJBUniversalController extends JBUniversalController
     public function paymentFail()
     {
         $this->_init();
-        $this->app->document->setTitle(JText::_('JBZOO_PAYMENT_FAIL_PAGE_TITLE'));
 
+        $appParams = $this->app->data->create($this->appParams->get('global.jbzoo_cart_config.', array()));
+
+        // check custom fail page
+        $failPage = JString::trim($appParams->get('payment-page-fail'));
+        if (!empty($failPage)) {
+            $failPage = $this->app->jbrouter->addParamsToUrl($failPage, array('order_id' => $this->order->id));
+            $this->setRedirect($failPage);
+
+            return;
+        }
+
+        $this->app->document->setTitle(JText::_('JBZOO_PAYMENT_FAIL_PAGE_TITLE'));
         // display
         $this->getview('payment_fail')->addtemplatepath($this->template->getpath())->setlayout('payment_fail')->display();
     }
+
+    /**
+     * Action for success order page without payment
+     */
+    public function paymentNotPaid()
+    {
+        $this->_init();
+
+        $appParams = $this->app->data->create($this->appParams->get('global.jbzoo_cart_config.', array()));
+
+        // check custom success page
+        $successPage = JString::trim($appParams->get('payment-page-success'));
+        if (!empty($successPage)) {
+            $successPage = $this->app->jbrouter->addParamsToUrl($successPage, array('order_id' => $this->order->id));
+            $this->setRedirect($successPage);
+
+            return;
+        }
+
+        $this->getview('payment_success')->addtemplatepath($this->template->getpath())->setlayout('payment_success')->display();
+    }
+
+    /**
+     * Check interkassa v2 Hash
+     * @param $data
+     * @param $ikSecret
+     * @return bool
+     */
+    protected function _checkIKv2Hash($data, $ikSecret)
+    {
+        $post = array();
+        foreach ($data as $key => $value) {
+            if (preg_match('#^ik_#i', $key)) {
+                $post[$key] = $value;
+            }
+        }
+
+        $ikSign = $post['ik_sign'];
+        unset($post['ik_sign']);
+        ksort($post, SORT_STRING);
+        array_push($post, $ikSecret);
+        $sigMd5 = base64_encode(md5(implode(':', $post), true));
+
+        return $sigMd5 === $ikSign;
+    }
+
 }
 

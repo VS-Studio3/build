@@ -155,7 +155,7 @@ class JBCSVMapperHelper extends AppHelper
     {
         $result = array();
         $type   = $item->getType();
-        $params = $this->app->jbuser->getParam('export-items', array());
+        $params = JBModelConfig::model()->getGroup('export.items');
 
         $i = 0;
         foreach ($type->getElements() as $identifier => $element) {
@@ -163,7 +163,7 @@ class JBCSVMapperHelper extends AppHelper
             $elemValue = $this->_csvcell->createItem($element, $item, 'user')->toCSV();
 
             if ($elemValue != JBCSVMapperHelper::FIELD_CONTINUE) {
-                if (!(int)$params->fields_full_price && $element->getElementType() == 'jbpriceadvance') {
+                if (!(int)$params->get('fields_full_price') && $element->getElementType() == 'jbpriceadvance') {
                     continue;
                 }
                 $name          = $element->config->get('name') ? $element->config->get('name') : $element->getElementType();

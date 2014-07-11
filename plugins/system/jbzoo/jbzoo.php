@@ -17,20 +17,48 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.plugin.plugin');
 jimport('joomla.filesystem.file');
 
+/**
+ * Class plgSystemJBZoo
+ */
 class plgSystemJBZoo extends JPlugin
 {
+
     /**
-     * Event onAfterInitialise Joomla
-     * @return mixed
+     * When these components use, JBZoo doesn't init (backend only)
+     * @var array
      */
-    public function onAfterInitialise()
+    protected $_disableInitBackEnd = array(
+        'com_seoboss'
+    );
+
+    /**
+     * When these components use, JBZoo doesn't init (frontend only)
+     * @var array
+     */
+    protected $_disableInitFrontEnd = array(
+        'com_seoboss'
+    );
+
+    /**
+     * @var JBZooSystemPlugin
+     */
+    protected $_jbzooSystemPlg = null;
+
+    /**
+     * Init Zoo && JBZoo Framework
+     */
+    protected function _initFramework()
     {
-        if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) { // hack for perfomance test
+        if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) { // hack for performance test
             $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
         }
 
-        $componentEnabled = JComponentHelper::getComponent('com_zoo', true)->enabled;
-        if (!$componentEnabled) {
+        if (!$this->_getExtCompatibility()) {
+            return false;
+        }
+
+        $compEnabled = JComponentHelper::getComponent('com_zoo', true)->enabled;
+        if (!$compEnabled) {
             return;
         }
 
@@ -52,7 +80,111 @@ class plgSystemJBZoo extends JPlugin
         $jbzooBootstrap = JPATH_ROOT . '/media/zoo/applications/jbuniversal/framework/jbzoo.php';
         if (JFile::exists($jbzooBootstrap)) {
             require_once($jbzooBootstrap);
+
             JBZoo::init();
+
+            $this->_jbzooSystemPlg = JBZooSystemPlugin::getInstance();
+        }
+    }
+
+    /**
+     * Check campatibility with external componetns
+     */
+    protected function _getExtCompatibility()
+    {
+        $joomlaApp = JFactory::getApplication();
+        $jInput    = $joomlaApp->input;
+        $isSite    = $joomlaApp->isSite();
+        $compName  = $jInput->getCmd('option');
+
+        if (
+            ($isSite && in_array($compName, $this->_disableInitFrontEnd, true)) ||
+            (!$isSite && in_array($compName, $this->_disableInitBackEnd, true))
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Joomla Event onAfterInitialise
+     */
+    public function onAfterInitialise()
+    {
+        $this->_initFramework();
+        if ($this->_jbzooSystemPlg) {
+            $this->_jbzooSystemPlg->onAfterInitialise();
+        }
+    }
+
+    /**
+     * Joomla Event onAfterRoute
+     */
+    public function onAfterRoute()
+    {
+        if ($this->_jbzooSystemPlg) {
+            $this->_jbzooSystemPlg->onAfterRoute();
+        }
+    }
+
+    /**
+     * Joomla Event onAfterDispatch
+     */
+    public function onAfterDispatch()
+    {
+        if ($this->_jbzooSystemPlg) {
+            $this->_jbzooSystemPlg->onAfterDispatch();
+        }
+    }
+
+    /**
+     * Joomla Event onBeforeRender
+     */
+    public function onBeforeRender()
+    {
+        if ($this->_jbzooSystemPlg) {
+            $this->_jbzooSystemPlg->onBeforeRender();
+        }
+    }
+
+    /**
+     * Joomla Event onAfterRender
+     */
+    public function onAfterRender()
+    {
+        if ($this->_jbzooSystemPlg) {
+            $this->_jbzooSystemPlg->onAfterRender();
+        }
+    }
+
+    /**
+     * Joomla Event onBeforeCompileHead
+     */
+    public function onBeforeCompileHead()
+    {
+        if ($this->_jbzooSystemPlg) {
+            $this->_jbzooSystemPlg->onBeforeCompileHead();
+        }
+    }
+
+    /**
+     * Joomla Event onSearch
+     */
+    public function onSearch()
+    {
+        if ($this->_jbzooSystemPlg) {
+            $this->_jbzooSystemPlg->onSearch();
+        }
+    }
+
+    /**
+     * Joomla Event onSearchAreas
+     */
+    public function onSearchAreas()
+    {
+        if ($this->_jbzooSystemPlg) {
+            $this->_jbzooSystemPlg->onSearchAreas();
         }
     }
 

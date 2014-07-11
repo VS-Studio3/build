@@ -31,7 +31,7 @@ class JBModelElementItemname extends JBModelElement
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return $this->_getWhere($value);
+        return $this->_getWhere($value, $exact);
     }
 
     /**
@@ -45,14 +45,15 @@ class JBModelElementItemname extends JBModelElement
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return $this->_getWhere($value);
+        return $this->_getWhere($value, $exact);
     }
 
     /**
      * @param $value
+     * @param $exact
      * @return string
      */
-    protected function _getWhere($value)
+    protected function _getWhere($value, $exact = 0)
     {
         if (!is_array($value)) {
             $value = array($value);
@@ -60,8 +61,12 @@ class JBModelElementItemname extends JBModelElement
 
         $where = array();
         foreach ($value as $valueOne) {
-            $valueOne = $this->_prepareValue($valueOne);
-            $where[]  = $this->_buildLikeBySpaces($valueOne, 'tItem.name');
+            if ((int)$exact) {
+                $where[]  = 'tItem.name = ' . $this->_db->quote($valueOne);
+            } else {
+                $valueOne = $this->_prepareValue($valueOne);
+                $where[]  = $this->_buildLikeBySpaces($valueOne, 'tItem.name');
+            }
         }
 
         return $where;
@@ -74,20 +79,6 @@ class JBModelElementItemname extends JBModelElement
      */
     protected function _prepareValue($value, $exact = false)
     {
-        if (is_numeric($value)) {
-
-            $select = $this->_getSelect()
-                ->select('tItem.name AS name')
-                ->from(ZOO_TABLE_ITEM . ' AS tItem')
-                ->where('id = ?', (int)$value);
-
-            $row = $this->fetchRow($select);
-
-            if ($row) {
-                return $row->name;
-            }
-        }
-
         return $value;
     }
 

@@ -20,7 +20,7 @@ defined('_JEXEC') or die('Restricted access');
 class BasketJBUniversalController extends JBUniversalController
 {
 
-    const TIME_BETWEEN_PUBLIC_SUBMISSIONS = 30;
+    const TIME_BETWEEN_PUBLIC_SUBMISSIONS = 10;
     const SESSION_PREFIX                  = 'JBZOO_';
 
     /**
@@ -31,6 +31,8 @@ class BasketJBUniversalController extends JBUniversalController
     {
         // init
         $this->app->jbdebug->mark('basket::init');
+
+        $this->app->jbdoc->noindex();
 
         $appId  = $this->_jbrequest->get('app_id');
         $Itemid = $this->_jbrequest->get('Itemid');
@@ -217,7 +219,6 @@ class BasketJBUniversalController extends JBUniversalController
         $post   = $this->app->request->get('post:', 'array');
         $appId  = $this->_jbrequest->get('app_id');
         $Itemid = $this->_jbrequest->get('Itemid');
-        $msg    = '';
 
         try {
             $application = $this->app->table->application->get($appId);
@@ -316,18 +317,34 @@ class BasketJBUniversalController extends JBUniversalController
                     }
                 }
 
-                $item->getParams()->set('config.primary_category', 0);
+                // set category
+                $primaryCategory = $item->getPrimaryCategoryId();
+                $categoryId      = (int)$submission->getForm($item->type)->get('category', 0);
+                if (empty($primaryCategory) && $categoryId > 0) {
+                    $item->getParams()->set('config.primary_category', $categoryId);
+                }
+
+                // save
                 $this->app->event->dispatcher->notify($this->app->event->create($item, 'basket:beforesave', array('item' => $item, 'appParams' => $appParams)));
                 $this->app->event->dispatcher->notify($this->app->event->create($submission, 'submission:beforesave', array('item' => $item, 'new' => true)));
                 $this->app->table->item->save($item);
 
+                // change name to ID
                 $item->name = JString::str_ireplace('__ID__', $item->id, $item->name);
-
                 $this->app->table->item->save($item);
+
+                // save relative category
+                if ($categoryId > 0) {
+                    $this->app->category->saveCategoryItemRelations($item, array($categoryId));
+                }
+
+                // after save event
                 $this->app->event->dispatcher->notify($this->app->event->create($item, 'basket:saved', array('item' => $item, 'appParams' => $appParams)));
 
+                // empty cart items
                 $this->app->jbcart->removeItems();
 
+                // redirect
                 $orderDetails = JBModelOrder::model()->getDetails($item);
                 if ((int)$appParams->get('global.jbzoo_cart_config.payment-enabled') && $orderDetails->getTotalPrice() > 0) {
                     $msg = JText::_('JBZOO_CART_SUCCESS_TO_PAYMENT_MESSAGE');
@@ -337,7 +354,7 @@ class BasketJBUniversalController extends JBUniversalController
 
                 } else {
                     $msg = JText::_('JBZOO_CART_SUCCESS_MESSAGE');
-                    $this->setRedirect(JRoute::_($this->app->jbrouter->basketSuccess($Itemid, $appId), false), $msg);
+                    $this->setRedirect(JRoute::_($this->app->jbrouter->paymentNotPaid($Itemid, $appId, $item->id), false), $msg);
 
                     return;
                 }
@@ -350,7 +367,7 @@ class BasketJBUniversalController extends JBUniversalController
             $this->app->jbnotify->warning((string)JText::_($e));
         }
 
-        $this->setRedirect(JRoute::_($this->app->jbrouter->basket($Itemid, $appId), false), $msg);
+        $this->setRedirect(JRoute::_($this->app->jbrouter->basket($Itemid, $appId), false));
     }
 
     /**
@@ -358,9 +375,20 @@ class BasketJBUniversalController extends JBUniversalController
      */
     protected function _createEmptyItem($type, $application = null)
     {
-
         if (!$application) {
             $application = $this->application;
+        }
+
+        $user = JFactory::getUser();
+
+        // Joomla ViewLevel (Registered)
+        $accessLevel = $user->getAuthorisedViewLevels();
+        if (count($accessLevel) > 1) {
+            $accessLevel = $accessLevel[1];
+        } else if (count($accessLevel) == 1) {
+            $accessLevel = $accessLevel[0];
+        } else {
+            $accessLevel = 1;
         }
 
         // get item
@@ -369,15 +397,16 @@ class BasketJBUniversalController extends JBUniversalController
         $item->type             = $type->id;
         $item->publish_up       = $this->app->date->create()->toSQL();
         $item->publish_down     = $this->app->database->getNullDate();
-        $item->access           = $this->app->joomla->getDefaultAccess();
+        $item->access           = $accessLevel;
         $item->created          = $this->app->date->create()->toSQL();
-        $item->created_by       = JFactory::getUser()->get('id');
+        $item->created_by       = $user->id;
         $item->created_by_alias = '';
         $item->state            = 0;
         $item->searchable       = 0;
         $item->getParams()
-            ->set('config.enable_comments', true)
-            ->set('config.primary_category', 0);
+            ->set('config.enable_comments', 1)
+            ->set('config.primary_category', 0)
+            ->set('metadata.robots', 'noindex, nofollow');
 
         return $item;
     }

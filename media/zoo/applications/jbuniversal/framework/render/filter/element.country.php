@@ -25,7 +25,7 @@ class JBFilterElementCountry extends JBFilterElement
      */
     function html()
     {
-        $values = $this->_getValues('db');
+        $values = $this->_getValues();
 
         return $this->app->jbhtml->select(
             $this->_createOptionsList($values),

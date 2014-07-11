@@ -21,8 +21,7 @@ $zoo->jbassets->filterprops($itemLayout);
 ?>
 
 <div class="jbzoo jbzoo-props props-list-<?php echo $itemLayout; ?>">
-    <?php
-    echo $renderer->render('item.' . $itemLayout, array(
+    <?php echo $renderer->render('item.' . $itemLayout, array(
         'type'        => $type,
         'layout'      => $itemLayout,
         'application' => $application,

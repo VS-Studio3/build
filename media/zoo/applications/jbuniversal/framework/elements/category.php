@@ -35,7 +35,7 @@ class JBCSVCategory
      */
     function __construct(Category $category)
     {
-        $this->app       = App::getInstance('zoo');
+        $this->app = App::getInstance('zoo');
         $this->_category = $category;
     }
 
@@ -137,9 +137,10 @@ class JBCSVCategory
 
         if (!empty($data)) {
             $from = array(':', ';');
-            $to   = array('%col%', '%sem%');
+            $to = array('%col%', '%sem%');
 
             foreach ($data as $key => $value) {
+                $key = JString::strtolower($key);
                 if ($nullElement) {
                     $result[] = $key . ':' . JString::str_ireplace($from, $to, $value);
                 } else {
@@ -164,11 +165,12 @@ class JBCSVCategory
 
         if (!empty($string)) {
             $from = array('%col%', '%sem%');
-            $to   = array(':', ';');
+            $to = array(':', ';');
 
             $list = explode(';', $string);
             foreach ($list as $item) {
                 list($key, $value) = explode(':', $item);
+                $key = JString::strtolower($key);
                 $result[$key] = JString::str_ireplace($from, $to, $value);
             }
         }

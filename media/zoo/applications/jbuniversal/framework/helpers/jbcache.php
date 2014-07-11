@@ -94,15 +94,20 @@ class JBCacheHelper extends AppHelper
      * @param mixed $data
      * @param string $group
      * @param bool $isForce
+     * @param array $params
      * @return bool
      */
-    public function set($key, $data, $group = 'default', $isForce = false)
+    public function set($key, $data, $group = 'default', $isForce = false, array $params = array())
     {
         $group = str_replace('-', '_', $group);
         $cache = JFactory::getCache('jbzoo_' . $group, 'output');
         $key   = $this->_simpleHash($key);
         if ($isForce) {
             $cache->setCaching(true);
+        }
+
+        if (isset($params['ttl']) && (int)$params['ttl'] > 0) {
+            $cache->setLifeTime((int)$params['ttl']);
         }
 
         return $cache->store($data, $key);
@@ -113,15 +118,20 @@ class JBCacheHelper extends AppHelper
      * @param string $key
      * @param string $group
      * @param bool $isForce
+     * @param array $params
      * @return null
      */
-    public function get($key, $group = 'default', $isForce = false)
+    public function get($key, $group = 'default', $isForce = false, array $params = array())
     {
         $group = str_replace('-', '_', $group);
         $cache = JFactory::getCache('jbzoo_' . $group, 'output');
         $key   = $this->_simpleHash($key);
         if ($isForce) {
             $cache->setCaching(true);
+        }
+
+        if (isset($params['ttl']) && (int)$params['ttl'] > 0) {
+            $cache->setLifeTime((int)$params['ttl']);
         }
 
         return $cache->get($key);

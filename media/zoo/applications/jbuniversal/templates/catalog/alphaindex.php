@@ -13,6 +13,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+$this->app->jbdoc->noindex();
 
 $this->app->jbdebug->mark('template::alphaindex::start');
 

@@ -21,6 +21,7 @@ class JBStringHelper extends AppHelper
 {
 
     const MAX_LENGTH = 30;
+    const ENCODING   = 'UTF-8';
 
     /**
      * Get sub string (by words)
@@ -105,4 +106,30 @@ class JBStringHelper extends AppHelper
 
         return $result;
     }
+
+    /**
+     * Get unique string
+     * @param  string $prefix
+     * @return string
+     */
+    public function getId($prefix = 'unique-')
+    {
+        $unique = $prefix . mt_rand(1, 999999);
+        return $unique;
+    }
+
+    /**
+     * Clean value
+     * @param  string $value
+     * @param  string $encoding
+     * @return string
+     */
+    public function clean($value, $encoding = self::ENCODING)
+    {
+        $value = JString::trim($value);
+        $value = strip_tags($value);
+
+        return htmlentities($value, ENT_COMPAT, $encoding);
+    }
+
 }

@@ -28,36 +28,31 @@ class JBModelValues extends JBModel
     }
 
     /**
-     * Get user properties values list
-     * @param string $identifier
-     * @param string $itemType
-     * @param string $applicationId
+     * @param $elementId
+     * @param $itemType
+     * @param $applicationId
      * @param array $filter
-     * @return array
+     * @return array|JObject|null
      */
-    public function getPropsValues($identifier, $itemType, $applicationId, array $filter = array())
+    public function getPropsValues($elementId, $itemType, $applicationId, array $filter = array())
     {
-        $this->app->jbdebug->mark('model::' . $identifier . '::start');
+        $this->app->jbdebug->mark('model::' . $elementId . '::start');
 
         $cacheHash = sha1(serialize(func_get_args()));
-        $cacheKey  = 'get-props-values/' . $identifier . '/' . $cacheHash;
+        $cacheKey  = 'get-props-values';
         if (!($result = $this->_jbcache->get($cacheHash, $cacheKey))) {
 
-            $identifier = $this->_jbtables->getFieldName($identifier, 's');
+            $identifier = $this->_jbtables->getFieldName($elementId, 's');
             $tableName  = $this->_jbtables->getIndexTable($itemType);
 
             $select = $this->_getItemSelect($itemType, $applicationId)
                 ->innerJoin($tableName . ' AS tIndex ON tIndex.item_id = tItem.id')
                 ->clear('select')
-
                 ->select('tIndex.' . $identifier . ' AS value')
                 ->select('tIndex.' . $identifier . ' AS text')
                 ->select('COUNT(tIndex.' . $identifier . ') AS count')
-
                 ->where('tIndex.' . $identifier . ' <> ""')
                 ->where('tIndex.' . $identifier . ' IS NOT NULL')
-
-                //->order('tIndex.' . $identifier . ' ASC')
                 ->group('tIndex.' . $identifier);
 
             $columns = $this->_jbtables->getFields($this->_jbtables->getIndexTable($itemType));
@@ -65,35 +60,82 @@ class JBModelValues extends JBModel
             // simple filter (if defined)
             foreach ($filter as $filterIdentifier => $filterValue) {
                 // TODO add filter by range and dates
-                if (is_string($filterValue)) {
+                if (!is_array($filterValue)) {
 
                     if ($filterIdentifier == '_itemname') {
                         $select->where('tItem.name = ?', $filterValue);
 
-                    } else {
+                    } else if ($filterIdentifier == '_itemcategory') {
+                        $select->leftJoin(ZOO_TABLE_CATEGORY_ITEM . ' AS tCategoryItem ON tCategoryItem.item_id = tItem.id');
+                        $select->where('tCategoryItem.category_id = ?', $filterValue);
 
+                    } else {
                         $filterIdentifier = $this->_jbtables->getFieldName($filterIdentifier, 's');
                         if (in_array($filterIdentifier, $columns, true)) {
                             $select->where('tIndex.' . $filterIdentifier . ' = ?', $filterValue);
                         }
 
                     }
+
                 }
             }
 
             $result = $this->fetchAll($select, true);
 
-            // mysql can not sort by num and string together
+            // mysql can not sort both by num and string
             if (!empty($result)) {
-                usort($result, array('JBModelValues', "sortByText"));
+                $result = $this->_sortValues($result, $elementId);
             }
 
             $this->_jbcache->set($cacheHash, $result, $cacheKey);
         }
 
-        $this->app->jbdebug->mark('model::' . $identifier . '::end');
+        $this->app->jbdebug->mark('model::' . $elementId . '::end');
 
         return $result;
+    }
+
+    /**
+     * @param $data
+     * @param $identifier
+     * @return array
+     */
+    public function _sortValues($data, $identifier)
+    {
+        $elements = $this->app->jbentity->getItemTypesData(false);
+        if (isset($elements[$identifier])
+            && in_array($elements[$identifier]['type'], array('radio', 'checkbox', 'select'))
+        ) {
+        
+            $optionList = array();
+            foreach ($elements[$identifier]['option'] as $item) {
+                $optionList[] = $item['name'];
+            }
+            
+            // order data by $optionList
+            $ordered = array();
+            foreach ($optionList as $newIndex => $key) {
+                
+                $index = false;
+                foreach($data as $oldIndex => $dataItem)  {
+                    
+                    if (strtolower(trim($dataItem['value'])) == strtolower(trim($key))) {
+                        $index = $oldIndex;
+                    }
+                }
+                
+                if ($index !== false) {
+                    $ordered[$newIndex] = $data[$index];
+                }
+            }
+
+            $data = $ordered;
+
+        } else {
+            usort($data, array('JBModelValues', "sortByText"));
+        }
+
+        return $data;
     }
 
     /**
@@ -249,13 +291,13 @@ class JBModelValues extends JBModel
 
             $select = $this->_getItemSelect($itemType, $applicationId)
                 ->clear('select')
+                ->innerJoin(ZOO_TABLE_JBZOO_SKU . ' AS tSku ON tSku.item_id = tItem.id')
                 ->select(array(
                     'MAX(tSku.price) AS price_max',
                     'MIN(tSku.price) AS price_min',
                     'MAX(tSku.total) AS total_max',
                     'MIN(tSku.total) AS total_min',
                 ))
-                ->innerJoin(ZOO_TABLE_JBZOO_SKU . ' AS tSku ON tSku.item_id = tItem.id')
                 ->where('tSku.element_id = ?', $identifier);
 
             $result = $this->fetchRow($select);

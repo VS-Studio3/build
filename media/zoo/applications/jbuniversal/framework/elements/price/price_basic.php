@@ -42,8 +42,8 @@ class JBCSVItemPricePrice_basic extends JBCSVItem
     public function fromCSV($value, $position = null)
     {
         // save data
-        $data                         = $this->_element->data();
-        $data['basic']['value'] = isset($value) ? $value : '';
+        $data                   = $this->_element->data();
+        $data['basic']['value'] =  $this->_getFloat($value);
         $this->_element->bindData($data);
 
         return $this->_item;

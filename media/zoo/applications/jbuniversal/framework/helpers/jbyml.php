@@ -284,37 +284,18 @@ class JBYmlHelper extends AppHelper
     public function init()
     {
         // Init vars
+        $this->_appParams = $this->app->jbconfig->getList('config.yml');
+        $appList = $this->_appParams->get('app_list');
 
-        $appId        = defined('JBZOO_CONFIG_YML_APP_LIST') ? explode(':', JBZOO_CONFIG_YML_APP_LIST) : '';
-        $siteName     = defined('JBZOO_CONFIG_YML_SITE_NAME') ? JBZOO_CONFIG_YML_SITE_NAME : '';
-        $siteUrl      = defined('JBZOO_CONFIG_YML_SITE_URL') ? JBZOO_CONFIG_YML_SITE_URL : '';
-        $companyName  = defined('JBZOO_CONFIG_YML_COMPANY_NAME') ? JBZOO_CONFIG_YML_COMPANY_NAME : '';
-        $currencyRate = defined('JBZOO_CONFIG_YML_CURRENCY_RATE') ? JBZOO_CONFIG_YML_CURRENCY_RATE : '';
-        $type         = defined('JBZOO_CONFIG_YML_TYPE') ? explode(':', JBZOO_CONFIG_YML_TYPE) : '';
-        $filePath     = defined('JBZOO_CONFIG_YML_FILE_PATH') ? JBZOO_CONFIG_YML_FILE_PATH : '';
-        $fileName     = defined('JBZOO_CONFIG_YML_FILE_NAME') ? JBZOO_CONFIG_YML_FILE_NAME : '';
-
-        $this->_appParams = $this->app->data->create(array(
-            'app_id'        => $appId,
-            'site_name'     => $siteName,
-            'site_url'      => $siteUrl,
-            'company_name'  => $companyName,
-            'currency'      => 'RUB',
-            'currency_rate' => $currencyRate,
-            'type'          => $type,
-            'file_path'     => $filePath,
-            'file_name'     => $fileName,
-            // 'delivery'      => JBZOO_CONFIG_YML_DELIVERY
-        ));
-
-        if (!empty($appId)) {
+        if (!empty($appList)) {
             $this->_apps = $this->app->table->application->all(array(
                 'conditions' => array(
-                    'id IN (' . implode(',', $this->_appParams->get('app_id')) . ')')
+                    'id IN (' . implode(',', $appList) . ')')
             ));
         } else {
             $this->_apps = '';
         }
+
         $this->_count = $this->app->jbsession->get('ymlCount', 'yml');
     }
 
@@ -329,8 +310,8 @@ class JBYmlHelper extends AppHelper
         $siteName         = $this->_appParams->get('site_name');
         $companyName      = $this->_appParams->get('company_name');
         $supportCurrency  = array('RUR', 'RUB', 'USD', 'BYR', 'KZT', 'EUR', 'UAH');
-        $currency         = $this->_appParams->get('currency');
-        $currencyRate     = $this->_appParams->get('currency_rate');
+        $currency         = $this->_appParams->get('currency', 'RUB');
+        $currencyRate     = $this->_appParams->get('currency_rate', 'default');
 
         if (!empty($siteUrl)) {
             $site_url = $this->replaceSpecial($this->_appParams->get('site_url', ''));
@@ -366,7 +347,7 @@ class JBYmlHelper extends AppHelper
 
         $categories = $this->app->table->category->all(array(
             'conditions' => array(
-                'application_id IN (' . implode(',', $this->_appParams->get('app_id')) . ')')
+                'application_id IN (' . implode(',', $this->_appParams->get('app_list')) . ')')
         ));
 
         return array(
@@ -418,67 +399,84 @@ class JBYmlHelper extends AppHelper
      */
     public function exportItems($offset, $limit)
     {
-        $types = $this->_appParams->get('type');
+        $types = $this->_appParams->get('type_list');
         $items = JBModelItem::model()->getList(
-            $this->_appParams->get('app_id'),
+            $this->_appParams->get('app_list'),
             null,
             $types,
             array(
-                'limit'     => array(
-                    $offset,
-                    $limit
-                ),
+                'limit'     => array($offset, $limit),
                 'published' => 1
             )
         );
         $price = $categoryId = $currencyId = $available = $picture = $link = array();
 
         foreach ($items as $key => $item) {
-            $offer = false;
-            $arr   = $item->getElements();
-            foreach ($arr as $value) {
-                if ($value->config->type == 'jbpriceadvance') {
+            $offer    = false;
+            $elements = $item->getElements();
+            foreach ($elements as $element) {
+
+                $data = $element->getElementData();
+
+                if ($element->config->type == 'jbpriceadvance') {
                     // get price
-                    $price[$key] = $this->replaceSpecial($value->getElementData()->basic['value']);
+                    $price[$key] = $this->replaceSpecial($data->basic['value']);
 
                     // get currency id
-                    $currencyId[$key] = $this->replaceSpecial($value->getElementData()->basic['currency']);
+                    $currencyId[$key] = $this->replaceSpecial($data->basic['currency']);
 
                     // get available
-                    if ((int)$value->getElementData()->basic['balance'] > 0 ||
-                        (int)$value->getElementData()->basic['balance'] == -1
-                    ) {
+                    if ((int)$data->basic['balance'] > 0 || (int)$data->basic['balance'] == -1) {
                         $available[$key] = 'true';
                     } else {
                         $available[$key] = 'false';
                     }
 
                     $offer = true;
-                } elseif ($value->config->type == 'jbprice') {
-                    $data             = $value->current();
+                } elseif ($element->config->type == 'jbprice') {
+                    $data             = $element->current();
                     $price[$key]      = $data['value'];
-                    $currencyId[$key] = $value->config->currency;
-                    $available[$key]  = $data['in_stock'] ? 'true' : 'false';
+                    $currencyId[$key] = $element->config->currency;
+                    $available[$key]  = (isset($data['in_stock']) && $data['in_stock']) ? 'true' : 'false';
                     $offer            = true;
                 }
 
-                // get image path
-                if ($value->config->type == 'jbimage' || $value->config->type == 'image') {
-                    $picture[$key] = $this->replaceSpecial(JURI::root() . str_replace('\\','/',$value->getElementData()->get('file')));
+                // get image paths
+                if ($element->config->type == 'image') {
+                    $picture[$key] = $this->replaceSpecial(JURI::root() . str_replace('\\', '/', $data->get('file')));
                 }
 
-                if ($value->config->type == 'country') {
-                    $data = $value->getElementData()->get('country');
+                // get jbimage paths
+                if ($element->config->type == 'jbimage') {
 
-                    if (isset($data) && array_key_exists($data[0], $this->_country)) {
-                        $country[$key] = $this->_country[$data[0]];
+                    $picture[$key] = array();
+
+                    $imageData = $element->data();
+                    $limit     = 10;
+
+                    foreach ($imageData as $i => $row) {
+                        if (isset($row['file']) && $row['file']) {
+                            $picture[$key][] = $this->replaceSpecial(JURI::root() . str_replace('\\', '/', $row['file']));
+                        }
+
+                        if ($limit == $i + 1) {
+                            break;
+                        }
                     }
 
+                    $picture[$key] = array_unique($picture[$key]);
+                }
+
+                // get countries
+                if ($element->config->type == 'country') {
+                    $countryData = $data->get('country');
+                    if (isset($countryData[0]) && array_key_exists($countryData[0], $this->_country)) {
+                        $country[$key] = $this->_country[$countryData[0]];
+                    }
                 }
             }
 
             if (!$offer) {
-
                 $filePath = $this->getPath();
 
                 if (JFile::exists($filePath)) {
@@ -591,11 +589,11 @@ class JBYmlHelper extends AppHelper
     {
         if ($path) {
             $tmpPath  = $this->_appParams->get('file_path', 'images');
-            $tmpPath  = JPath::clean(JPATH_ROOT . DS . $tmpPath);
+            $tmpPath  = JPATH_ROOT . DS . $tmpPath;
             $fileName = $this->_appParams->get('file_name', 'yml');
-            $filePath = $tmpPath . DS . $fileName . '.xml';
+            $filePath = JPath::clean($tmpPath . DS . $fileName . '.xml');
         } else {
-            $tmpPath  = $this->_appParams->get('file_path', 'images');
+            $tmpPath  = trim($this->_appParams->get('file_path', 'images'), '/');
             $filePath = JUri::root() . $tmpPath . '/' . $this->_appParams->get('file_name', 'yml') . '.xml';
         }
 
@@ -613,13 +611,17 @@ class JBYmlHelper extends AppHelper
     }
 
     /**
-     * @return int
+     * @return int|boolean
      */
     public function getTotal()
     {
-        $types = $this->_appParams->get('type');
-        $appId = $this->_appParams->get('app_id');
-        return JBModelItem::model()->getTotal($appId, $types);
+        $types = $this->_appParams->get('type_list');
+        $appId = $this->_appParams->get('app_list');
+        
+        if(empty($types) || empty($appId)) {
+            return false;
+        }
 
+        return JBModelItem::model()->getTotal($appId, $types);
     }
 }

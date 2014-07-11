@@ -60,15 +60,21 @@ class JBModelCategory extends JBModel
 
     /**
      * Get nested categories by parent category id
+     * @param array $categoryId
+     * @param int $appId
+     * @return array
      */
-    public function getNestedCategories($categoryId, $appId = null)
+    public function getNestedCategories($categoryId = null, $appId = null)
     {
         $categoryId = (array)$categoryId;
 
         $select = $this->_getSelect()
             ->select('tCategory.id')
-            ->from(ZOO_TABLE_CATEGORY . ' AS tCategory')
-            ->where('tCategory.parent IN (' . implode(', ', $categoryId) . ')');
+            ->from(ZOO_TABLE_CATEGORY . ' AS tCategory');
+
+        if (!empty($categoryId)) {
+            $select->where('tCategory.parent IN (' . implode(', ', $categoryId) . ')');
+        }
 
         if ((int)$appId) {
             $select->where('tCategory.application_id = ?', (int)$appId);
@@ -105,11 +111,11 @@ class JBModelCategory extends JBModel
             $select->where('tCategory.application_id = ?', (int)$appId);
         }
 
-        if(!is_null($options->get('parent'))){
+        if (!is_null($options->get('parent'))) {
             $select->where('tCategory.parent = ?', $options->get('parent'));
         }
 
-        if($options->get('published')){
+        if ($options->get('published')) {
             $select->where('tCategory.published = ?', 1);
         }
 

@@ -31,6 +31,11 @@ class JBImportJBuniversalController extends JBuniversalController
     protected $_jbuser = null;
 
     /**
+     * @var JBImportHelper
+     */
+    protected $_jbimport = null;
+
+    /**
      * @var array
      */
     private $_defaultParams = array(
@@ -68,7 +73,7 @@ class JBImportJBuniversalController extends JBuniversalController
     public function items()
     {
         $this->_jbsession->clearGroup('import');
-        $this->importParams = $this->_jbuser->getParam('import-items', $this->_defaultParams);
+        $this->importParams = $this->_config->getGroup('import.items', $this->_jbuser->getParam('import-items', $this->_defaultParams));
 
         $this->renderView();
     }
@@ -79,7 +84,7 @@ class JBImportJBuniversalController extends JBuniversalController
     public function categories()
     {
         $this->_jbsession->clearGroup('import');
-        $this->importParams = $this->_jbuser->getParam('import-categories', $this->_defaultParams);
+        $this->importParams = $this->_config->getGroup('import.categories', $this->_jbuser->getParam('import-categories', $this->_defaultParams));
 
         $this->renderView();
     }
@@ -92,6 +97,14 @@ class JBImportJBuniversalController extends JBuniversalController
         $csvfile    = $this->_jbrequest->getFile('csvfile', 'jbzooform');
         $request    = $this->_jbrequest->getArray('jbzooform');
         $importType = isset($request['import-type']) ? $request['import-type'] : null;
+
+        if (empty($request['separator'])) {
+            $request['separator'] = $this->_defaultParams['separator'];
+        }
+
+        if (empty($request['enclosure'])) {
+            $request['enclosure'] = $this->_defaultParams['enclosure'];
+        }
 
         // validate upload file
         try {
@@ -107,7 +120,7 @@ class JBImportJBuniversalController extends JBuniversalController
         if (JFile::upload($userfile['tmp_name'], $file)) {
 
             // prepare session data
-            $this->_jbuser->setParam('import-' . $importType, $request);
+            $this->_config->setGroup('import.' . $importType, $request);
 
             $request['file'] = $file;
 
@@ -123,7 +136,7 @@ class JBImportJBuniversalController extends JBuniversalController
 
                 // some vars for template
                 $this->controls   = $this->_jbimport->itemsControls($this->info);
-                $this->prevParams = $this->_jbuser->getParam('lastImport-items');
+                $this->prevParams = $this->_config->getGroup('import.last.items', $this->_jbuser->getParam('lastImport-items'));
 
                 $this->renderView('items');
 
@@ -131,7 +144,7 @@ class JBImportJBuniversalController extends JBuniversalController
 
                 // some vars for template
                 $this->controls   = $this->_jbimport->categoriesControls($this->info);
-                $this->prevParams = $this->_jbuser->getParam('lastImport-categories');
+                $this->prevParams = $this->_config->getGroup('import.last.categories', $this->_jbuser->getParam('lastImport-categories'));
 
                 $this->renderView('categories');
 
@@ -155,6 +168,8 @@ class JBImportJBuniversalController extends JBuniversalController
         $checkOptions = $this->_jbrequest->get('checkOptions');
         $lose         = $this->_jbrequest->get('lose');
         $key          = $this->_jbrequest->get('key');
+        $create       = $this->_jbrequest->get('create');
+        $createAlias  = $this->_jbrequest->get('createAlias', 0);
         $assign       = $this->_jbrequest->getArray('assign');
         $appid        = (int)$this->_jbrequest->get('appid');
 
@@ -168,18 +183,22 @@ class JBImportJBuniversalController extends JBuniversalController
             'typeid'       => $typeid,
             'lose'         => $lose,
             'key'          => $key,
+            'create'       => $create,
             'assign'       => $assign[$typeid],
             'checkOptions' => $checkOptions,
+            'createAlias'  => $createAlias
         );
 
         $this->_jbsession->setBatch($data, 'import');
 
         // save to user params
-        $params          = (array)$this->_jbuser->getParam('lastImport-items', array());
+        $oldParams = (array)$this->_jbuser->getParam('lastImport-items', array());
+        $params    = $this->_config->getGroup('import.last.items', $oldParams);
+
         $params[$typeid] = $assign[$typeid];
         unset($data['assign']);
-        $params['previousParams'] = $data;
-        $this->_jbuser->setParam('lastImport-items', $params);
+        $params['previousparams'] = $data;
+        $this->_config->setGroup('import.last.items', $params);
 
         $this->renderView();
     }
@@ -189,10 +208,12 @@ class JBImportJBuniversalController extends JBuniversalController
      */
     public function categoriesSteps()
     {
-        $lose   = $this->_jbrequest->get('lose');
-        $key    = $this->_jbrequest->get('key');
-        $assign = $this->_jbrequest->getArray('assign');
-        $appid  = (int)$this->_jbrequest->get('appid');
+        $lose        = $this->_jbrequest->get('lose');
+        $key         = $this->_jbrequest->get('key');
+        $assign      = $this->_jbrequest->getArray('assign');
+        $create      = $this->_jbrequest->get('create');
+        $createAlias = $this->_jbrequest->get('createAlias', 0);
+        $appid       = (int)$this->_jbrequest->get('appid');
 
         if (empty($appid) || empty($assign)) {
             $this->app->jbnotify->notice(JText::_('JBZOO_INCORRECT_DATA'));
@@ -200,16 +221,18 @@ class JBImportJBuniversalController extends JBuniversalController
         }
 
         $data = array(
-            'appid'  => $appid,
-            'lose'   => $lose,
-            'key'    => $key,
-            'assign' => $assign,
+            'appid'       => $appid,
+            'lose'        => $lose,
+            'key'         => $key,
+            'create'      => $create,
+            'createAlias' => $createAlias,
+            'assign'      => $assign,
         );
 
         $this->_jbsession->setBatch($data, 'import');
 
         // save to user params
-        $this->_jbuser->setParam('lastImport-categories', $data);
+        $this->_config->setGroup('import.last.categories', $data);
 
         $this->renderView();
     }

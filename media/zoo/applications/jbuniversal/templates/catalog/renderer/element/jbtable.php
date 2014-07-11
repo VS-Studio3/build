@@ -14,9 +14,10 @@
 defined('_JEXEC') or die('Restricted access');
 
 
+$params['style']      = 'jbtable';
 $params['tag']        = 'tr';
 $params['labelTag']   = 'td';
 $params['wrapperTag'] = 'td';
-$params['style']      = 'jbtable';
+$params['clear']      = 0;
 
 include dirname(__FILE__) . '/jbblock.php';

@@ -56,33 +56,48 @@ class JBModelElementRange extends JBModelElement
      */
     protected function _prepareValue($value, $exact = false)
     {
-        if ($this->_isDate($value)) {
-            $values = $value['range-date'];
-        } else {
-            $values = $value['range'];
+        $value  = parent::_prepareValue($value);
+        $values = array();
+
+        if (!empty($value['range-date']) ||
+            !empty($value['range'])
+        ) {
+            $value = array($value);
         }
 
-        if (!is_array($values)) {
-            $values = explode('/', $values);
-        }
+        foreach ($value as $val) {
 
-        if ($this->_isDate($value)) {
+            if ($this->_isDate($val)) {
+                $tmp = $val['range-date'];
 
-            $values = array(
-                $this->app->jbdate->toMysql($values[0]),
-                $this->app->jbdate->toMysql($values[1]),
-            );
+            } elseif (is_string($val) && strpos($val, '/')) {
+                $tmp = explode('/', $val);
 
-        } else {
+            } else {
+                if(is_string($val['range']) && strpos($val['range'], '/')) {
+                    $tmp = explode('/', $val['range']);
 
-            $values = array(
-                JString::trim($values[0]),
-                JString::trim($values[1])
-            );
-        }
+                } else {
+                    $tmp = $val['range'];
 
-        if ($values[0] === '' && $values[1] === '') {
-            return array();
+                }
+            }
+
+            if ($this->_isDate($val)) {
+
+                $values[] = array(
+                    $this->app->jbdate->toMysql($tmp[0]),
+                    $this->app->jbdate->toMysql($tmp[1]),
+                );
+
+            } else {
+
+                $values[] = array(
+                    JString::trim($tmp[0]),
+                    JString::trim($tmp[1])
+                );
+            }
+
         }
 
         return $values;
@@ -95,7 +110,7 @@ class JBModelElementRange extends JBModelElement
      */
     protected function _isDate($value)
     {
-        return isset($value['range-date']);
+        return is_array($value) && isset($value['range-date']);
     }
 
     /**
@@ -106,41 +121,50 @@ class JBModelElementRange extends JBModelElement
      */
     protected function _getWhere($values, $elementId)
     {
-        $isDate = $this->_isDate($values);
+        if(is_array($values) && !isset($values['range-date'])) {
+            foreach($values as $val) {
+                $isDate = $this->_isDate($val);
+            }
+        } else {
+            $isDate = $this->_isDate($values);
+        }
+
         $values = $this->_prepareValue($values);
 
-        $where = array();
-
         if (!empty($values)) {
+            $where = array();
 
-            if (strlen($values[0]) == 0 && strlen($values[1]) == 0) {
-                return null;
-            }
+            foreach ($values as $value) {
 
-            $clearElementId = $this->_jbtables->getFieldName($elementId, $isDate ? 'd' : 'n');
+                if (strlen($value[0]) == 0 && strlen($value[1]) == 0) {
+                    return null;
+                }
 
-            if ($isDate) {
+                $clearElementId = $this->_jbtables->getFieldName($elementId, $isDate ? 'd' : 'n');
 
-                if (!empty($values[0]) && empty($values[1])) {
-                    $where[] = "tIndex." . $clearElementId . " >= STR_TO_DATE('" . $values[0] . "', '%Y-%m-%d %H:%i:%s')";
+                if ($isDate) {
 
-                } elseif (empty($values[0]) && !empty($values[1])) {
-                    $where[] = "tIndex." . $clearElementId . " <= STR_TO_DATE('" . $values[1] . "', '%Y-%m-%d %H:%i:%s')";
+                    if (!empty($value[0]) && empty($value[1])) {
+                        $where[] = "tIndex." . $clearElementId . " >= STR_TO_DATE('" . $value[0] . "', '%Y-%m-%d %H:%i:%s')";
+
+                    } elseif (empty($value[0]) && !empty($value[1])) {
+                        $where[] = "tIndex." . $clearElementId . " <= STR_TO_DATE('" . $value[1] . "', '%Y-%m-%d %H:%i:%s')";
+
+                    } else {
+                        $where[] = "tIndex." . $clearElementId
+                            . " BETWEEN STR_TO_DATE('" . $value[0] . "', '%Y-%m-%d %H:%i:%s')"
+                            . " AND STR_TO_DATE('" . $value[1] . "', '%Y-%m-%d %H:%i:%s')";
+                    }
 
                 } else {
-                    $where[] = "tIndex." . $clearElementId
-                        . " BETWEEN STR_TO_DATE('" . $values[0] . "', '%Y-%m-%d %H:%i:%s')"
-                        . " AND STR_TO_DATE('" . $values[1] . "', '%Y-%m-%d %H:%i:%s')";
-                }
 
-            } else {
+                    if (strlen($value[0]) != 0) {
+                        $where[] = 'tIndex.' . $clearElementId . ' >= ' . (float)$value[0];
+                    }
 
-                if (strlen($values[0]) != 0) {
-                    $where[] = 'tIndex.' . $clearElementId . ' >= ' . (float)$values[0];
-                }
-
-                if (strlen($values[1]) != 0) {
-                    $where[] = 'tIndex.' . $clearElementId . ' <= ' . (float)$values[1];
+                    if (strlen($value[1]) != 0) {
+                        $where[] = 'tIndex.' . $clearElementId . ' <= ' . (float)$value[1];
+                    }
                 }
             }
 

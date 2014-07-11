@@ -18,7 +18,8 @@ $uniqClass = 'jsJBPriceAdvance-' . $this->identifier . '-' . $this->getItem()->i
 $iniqId = uniqid('jbprice-adv-');
 ?>
 
-<div class="jsJBPriceAdvance jbprice-advance <?php echo $uniqClass; ?>" id="<?php echo $iniqId; ?>">
+<!-- <p><strong><?php echo $this->getItem()->name; ?></strong></p> -->
+<div class="jsJBPriceAdvance jbprice-advance <?php echo $uniqClass; ?>" id="<?php echo $iniqId; ?>">    
     <?php echo $skuTmpl; ?>
     <?php echo $balanceTmpl; ?>
     <?php echo $pricesTmpl; ?>

@@ -51,7 +51,7 @@ class JBEmailHelper extends AppHelper
         $layoutPath = explode('.', $layout);
 
         $output = false;
-        if (in_array($layoutPath[2], $renderer->getLayouts($path))) {
+        if (isset($layoutPath[2]) && in_array($layoutPath[2], $renderer->getLayouts($path))) {
             $output = $renderer->render($layout, array(
                 'item'         => $item,
                 'siteName'     => $siteName,

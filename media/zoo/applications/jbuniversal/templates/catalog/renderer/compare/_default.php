@@ -19,7 +19,7 @@ $this->app->jbdebug->mark('layout::compare::start');
 // get render
 $view = $this->getView();
 $render = $view->renderer;
-
+$tooltip = '';
 // render table cells items
 $renderedItems = $render->renderFields($view->itemType, $view->appId, $vars['objects']);
 $elementList = $render->getElementList($renderedItems);
@@ -68,7 +68,15 @@ if ($view->layoutType == 'v') {
 
             $label = $render->renderElementLabel($elementId, $view->itemType, $view->appId);
 
-            echo '<tr class="compare-row"><th>' . $label . '</th>';
+            $element     = $this->app->jbentity->getElement($elementId, $view->itemType, $view->appId);
+            $tooltipText = $this->app->jbstring->clean($element->config->get('description'));
+            $tooltip     = $tooltipText ? ' <span class="jbtooltip" title="' . $tooltipText . '"></span>' : '';
+
+            if ($tooltipText) {
+                $this->app->jbassets->initTooltip();
+            }
+
+            echo '<tr class="compare-row"><th>' . $label . $tooltip . '</th>';
             foreach ($renderedItems as $itemId => $itemElements) {
                 echo '<td class="compare-cell">' . $itemElements[$elementId] . '</td>' . "\n";
             }
@@ -112,13 +120,24 @@ if ($view->layoutType == 'v') {
 
     echo '<thead><tr><td class="item-names">&nbsp;</td>';
     foreach ($elementList as $elementId) {
+        $element = $this->app->jbentity->getElement($elementId, $view->itemType, $view->appId);
+        if ($element) {
+            $tooltipText = $this->app->jbstring->clean($element->config->get('description'));
+            $tooltip     = $tooltipText ? ' <span class="jbtooltip" title="' . $tooltipText . '"></span>' : '';
+
+            if ($tooltipText) {
+                $this->app->jbassets->initTooltip();
+            }
+        }
         if ($elementId != 'itemname') {
-            echo '<th>' . $render->renderElementLabel($elementId, $view->itemType, $view->appId) . '</th>' . "\n";
+            echo '<th>' . $render->renderElementLabel($elementId, $view->itemType, $view->appId) . $tooltip . '</th>' . "\n";
         }
     }
     echo '</tr></thead>';
 
     echo '<tbody>';
+    echo '<meta charset="utf8" />';
+
     foreach ($renderedItems as $itemId => $itemElements) {
 
         echo '<tr class="compare-row">';
@@ -127,9 +146,11 @@ if ($view->layoutType == 'v') {
             if ($elementId == 'itemname') {
                 $link  = $this->app->route->item($vars['objects'][$itemId]);
                 $title = $elementHtml;
+
                 echo '<th><a href="' . $link . '" title="' . $title . '">' . $title . '</a></th>' . "\n";
 
             } else {
+
                 echo '<td class="compare-cell ' . $elementId . '" data-elementid="' . $elementId . '">' . $elementHtml . '</td>' . "\n";
             }
         }

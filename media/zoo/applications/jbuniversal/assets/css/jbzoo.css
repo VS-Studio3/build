@@ -250,6 +250,7 @@
 
 .jbzoo .subcategories .column,
 .jbzoo .related-items .column,
+.jbzoo .module-items .column,
 .jbzoo .items .column {
     margin-right: 1%;
     margin-bottom: 1em;
@@ -257,6 +258,7 @@
 
 .jbzoo .subcategories .column.last,
 .jbzoo .related-items .column.last,
+.jbzoo .module-items .column.last,
 .jbzoo .items .column.last {
     margin-right: 0;
 }
@@ -1566,14 +1568,6 @@
     text-decoration: none;
 }
 
-.jbzootabs-header a {
-    color: #444;
-}
-
-.jbzootabs-widget-cont a {
-    color: #444;
-}
-
 .jbzootabs .jbzootabs-nav li {
     list-style: none;
     white-space: nowrap;
@@ -1845,7 +1839,7 @@ h3.jbzootabs-accordion-header.jbzootabs-accordion-active.jbzootabs-accordion-ico
     border-spacing: 0;
 }
 
-*+.jbzoo .jbtable {
+* + .jbzoo .jbtable {
     margin-top: 20px;
 }
 
@@ -1967,4 +1961,150 @@ h3.jbzootabs-accordion-header.jbzootabs-accordion-active.jbzootabs-accordion-ico
     background: rgba(105, 180, 36, 0.41);
     cursor: default;
     text-shadow: none;
+}
+
+/***************************** JBColor *********************************/
+
+.jbzoo .jbzoo-colors .jbcolor-label,
+.jbzoo .jbcolor-label {
+    display: inline-block;
+    padding: 3px;
+    margin: 4px;
+    border: 1px solid #777777;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-transition: 1s;
+    -moz-transition: 1s;
+    transition: 1s;
+    opacity: 0.2;
+}
+
+.jbzoo .jbcolor-label.default,
+.jbzoo .jbcolor-label.default .jbcolor {
+    opacity: 1;
+}
+
+.jbzoo .jbcolor-default .jbcolor {
+    display: block;
+}
+
+.jbzoo .jbcolor-alphabetic,
+.jbzoo .jbcolor-default {
+    display: inline-block;
+}
+
+.jbzoo .jbcolor-label,
+.jbzoo .jbcolor-label .jbcolor {
+    opacity: 1;
+    cursor: default;
+}
+
+.jbzoo input.jbcolor-input:checked + label {
+    -webkit-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    transform: rotate(-180deg);
+    opacity: 1;
+}
+
+.jbzoo .jbcolor-label div {
+    width: 26px;
+    height: 26px;
+    float: left;
+    color: #fff;
+    opacity: 0.2;
+    cursor: pointer;
+    outline: 0;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    -webkit-box-shadow: inset 0 13px 0 rgba(255, 255, 255, .1);
+    -moz-box-shadow: inset 0 13px 0 rgba(255, 255, 255, .1);
+    box-shadow: inset 0 13px 0 rgba(255, 255, 255, .1);
+    -webkit-transition: 1s;
+    -moz-transition: 1s;
+    transition: 1s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.jbzoo .jbcolor-label div:hover,
+.jbzoo .jbcolor-label:hover,
+.jbzoo .jbcolor-label:hover div {
+    opacity: 1;
+    -webkit-box-shadow: inset 0 13px 0 rgba(255, 255, 255, .1) #838383 0px 0px 5px;
+    -moz-box-shadow: inset 0 13px 0 rgba(255, 255, 255, .1) #838383 0px 0px 5px;
+    box-shadow: inset 0 13px 0 rgba(255, 255, 255, .1) #838383 0px 0px 5px;
+    -webkit-transition: 1s;
+    -moz-transition: 1s;
+    transition: 1s;
+}
+
+.jbzoo .jbcolor-input {
+    position: absolute;
+    left: -9999px;
+}
+
+.jbzoo input.jbcolor-input:checked + label div {
+    border-color: #fff;
+    opacity: 1;
+    cursor: inherit;
+}
+
+.jbzoo input.jbcolor-input:checked + label div {
+    background: url('../img/icon/checked.png') no-repeat 50%;
+}
+
+/* for ie8 */
+.jbzoo .jbcolor-label.checked div {
+    background: url('../img/icon/checked.png') no-repeat 50%;
+}
+
+/************************************************** JBZoo MOD ITEM ************************************/
+
+.jbzoo .module-items .recently-viewed-clear {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    padding: 0 0 0 15px;
+    background: url('../img/icon/cancel.gif') no-repeat center left;
+    display: none;
+    color: #666;
+}
+
+.jbzoo .module-items {
+    position: relative;
+    padding: 25px 0;
+}
+
+.jbzoo .module-items .item-image {
+    width: auto;
+}
+
+.jbzoo .module-items .wrapper-item-desc td {
+    vertical-align: top;
+    border-bottom: #ccc 1px solid;
+    padding: 0.5em;
+}
+
+.jbzoo .module-items:hover .recently-viewed-clear {
+    display: block;
+}
+
+.jbzoo .module-items .column {
+    padding: 5px;
+}
+
+/************************************************ Tooltip *************************************************/
+
+.jbzoo .jbtooltip {
+    background: url('../img/icon/tooltip.png') no-repeat 50% 50%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin-left: 12px;
 }

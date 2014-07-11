@@ -13,7 +13,6 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-
 // default params
 $params = array_merge(array(
     'first'      => 0,
@@ -25,6 +24,7 @@ $params = array_merge(array(
     'tag'        => 'div',
     'labelTag'   => 'strong',
     'wrapperTag' => '',
+    'tooltip'    => 0,
     'clear'      => 0,
     'class'      => '',
     '_layout'    => '',
@@ -35,10 +35,28 @@ $params = array_merge(array(
 // create label
 $label = '';
 if ($params['showlabel']) {
+
+    // add tooltip
+    $tooltip = '';
+
+    if ($params['tooltip']) {
+        $tooltipText = $this->app->jbstring->clean($element->config->get('description'));
+        $tooltip     = $tooltipText ? ' <span class="jbtooltip" title="' . $tooltipText . '"></span>' : '';
+
+        $this->app->jbassets->initTooltip();
+    }
+
+    // check label
     $labelText = ($params['altlabel']) ? $params['altlabel'] : $element->getConfig()->get('name');
-    $label     = '<' . $params['labelTag'] . ' class="element-label"> ' . $labelText . '</' . $params['labelTag'] . '>';
+
+    $label = '<' . $params['labelTag'] . ' class="element-label"> '
+        . $labelText
+        . $tooltip
+        . '</' . $params['labelTag'] . '>';
+
 }
 
+// collect html classes
 $classes = array_filter(array(
     'index-' . (int)$params['_index'],
     $params['class'],

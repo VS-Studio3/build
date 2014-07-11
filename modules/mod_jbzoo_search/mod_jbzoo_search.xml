@@ -6,19 +6,19 @@
     @version     2.x Pro
     @author      JBZoo App http://jbzoo.com
     @copyright   Copyright (C) JBZoo.com,  All rights reserved.
-    @license     http://jbzoo.com/license-pro.php JBZoo Licence
+    @license     http://jbzoo.com/license JBZoo Licence
     @coder       Denis Smetannikov <denis@jbzoo.com>
 -->
 <extension type="module" version="2.5" method="upgrade" client="site">
     <name>JBZoo Search</name>
     <author>JBZoo.com</author>
-    <creationDate>2013 12</creationDate>
+    <creationDate>2014 06</creationDate>
     <copyright>Copyright (C) JBZoo.com, All rights reserved.</copyright>
     <authorEmail>admin@jbzoo.com</authorEmail>
     <authorUrl>http://jbzoo.com</authorUrl>
-    <version>2.1.1 Pro</version>
+    <version>2.1.4 Pro</version>
     <updateUrl>http://server.jbzoo.com/checkupdates</updateUrl>
-    <license>http://jbzoo.com/license-pro.php JBZoo Licence</license>
+    <license>http://jbzoo.com/license JBZoo Licence</license>
     <description>JBZOO_SEARCH_MODULE_DESCRIPTION</description>
 
     <files>
@@ -107,6 +107,9 @@
                     <option value="1">JBZOO_FILTER_EXACT_NOTEXT</option>
                     <option value="0">JBZOO_FILTER_EXACT_TEXT</option>
                 </field>
+
+                <field name="depend_category" type="jbbool" default="0" label="JBZOO_FILTER_DEPEND_CATEGORY"
+                       description="JBZOO_FILTER_DEPEND_CATEGORY_DESC"/>
 
                 <field name="cache" type="hidden" default="0"/>
                 <field name="owncache" type="hidden" default="0"/>

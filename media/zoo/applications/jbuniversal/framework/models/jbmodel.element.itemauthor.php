@@ -31,7 +31,7 @@ class JBModelElementItemauthor extends JBModelElement
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return array($this->_getWhere($value, $elementId));
+        return $this->_getWhere($value, $elementId);
     }
 
     /**
@@ -45,7 +45,7 @@ class JBModelElementItemauthor extends JBModelElement
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        return array($this->_getWhere($value, $elementId));
+        return $this->_getWhere($value, $elementId);
     }
 
     /**
@@ -93,7 +93,7 @@ class JBModelElementItemauthor extends JBModelElement
     protected function _getWhere($value)
     {
         if ($this->_isUserExists($value)) {
-            return 'tItem.created_by = ' . (int)$value;
+            return array('tItem.created_by = ' . (int)$value);
         }
 
         if (!is_array($value)) {
@@ -102,11 +102,24 @@ class JBModelElementItemauthor extends JBModelElement
 
         $conditions = array();
         foreach ($value as $oneValue) {
-            $userIds      = $this->_getUserIdByName($oneValue);
-            $conditions[] = 'tItem.created_by IN (' . implode(', ', $userIds) . ')';
+
+            $oneValue = JString::trim($oneValue);
+            if (empty($oneValue)) {
+                continue;
+            }
+
+            $userIds = $this->_getUserIdByName($oneValue);
+            if (!empty($userIds)) {
+                $conditions[] = 'tItem.created_by IN (' . implode(', ', $userIds) . ')';
+            }
+
             $conditions[] = 'tItem.created_by_alias LIKE ' . $this->_db->quote('%' . $oneValue . '%');
         }
 
-        return '( ' . implode(' OR ', $conditions) . ' )';
+        if (!empty($conditions)) {
+            return array('( ' . implode(' OR ', $conditions) . ' )');
+        }
+
+        return array('tItem.id IN (0)');
     }
 }

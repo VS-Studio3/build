@@ -48,6 +48,7 @@ class JBModelSearchindex extends JBModel
         'addthis',
         'textarea',
         'disqus',
+        'email',
         'file',
         'flickr',
         'googlemaps',
@@ -55,7 +56,6 @@ class JBModelSearchindex extends JBModel
         'joomlamodule',
         'link',
         'media',
-        'rating',
         'relatedcategories',
         'relateditems',
         'socialbookmarks',
@@ -112,7 +112,11 @@ class JBModelSearchindex extends JBModel
         foreach ($ids as $id) {
 
             // get item by id
-            $item     = $this->app->table->item->get($id);
+            $item = $this->app->table->item->get($id);
+            if (!$item->getType()) {
+                continue;
+            }
+
             $itemData = $this->updateByItem($item, true);
             $itemType = $item->getType()->id;
 
@@ -156,6 +160,15 @@ class JBModelSearchindex extends JBModel
      */
     public function updateByItem(Item $item, $returnDataPack = false)
     {
+        if ($item->getApplication()->getGroup() != JBZOO_APP_GROUP) {
+            return null;
+        }
+
+        // for corrupted database
+        if (!$item->getType()) {
+            return 0;
+        }
+
         $this->removeById($item);
         JBModelSku::model()->updateItemSku($item);
 
@@ -174,7 +187,6 @@ class JBModelSearchindex extends JBModel
 
         foreach ($rows as $elementId => $row) {
             $rowData = $this->_valuesByTypes($row, $elementId);
-
 
             // find max deep vars level
             if (!empty($rowData)) {
@@ -253,7 +265,7 @@ class JBModelSearchindex extends JBModel
 
         // check is number
         $strings = explode("\n", $value);
-        if (!empty($strings)) {
+        if (!empty($value) && !empty($strings)) {
             foreach ($strings as $string) {
 
                 $string = JString::trim($string);
@@ -269,6 +281,9 @@ class JBModelSearchindex extends JBModel
                     $multiInsert[] = array('s' => $string);
                 }
             }
+        } else {
+            //$multiInsert[] = array('n' => 0);
+            //$multiInsert[] = array('s' => '');
         }
 
         // check date
@@ -440,22 +455,31 @@ class JBModelSearchindex extends JBModel
     /**
      * Get related category id list
      * @param int $itemId
+     * @param bool $getName
      * @return array
      */
-    public function getRelatedCategoryIds($itemId)
+    public function getRelatedCategoryIds($itemId, $getName = true)
     {
         $select = $this->_getSelect()
-            ->select('tCategory.id AS id, tCategory.name AS name')
+            ->select('tCategory.id AS id')
             ->from(ZOO_TABLE_CATEGORY_ITEM . ' AS tCategoryItem')
             ->innerJoin(ZOO_TABLE_CATEGORY . ' AS tCategory ON tCategory.id = tCategoryItem.category_id')
             ->where('tCategoryItem.item_id = ?', $itemId);
+
+        if ($getName) {
+            $select->select('tCategory.name AS name');
+        }
 
         $rows = $this->fetchAll($select);
 
         $result = array();
         foreach ($rows as $row) {
             $result[] = $row->id;
-            $result[] = $row->name;
+
+            if ($getName) {
+                $result[] = $row->name;
+            }
+
         }
 
         return $result;
@@ -476,8 +500,10 @@ class JBModelSearchindex extends JBModel
         $rows = $this->fetchAll($select);
 
         $result = array();
-        foreach ($rows as $row) {
-            $result[] = $row->name;
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
+                $result[] = $row->name;
+            }
         }
 
         return $result;

@@ -13,14 +13,12 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-
 ?>
 <div class="filter-props">
     <?php
     echo $this->renderPosition('fields', array(
-            'moduleParams' => $params,
-            'style'        => 'filterprops.block',
-            'tag'          => 'h4'
+            'style' => 'filterprops.block',
+            'tag'   => 'h4'
         )
     );
     ?>

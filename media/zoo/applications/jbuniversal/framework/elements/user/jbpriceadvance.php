@@ -44,8 +44,6 @@ class JBCSVItemUserJBPriceAdvance extends JBCSVItem
      */
     public function fromCSV($value, $position = null)
     {
-        $values = array();
-
         if (JString::strpos($value, ':') !== false
             && JString::strpos($value, JBCSVItem::SEP_CELL) === false
         ) {
@@ -59,14 +57,14 @@ class JBCSVItemUserJBPriceAdvance extends JBCSVItem
                 $values = array(
                     'sku'         => $this->_getString($valuesTmp[0]),
                     'balance'     => $this->_getBool($valuesTmp[1]) ? -1 : 0,
-                    'value'       => $this->_getString($valuesTmp[2]),
+                    'value'       => $this->_getFloat($valuesTmp[2]),
                     'description' => $this->_getString($valuesTmp[3]),
                 );
 
             } else if (count($valuesTmp) == 3) {
                 $values = array(
                     'sku'         => $this->_getString($valuesTmp[0]),
-                    'value'       => $this->_getString($valuesTmp[1]),
+                    'value'       => $this->_getFloat($valuesTmp[1]),
                     'description' => $this->_getString($valuesTmp[2]),
                     'balance'     => -1,
                 );
@@ -74,7 +72,7 @@ class JBCSVItemUserJBPriceAdvance extends JBCSVItem
             } else if (count($valuesTmp) == 2) {
                 $values = array(
                     'sku'         => $this->_item->id,
-                    'value'       => $this->_getString($valuesTmp[0]),
+                    'value'       => $this->_getFloat($valuesTmp[0]),
                     'description' => $this->_getString($valuesTmp[1]),
                     'balance'     => -1,
                 );
@@ -82,7 +80,7 @@ class JBCSVItemUserJBPriceAdvance extends JBCSVItem
             } else {
                 $values = array(
                     'sku'         => $this->_item->id,
-                    'value'       => $this->_getInt($valuesTmp[0]),
+                    'value'       => $this->_getFloat($valuesTmp[0]),
                     'description' => '',
                     'balance'     => -1,
                 );
@@ -92,7 +90,7 @@ class JBCSVItemUserJBPriceAdvance extends JBCSVItem
 
         // check option configs
         if ($position != 1) {
-            $importData = $this->app->jbsession->getGroup('import');
+            $importData = $this->_lastImportParams->get('previousparams');
             if (isset($importData['checkOptions']) && (int)$importData['checkOptions'] == JBImportHelper::OPTIONS_YES) {
 
                 $config      = $this->_element->config;
@@ -113,7 +111,7 @@ class JBCSVItemUserJBPriceAdvance extends JBCSVItem
                 }
             }
         }
-        
+
         // save data
         if ($position == 1) {
             $data = array('basic' => $values);
@@ -123,6 +121,18 @@ class JBCSVItemUserJBPriceAdvance extends JBCSVItem
 
             if (!isset($data['variations'])) {
                 $data['variations'] = array();
+            }
+
+            if (isset($values['param1'])) {
+                $values['param1'] = $this->app->string->sluggify($values['param1']);
+            }
+
+            if (isset($values['param2'])) {
+                $values['param2'] = $this->app->string->sluggify($values['param2']);
+            }
+
+            if (isset($values['param3'])) {
+                $values['param3'] = $this->app->string->sluggify($values['param3']);
             }
 
             $data['variations'][] = $values;

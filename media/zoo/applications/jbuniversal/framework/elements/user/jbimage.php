@@ -25,7 +25,6 @@ class JBCSVItemUserJBImage extends JBCSVItem
     public function toCSV()
     {
         $result = array();
-        $params = $this->app->jbuser->getParam('export-items', array());
 
         if (!empty($this->_value)) {
             foreach ($this->_value as $self) {
@@ -40,7 +39,7 @@ class JBCSVItemUserJBImage extends JBCSVItem
             }
         }
 
-        if ((int)$params->merge_repeatable) {
+        if ((int)$this->_exportParams->get('merge_repeatable')) {
             return implode(JBCSVItem::SEP_ROWS, $result);
         } else {
             return $result;

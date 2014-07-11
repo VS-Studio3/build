@@ -24,11 +24,7 @@ defined('_JEXEC') or die('Restricted access');
 
     <h2><?php echo JText::_('JBZOO_ADMIN_TITLE_CONFIG_MAIN'); ?></h2>
 
-    <?php
-    echo $this->app->jbform->render('config', array(
-        'action' => $this->app->jbrouter->admin(array('task' => 'saveConfig')),
-    ), $this->app->jbconfig->getList());
-    ?>
+    <?php echo $this->app->jbform->render('config', array(), $this->configData); ?>
 
     <?php echo $this->partial('footer'); ?>
 </div>

@@ -13,14 +13,14 @@
     <fields>
         <fieldset name="licence" label="">
             <field type="text"
-                   defult=""
+                   default=""
                    size="60"
                    name="JBZOO_USERNAME"
                    label="JBZOO_FORM_LICENCE_LOGIN"
                    description="JBZOO_FORM_LICENCE_LOGIN_DESCRIPTION"/>
 
             <field type="password"
-                   defult=""
+                   default=""
                    size="60"
                    name="JBZOO_PASSWORD"
                    label="JBZOO_FORM_LICENCE_PASSWORD"

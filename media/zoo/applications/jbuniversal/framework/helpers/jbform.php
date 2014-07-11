@@ -79,11 +79,15 @@ class JBFormHelper extends AppHelper
 
         $submitLabel = isset($options['submit']) ? $options['submit'] : JText::_('JBZOO_FORM_SUBMIT');
 
-        return '<form ' . $this->app->jbhtml->buildAttrs($options) . ' >'
-        . implode(" \n", $html)
-        . '<div class="submit-btn"><input type="submit" class="uk-button uk-button-primary" name="send" value="' . $submitLabel . '" /></div>'
-        . '</form>'
-        . '<div class="clr"></div>';
+        $html = '<form ' . $this->app->jbhtml->buildAttrs($options) . ' >'
+            . implode(" \n", $html)
+            . '<div class="submit-btn">'
+            . '<input type="submit" class="uk-button uk-button-primary" name="send" value="' . $submitLabel . '" />'
+            . '</div>'
+            . '</form>'
+            . '<div class="clr"></div>';
+
+        return $html;
     }
 
     /**

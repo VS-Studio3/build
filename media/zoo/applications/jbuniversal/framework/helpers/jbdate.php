@@ -79,4 +79,14 @@ class JBDateHelper extends AppHelper
 
     }
 
+    /**
+     * @param $date
+     * @return bool
+     */
+    public function isDate($date)
+    {
+        $time = strtotime($date);
+        return $time > 0;
+    }
+
 }

@@ -19,7 +19,6 @@ defined('_JEXEC') or die('Restricted access');
  */
 class JBDebugHelper extends AppHelper
 {
-
     /**
      * JBDump instance
      * @var JBDump|JProfiler
@@ -47,15 +46,14 @@ class JBDebugHelper extends AppHelper
         return; // for debug only
 
         if (self::$_jbdump === null) {
+            // Joomla standart profiler
+            if (defined('JDEBUG') && JDEBUG) {
+                self::$_jbdump = JProfiler::getInstance('Application');
+            }
 
             // jbdump plugin
             if (class_exists('jbdump')) {
                 self::$_jbdump = JBDump::i($this->_jbdumpParams);
-            }
-
-            // Joomla standart profiler
-            if (defined('JDEBUG') && JDEBUG) {
-                self::$_jbdump = JProfiler::getInstance('Application');
             }
         }
     }
@@ -66,8 +64,6 @@ class JBDebugHelper extends AppHelper
      */
     public function mark($name = '')
     {
-        return; // for debug only
-    
         if (self::$_jbdump !== null) {
             self::$_jbdump->mark($name);
         }
@@ -80,7 +76,7 @@ class JBDebugHelper extends AppHelper
     public function sql($select)
     {
         if (self::$_jbdump !== null) {
-            self::$_jbdump->dump((string)$select, 'jbdebug::sql');
+            self::$_jbdump->sql((string)$select, 'jbdebug::sql');
         }
     }
 }

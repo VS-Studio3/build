@@ -137,4 +137,18 @@ class JBFilterElementCategory extends JBFilterElement
 
         return $options;
     }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    protected function _getElementValue($value)
+    {
+        if ($this->_isValueEmpty($value)) {
+            $value = $this->app->jbrequest->getSystem('category');
+        }
+
+        return parent::_getElementValue($value);
+    }
+
 }

@@ -78,7 +78,9 @@ class JBFilterElement
      */
     function __construct($identifier, $value, array $params, array $attrs)
     {
-        $this->app     = App::getInstance('zoo');
+        $this->app = App::getInstance('zoo');
+
+        $params        = empty($params) ? array() : $params;
         $this->_params = $this->app->parameter->create($params);
 
         $this->_identifier = $identifier;
@@ -140,6 +142,9 @@ class JBFilterElement
 
         } elseif ($type == 'config') {
             $result = $this->_getConfigValues();
+
+        } else if ($type == '__default__') {
+            $result = true;
         }
 
         if (empty($result)) {
@@ -155,10 +160,21 @@ class JBFilterElement
      */
     protected function _getDbValues()
     {
+        $elements = array();
+
+        $isCatDepend = (int)$this->_params->moduleParams->get('depend_category');
+        if ($isCatDepend) {
+            $categoryId = $this->app->jbrequest->getSystem('category');
+            if ($categoryId > 0) {
+                $elements['_itemcategory'] = $categoryId;
+            }
+        }
+
         return JBModelValues::model()->getPropsValues(
             $this->_identifier,
             $this->_params->get('item_type', null),
-            $this->_params->get('item_application_id', null)
+            $this->_params->get('item_application_id', null),
+            $elements
         );
     }
 
@@ -257,7 +273,7 @@ class JBFilterElement
             $uniqNumber = 0;
         }
 
-        $id = isset($this->_attrs['id']) ? $this->_attrs['id'] : '';
+        $id = isset($this->_attrs['id']) ? $this->app->jbstring->getId($this->_attrs['id']) : '';
 
         if ($postFix !== null) {
             $id .= '-' . $postFix;
@@ -331,4 +347,36 @@ class JBFilterElement
 
         return $placeholder;
     }
+
+    /**
+     * Init placeholder
+     * @param $attrs
+     * @return mixed
+     */
+    protected function _addPlaceholder($attrs)
+    {
+        $isAutocomplete = (int)$this->_params->get('jbzoo_filter_autocomplete', 0);
+        $placeholder    = JString::trim($this->_params->get('jbzoo_filter_placeholder'));
+
+        if (!empty($placeholder)) {
+            $attrs['placeholder'] = $placeholder;
+        }
+
+        if ($isAutocomplete) {
+            $attrs['class'][]     = 'jsAutocomplete';
+            $attrs['placeholder'] = $this->_getPlaceholder();
+        }
+
+        return $attrs;
+    }
+
+    /**
+     * Check is has value
+     */
+    public function hasValue()
+    {
+        $data = $this->_getValues('__default__'); // TODO hack for empty values
+        return !empty($data);
+    }
+
 }

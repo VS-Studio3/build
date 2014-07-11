@@ -29,6 +29,8 @@ class FavoriteJBUniversalController extends JBUniversalController
         // init
         $this->app->jbdebug->mark('favorite::init');
 
+        $this->app->jbdoc->noindex();
+
         $type   = $this->_jbrequest->get('type');
         $appId  = $this->_jbrequest->get('app_id');
         $itemId = $this->_jbrequest->get('Itemid');
@@ -84,5 +86,13 @@ class FavoriteJBUniversalController extends JBUniversalController
         $this->app->jbajax->send();
     }
 
-}
+    /**
+     * Remove all action
+     */
+    public function removeAll()
+    {
+        $this->app->jbfavorite->removeItems();
+        $this->app->jbajax->send();
+    }
 
+}

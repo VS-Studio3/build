@@ -19,7 +19,6 @@ defined('_JEXEC') or die('Restricted access');
  */
 class ElementJBRelatedAuto extends Element
 {
-
     /**
      * Related items
      * @var array
@@ -27,24 +26,27 @@ class ElementJBRelatedAuto extends Element
     protected $_relatedItems = null;
 
     /**
-     * Check, has value
+     * Check, is has value
      * @param array $params
      * @return bool
      */
     public function hasValue($params = array())
     {
-        $items = $this->_getRelatedAuto($params);
+        if ((int)$this->get('value', 1)) {
+            $items = $this->_getRelatedAuto($params);
+            return !empty($items);
+        }
 
-        return !empty($items);
+        return false;
     }
 
     /**
      * Edit action
      * @return bool
      */
-    function edit()
+    public function edit()
     {
-        return false;
+        return $this->app->html->_('select.booleanlist', $this->getControlName('value'), '', $this->get('value', 1));
     }
 
     /**
@@ -104,12 +106,13 @@ class ElementJBRelatedAuto extends Element
             $this->app->jbassets->heightFix();
         }
 
-        if ($params->get('layout', false)) {
+        $columns = $params->get('columns', 1);
+        if ($columns > 0 && $params->get('layout', false)) {
             if ($layout = $this->getLayout()) {
                 return self::renderLayout(
                     $layout, array(
                         'items'   => $itemsOutput,
-                        'columns' => $params->get('columns', 1)
+                        'columns' => $columns
                     )
                 );
             }

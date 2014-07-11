@@ -49,9 +49,9 @@ class CompareRenderer extends ItemRenderer
             $forceLayout = $this->_layout;
         }
 
-        $application = $this->app->table->application->get($appId);
-        $path        = $application->getGroup() . '.' . $type . '.' . $forceLayout;
-        $config      = $this->getConfig('item')->get($path);
+        $app    = $this->app->table->application->get($appId);
+        $path   = $app->getGroup() . '.' . $type . '.' . $forceLayout;
+        $config = $this->getConfig('item')->get($path);
 
         if ($config) {
             return isset($config[$position]) ? $config[$position] : array();
@@ -71,7 +71,7 @@ class CompareRenderer extends ItemRenderer
     {
         $element = $item->getElement($elementId);
 
-        if ($element && $item) {
+        if ($element && $item && $element->hasValue()) {
             return parent::render("element.default", array(
                 'params'  => $params,
                 'element' => $element,
@@ -91,19 +91,55 @@ class CompareRenderer extends ItemRenderer
      */
     public function renderFields($type, $appId, array $items)
     {
-        $elements      = $this->getPositionData(self::COMPARE_POSITION, $type, (int)$appId);
-        $layout        = $this->_layout;
-        $renderedItems = array();
+        $elements = $this->getPositionData(self::COMPARE_POSITION, $type, (int)$appId);
+        $layout   = $this->_layout;
 
+        $renderedItems = array();
         foreach ($items as $item) {
+
             $renderedItems[$item->id] = array('itemname' => $item->name);
+
             foreach ($elements as $index => $element) {
-                $element['_layout']                            = $layout;
-                $element['_position']                          = self::COMPARE_POSITION;
-                $element['_index']                             = $index;
-                $renderedItems[$item->id][$element['element']] = $this->renderItemElement($element['element'], $item, $element);
+
+                $element['_layout']   = $layout;
+                $element['_position'] = self::COMPARE_POSITION;
+                $element['_index']    = $index;
+
+                $html = $this->renderItemElement($element['element'], $item, $element);
+                $html = JString::trim($html);
+
+                $renderedItems[$item->id][$element['element']] = $html;
             }
 
+        }
+
+        // check empty items
+        $emptyItems = array();
+        foreach ($renderedItems as $itemId => $renderedItem) {
+
+            foreach ($renderedItem as $elemId => $elemValue) {
+                if (!isset($emptyItems[$elemId])) {
+                    $emptyItems[$elemId] = 0;
+                }
+
+                if (empty($elemValue)) {
+                    $emptyItems[$elemId]++;
+                }
+            }
+        }
+
+        // remove empty fields
+        $itemCount = count($renderedItems);
+        if ($itemCount > 0) {
+            foreach ($emptyItems as $elemId => $emptyCount) {
+
+                if ($itemCount == $emptyCount) {
+                    foreach ($renderedItems as $itemId => $renderedItem) {
+                        unset($renderedItems[$itemId][$elemId]);
+                    }
+                }
+
+            }
         }
 
         return $renderedItems;
@@ -133,8 +169,8 @@ class CompareRenderer extends ItemRenderer
     public function renderElementLabel($elementId, $itemType, $appId)
     {
         $elements = $this->getPositionData(self::COMPARE_POSITION, $itemType, (int)$appId, 'compare');
+        $itemType = $this->app->jbentity->getType($itemType, $appId);
 
-        $itemType           = $this->app->jbentity->getType($itemType, $appId);
         $typeElementsConfig = $itemType->config->get('elements');
 
         $resultLabel = null;

@@ -98,9 +98,9 @@ class ElementJBSocial extends Element implements iSubmittable
 
         $vkOptions = $fbOptions = $twOptions = $okOptions = $gpOptions = $liOptions = array();
 
-        if((int)$this->config->get('likes_enabled',1) &&
-            (int)$this->get('likes_enabled',1)
-        ){
+        if ((int)$this->config->get('likes_enabled', 1) &&
+            (int)$this->get('likes_enabled', 1)
+        ) {
             // Vkontakte Button
             if ((int)$params->get('like_vk_enabled', 1)) {
 
@@ -262,7 +262,6 @@ class ElementJBSocial extends Element implements iSubmittable
             (int)$this->config->get('complex_enabled', 1) &&
             (int)$this->get('complex_enabled', 1)
         ) {
-
             $yaOptions['yaEnabled'] = $params->get('like_ya_share_enabled');
             $doc->addScript('http://yandex.st/share/share.js');
 
@@ -270,15 +269,7 @@ class ElementJBSocial extends Element implements iSubmittable
             if (!empty($services)) {
                 $services = explode(',', $services);
             } else {
-                $services = array(
-                    'yaru',
-                    'vkontakte',
-                    'odnoklassniki',
-                    'moimir',
-                    'myspace',
-                    'tutby',
-                    'yazakladki'
-                );
+                $services = array('yaru', 'vkontakte', 'odnoklassniki', 'moimir', 'myspace', 'tutby', 'yazakladki');
             }
 
             $boxServices = array_values(array_diff($allServices, $services));
@@ -289,10 +280,12 @@ class ElementJBSocial extends Element implements iSubmittable
                 'quickServices' => $services
             );
 
-            $yaOptions['title']        = $moreParams['og:title'];
-            $yaOptions['description']  = isset($moreParams['og:description']) ? $this->_replaceSpecial($moreParams['og:description']) : '';
-            $yaOptions['image']        = isset($moreParams['og:image']) ? $moreParams['og:image'] : '';
-            $yaOptions['popupStyle']   = array('blocks' => $boxServices);
+            $yaOptions['title']       = $moreParams['og:title'];
+            $yaOptions['description'] = isset($moreParams['og:description']) ? $this->_replaceSpecial($moreParams['og:description']) : '';
+            $yaOptions['link']        = $this->app->jbrouter->getHostUrl() . $this->app->route->item($this->getItem());
+            $yaOptions['image']       = isset($moreParams['og:image']) ? $moreParams['og:image'] : '';
+            $yaOptions['popupStyle']  = array('blocks' => $boxServices);
+            $yaOptions['theme']       = $params->get('like_ya_share_theme', 'default');
         }
 
         if ($layout = $this->getLayout('_complex.php')) {
@@ -388,6 +381,10 @@ class ElementJBSocial extends Element implements iSubmittable
             }
         }
 
+        if (isset($ogTags['og:description'])) {
+            $ogTags['og:description'] = $this->app->zoo->triggerContentPlugins($ogTags['og:description']);
+        }
+
         return $ogTags;
     }
 
@@ -395,8 +392,8 @@ class ElementJBSocial extends Element implements iSubmittable
      * @param $string
      * @return string
      */
-    protected function _replaceSpecial($string){
-
+    protected function _replaceSpecial($string)
+    {
         $string = addslashes(str_replace('&nbsp;', ' ', strip_tags($string)));
         $string = str_replace(array("\r\n", "\r", "\n"), '', $string);
         $string = $this->app->jbstring->cutByWords($string, 250);
@@ -414,8 +411,7 @@ class ElementJBSocial extends Element implements iSubmittable
             if ((int)$this->config->get('likes_enabled', 0) ||
                 (int)$this->config->get('bookmarks_enabled', 0) ||
                 (int)$this->config->get('complex_enabled', 0)
-            )
-            {
+            ) {
                 return $this->renderLayout($layout);
             }
         }

@@ -146,6 +146,92 @@ class JBHTMLHelper extends AppHelper
     }
 
     /**
+     * Render color field
+     * @param string $inputType
+     * @param array $data
+     * @param string $name
+     * @param null $selected
+     * @return string
+     */
+    public function colors($inputType = 'checkbox', $data, $name, $selected = null)
+    {
+        $html = array();
+        $uniq = $this->app->jbstring->getId();
+        $i    = 0;
+
+        $html[] = '<div id="' . $uniq . '" class="jbzoo-colors">';
+
+        foreach ($data as $key => $value) {
+
+            $isFile = false;
+
+            if ($this->app->jbcolor->isFile($value)) {
+                $isFile = $value;
+            }
+
+            $id = $this->app->jbstring->getId();
+
+            $attribs = array(
+                'type'  => $inputType,
+                'name'  => $name . '[]',
+                'id'    => $id,
+                'title' => $key,
+                'value' => $key,
+                'class' => 'jbcolor-input'
+            );
+
+            $valueSlug = $this->app->string->sluggify(!$isFile ? $key : basename($value));
+
+            $labelAttribs = array(
+                'for'   => $id,
+                'title' => $key,
+                'class' => 'jbcolor-label hasTip ' . $inputType . ' value-' . $valueSlug,
+            );
+
+            $divAttribs = array(
+                'style' => 'background-color: ' . (!$isFile ? '#' . $value : 'transparent')
+            );
+
+            if (is_array($selected)) {
+                foreach ($selected as $val) {
+
+                    if ($inputType == 'radio' && $i >= 1) {
+                        continue;
+                    }
+
+                    if ($key == $val) {
+                        $attribs['checked'] = 'checked';
+                        $attribs['class'] .= ' checked';
+                        $i++;
+                        break;
+                    }
+                }
+            } else {
+                if ((string)$key == (string)$selected) {
+                    $attribs['checked'] = 'checked';
+                    $attribs['class'] .= ' checked';
+                }
+            }
+
+            $html[] = ' <input ' . $this->_buildAttrs($attribs) . ' />'
+                . '<label ' . $this->_buildAttrs($labelAttribs) . '>';
+
+            $html[] = ($isFile ? '<div class="checkIn" style="background: url(\'' . $isFile . '\') center;" >' : '');
+            $html[] = '<div ' . $this->_buildAttrs($divAttribs) . '></div>';
+
+            $html[] = ($isFile ? '</div>' : '');
+            $html[] = '</label>';
+        }
+
+        $html[] = '</div>';
+
+        $multiple = $inputType == 'checkbox' ? 1 : 0;
+        $this->app->jbassets->initJBColorHelper($uniq, $multiple);
+
+        return implode("\n", $html);
+    }
+
+    /**
      * Render hidden field
      * @param      $name
      * @param null $value
@@ -212,8 +298,8 @@ class JBHTMLHelper extends AppHelper
             $("#' . $idtag . '-wrapper")[0].slide = null;
             $("#' . $idtag . '-wrapper").slider({
                 "range" : true,
-                "min"   : ' . ((float)$params['min'] ? round((float)$params['min'], 2) : 0) . ',
-                "max"   : ' . ((float)$params['max'] ? round((float)$params['max'], 2) : 10000) . ',
+                "min"   : ' . ((float)$params['min'] ? floor((float)$params['min']) : 0) . ',
+                "max"   : ' . ((float)$params['max'] ? ceil((float)$params['max']) : 10000) . ',
                 "step"  : ' . ((float)$params['step'] ? round((float)$params['step'], 2) : 100) . ',
                 "values": [' . round((float)$value['0'], 2) . ', ' . round((float)$value['1'], 2) . '],
                 "slide" : function(event,ui) {
@@ -318,7 +404,7 @@ class JBHTMLHelper extends AppHelper
         $maxLevel  = $selectInfo['maxLevel'];
         $listNames = $selectInfo['names'];
 
-        $uniqId         = str_replace('.', '_', uniqid('', true));
+        $uniqId         = $this->app->jbstring->getId();
         $deepLevelCheck = $deepLevel = 0;
 
         $html = array();
@@ -397,8 +483,6 @@ class JBHTMLHelper extends AppHelper
             $attribs = $this->_buildAttrs($attribs);
         }
 
-        $idText = $idtag ? $idtag : $name;
-
         if ($inputType == 'checkbox') {
             $name = $name . '[]';
         }
@@ -422,7 +506,7 @@ class JBHTMLHelper extends AppHelper
                 'value' => $value,
                 'name'  => $name,
                 'type'  => $inputType,
-                'id'    => uniqid('id' . $valueSlug . '-'),
+                'id'    => 'id' . $valueSlug . '-' . $this->app->jbstring->getId(),
                 'class' => 'value-' . $valueSlug
             );
 
@@ -516,4 +600,5 @@ class JBHTMLHelper extends AppHelper
 
         return $value;
     }
+
 }

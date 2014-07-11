@@ -36,7 +36,7 @@ class JBModelElementItemDate extends JBModelElement
     {
         $value = $this->_prepareValue($value);
 
-        return array($this->_getWhere($value));
+        return $this->_getWhere($value);
     }
 
     /**
@@ -52,7 +52,32 @@ class JBModelElementItemDate extends JBModelElement
     {
         $value = $this->_prepareValue($value);
 
-        return array($this->_getWhere($value));
+        return $this->_getWhere($value);
+    }
+
+    /**
+     * Get conditions for search
+     * @param string|array $value
+     * @return array
+     */
+    protected function _getWhere($value)
+    {
+        $result = array();
+
+        if (is_array($value)) {
+            foreach ($value as $val) {
+
+                if (empty($val[0]) || empty($val[1])) {
+                    return null;
+                }
+
+                $result[] = "tItem." . $this->_fieldname
+                    . " BETWEEN STR_TO_DATE('" . $val[0] . "', '%Y-%m-%d %H:%i:%s')"
+                    . " AND STR_TO_DATE('" . $val[1] . "', '%Y-%m-%d %H:%i:%s')";
+            }
+        }
+
+        return array(implode(' OR ', $result));
     }
 
     /**
@@ -63,41 +88,66 @@ class JBModelElementItemDate extends JBModelElement
      */
     protected function _prepareValue($value, $exact = false)
     {
-        if (isset($value['range']) && is_array($value['range'])) {
-            $value = array(
-                ($value['range'][0] ? $value['range'][0] : '1970-01-01') . ' 00:00:00',
-                ($value['range'][1] ? $value['range'][1] : '2099-12-31') . ' 23:59:59'
-            );
-
-        } else if (isset($value['range-date']) && is_array($value['range-date'])) {
-            $value = array(
-                ($value['range-date'][0] ? $value['range-date'][0] : '1970-01-01') . ' 00:00:00',
-                ($value['range-date'][1] ? $value['range-date'][1] : '2099-12-31') . ' 23:59:59'
-            );
-
-        } else {
-            $date  = date(self::DATE_FORMAT, strtotime($value));
-            $value = array(
-                $date . ' 00:00:00',
-                $date . ' 23:59:59'
-            );
-        }
-
-        return $value;
-    }
-
-    /**
-     * Get conditions for search
-     * @param string|array $value
-     * @return string
-     */
-    protected function _getWhere($value)
-    {
-        $result = "tItem." . $this->_fieldname
-            . " BETWEEN STR_TO_DATE('" . $value[0] . "', '%Y-%m-%d %H:%i:%s')"
-            . " AND STR_TO_DATE('" . $value[1] . "', '%Y-%m-%d %H:%i:%s')";
+        $result = $this->_prepare($value);
 
         return $result;
     }
+
+    /**
+     * Prepare an array
+     * @param $value
+     * @return array
+     */
+    protected function _prepare($value)
+    {
+        $result = array();
+
+        if(is_string($value)) {
+            $value = array($value);
+        }
+
+        if (isset($value['range-date'])) {
+            $value = $value['range-date'];
+
+            $result[] = $this->_getDate($value);
+
+            return $result;
+        }
+
+        foreach ($value as $val) {
+            if (is_array($val)) {
+                if (isset($val['range'])) {
+                    $val = $val['range'];
+                } else if(isset($val['range-date'])) {
+                    $val = $val['range-date'];
+                }
+
+                $result[] = $this->_getDate($val);
+            } else {
+                $date = date(self::DATE_FORMAT, strtotime($val));
+                $result[] = array(
+                    $date . ' 00:00:00',
+                    $date . ' 23:59:59'
+                );
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  array $value
+     * @return array
+     */
+    protected function _getDate($value = array())
+    {
+        $result = array(
+            ($value[0] ? $value[0] : '1970-01-01') . ' 00:00:00',
+            ($value[1] ? $value[1] : '2099-12-31') . ' 23:59:59'
+        );
+
+        return $result;
+    }
+
 
 }

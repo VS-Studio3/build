@@ -111,7 +111,7 @@ class JBFavoriteHelper extends AppHelper
     {
         $items = $this->getAllItems();
 
-        if (!isset($items[$item->type])) {
+        if (!isset($items[$item->id])) {
             $items[$item->id] = array(
                 'id'      => null,
                 'item_id' => $item->id,

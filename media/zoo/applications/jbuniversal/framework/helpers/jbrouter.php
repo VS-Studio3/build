@@ -19,16 +19,31 @@ defined('_JEXEC') or die('Restricted access');
  */
 class JBRouterHelper extends AppHelper
 {
+    /**
+     * @var JBRequestHelper
+     */
+    protected $_jbrequest = null;
+
+    /**
+     * @param App $app
+     */
+    public function __construct($app)
+    {
+        parent::__construct($app);
+
+        $this->_jbrequest = $this->app->jbrequest;
+    }
+
 
     /**
      * Filter link
-     * @param string $identifier
+     * @param string $elemId
      * @param string $value
      * @param JRegistry $moduleParams
      * @param int $mode
      * @return string
      */
-    public function filter($identifier, $value, $moduleParams, $mode = 0)
+    public function filter($elemId, $value, $moduleParams, $mode = 0)
     {
         $urlParams = array(
             'option'     => 'com_zoo',
@@ -43,15 +58,22 @@ class JBRouterHelper extends AppHelper
         );
 
         if ($mode == 0) {
-            $urlParams['e'][$identifier] = $value;
+            $urlParams['e'][$elemId] = $value;
 
         } elseif ($mode == 1) {
-            $urlParams['e']              = $this->app->jbrequest->getElements();
-            $urlParams['e'][$identifier] = $value;
+            $urlParams['e']          = $this->_jbrequest->getElements();
+            $urlParams['e'][$elemId] = $value;
 
         } elseif ($mode == 2) {
-            $urlParams['e'] = $this->app->jbrequest->getElements();
-            unset($urlParams['e'][$identifier]);
+            $urlParams['e'] = $this->_jbrequest->getElements();
+            unset($urlParams['e'][$elemId]);
+        }
+
+        if ($moduleParams->get('depend_category', 0)) {
+            $categoryId = $this->_jbrequest->getSystem('category');
+            if ($categoryId > 0 && !isset($urlParams['e']['_itemcategory'])) {
+                $urlParams['e']['_itemcategory'] = $categoryId;
+            }
         }
 
         return $this->_url($urlParams);
@@ -142,8 +164,8 @@ class JBRouterHelper extends AppHelper
      */
     public function compare($menuItemid, $layout = 'v', $itemType = null, $appId = null)
     {
-        $itemType = ($itemType) ? $itemType : $this->app->jbrequest->get('type');
-        $appId    = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $itemType = ($itemType) ? $itemType : $this->_jbrequest->get('type');
+        $appId    = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -166,7 +188,7 @@ class JBRouterHelper extends AppHelper
      */
     public function favorite($menuItemid, $appId = null)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $appId = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -180,6 +202,26 @@ class JBRouterHelper extends AppHelper
     }
 
     /**
+     * Favorite link (remove)
+     * @return string
+     */
+    public function favoriteClear()
+    {
+        $appId  = (int)$this->_jbrequest->get('app_id');
+        $Itemid = (int)$this->_jbrequest->get('Itemid');
+
+        $linkParams = array(
+            'option'     => 'com_zoo',
+            'controller' => 'favorite',
+            'task'       => 'removeAll',
+            'app_id'     => (int)$appId,
+            'Itemid'     => (int)$Itemid,
+        );
+
+        return $this->_url($linkParams, true);
+    }
+
+    /**
      * Favorite remove item link
      * @param int $itemId
      * @param int $appId
@@ -187,7 +229,7 @@ class JBRouterHelper extends AppHelper
      */
     public function favoriteRemoveItem($itemId, $appId = null)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $appId = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -209,8 +251,8 @@ class JBRouterHelper extends AppHelper
      */
     public function compareClear($menuItemid, $itemType = null, $appId = null)
     {
-        $itemType = ($itemType) ? $itemType : $this->app->jbrequest->get('type');
-        $appId    = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $itemType = ($itemType) ? $itemType : $this->_jbrequest->get('type');
+        $appId    = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'      => 'com_zoo',
@@ -233,7 +275,7 @@ class JBRouterHelper extends AppHelper
      */
     public function basket($menuItemid, $appId = null)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $appId = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -241,6 +283,7 @@ class JBRouterHelper extends AppHelper
             'task'       => 'index',
             'app_id'     => (int)$appId,
             'Itemid'     => (int)$menuItemid,
+            'nocache'    => mt_rand(),
         );
 
         return $this->_url($linkParams, true);
@@ -253,7 +296,7 @@ class JBRouterHelper extends AppHelper
      */
     public function basketEmpty($appId = null)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $appId = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -273,7 +316,7 @@ class JBRouterHelper extends AppHelper
      */
     public function basketSuccess($menuItemid, $appId = null)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $appId = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -295,8 +338,7 @@ class JBRouterHelper extends AppHelper
      */
     public function basketPayment($menuItemid, $appId, $itemId)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
-
+        $appId      = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
         $linkParams = array(
             'option'     => 'com_zoo',
             'controller' => 'payment',
@@ -306,7 +348,10 @@ class JBRouterHelper extends AppHelper
             'order_id'   => $itemId,
         );
 
-        return $this->_url($linkParams, true);
+        $url  = $this->_url($linkParams, true);
+        $base = $this->getHostUrl();
+
+        return $base . $url;
     }
 
     /**
@@ -316,7 +361,7 @@ class JBRouterHelper extends AppHelper
      */
     public function basketDelete($appId = null)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $appId = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -335,7 +380,7 @@ class JBRouterHelper extends AppHelper
      */
     public function basketClear($appId = null)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $appId = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -354,7 +399,7 @@ class JBRouterHelper extends AppHelper
      */
     public function basketQuantity($appId = null)
     {
-        $appId = ($appId) ? $appId : (int)$this->app->jbrequest->get('app_id');
+        $appId = ($appId) ? $appId : (int)$this->_jbrequest->get('app_id');
 
         $linkParams = array(
             'option'     => 'com_zoo',
@@ -408,10 +453,10 @@ class JBRouterHelper extends AppHelper
     public function admin(array $params = array())
     {
         if (!isset($params['controller'])) {
-            $params['controller'] = $this->app->jbrequest->getCtrl();
+            $params['controller'] = $this->_jbrequest->getCtrl();
         }
 
-        $task = $this->app->jbrequest->getWord('task');
+        $task = $this->_jbrequest->getWord('task');
         if (!isset($params['task']) && !empty($task)) {
             $params['task'] = $task;
         }
@@ -436,6 +481,27 @@ class JBRouterHelper extends AppHelper
             'controller' => 'payment',
             'task'       => 'payment' . $type,
             'app_id'     => (int)$appId
+        );
+
+        return JURI::root() . 'index.php?' . $this->query($params);
+    }
+
+    /**
+     * Payment page for not paid orders
+     * @param $Itemid
+     * @param $appId
+     * @param $orderId
+     * @return string
+     */
+    public function paymentNotPaid($Itemid, $appId, $orderId)
+    {
+        $params = array(
+            'option'     => 'com_zoo',
+            'controller' => 'payment',
+            'task'       => 'paymentNotPaid',
+            'app_id'     => (int)$appId,
+            'Itemid'     => $Itemid,
+            'order_id'   => $orderId
         );
 
         return JURI::root() . 'index.php?' . $this->query($params);
@@ -473,6 +539,7 @@ class JBRouterHelper extends AppHelper
         $application = JApplication::getInstance('site');
         $router      = $application->getRouter();
         $link        = $router->build($this->app->route->item($item, false));
+
         return $root . preg_replace('/^.*administrator\//', '', $link, 1);
     }
 
@@ -483,5 +550,31 @@ class JBRouterHelper extends AppHelper
     public function query(array $data)
     {
         return http_build_query($data, null, '&');
+    }
+
+    /**
+     * Add params to custom URL
+     * @param $url
+     * @param array $params
+     * @return string
+     */
+    public function addParamsToUrl($url, array $params)
+    {
+        $add = $this->query($params);
+
+        if (strpos($url, '?') === false) {
+            return $url . '?' . $add;
+        }
+
+        return $url . '&' . $add;
+    }
+
+    /**
+     * Get root host
+     * @return string
+     */
+    public function getHostUrl()
+    {
+        return JUri::getInstance()->toString(array('scheme', 'user', 'pass', 'host', 'port'));
     }
 }

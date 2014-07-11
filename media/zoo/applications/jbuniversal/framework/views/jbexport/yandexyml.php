@@ -41,6 +41,11 @@ $this->app->jbassets->progressBar();
             <li><?php echo JText::_('JBZOO_YML_ATTENTION_1'); ?></li>
             <li><?php echo JText::_('JBZOO_YML_ATTENTION_2'); ?></li>
             <li><?php echo JText::_('JBZOO_YML_ATTENTION_3'); ?></li>
+            <li>
+                <a target="_blank" href="<?php echo $this->app->jbrouter->admin(array('controller' => 'jbconfig', 'task' => 'yandexYml')); ?>">
+                    <?php echo JText::_('JBZOO_YML_ATTENTION_4'); ?>
+                </a>
+            </li>
         </ul>
 
 

@@ -34,6 +34,9 @@
         <param name="default_image" type="text" default="" label="JBZOO_JBIMAGE_DEFAULT"
                description="JBZOO_JBIMAGE_DEFAULT_DESC"/>
 
+        <param name="remove_with_item" type="jbbool" default="0" label="JBZOO_JBIMAGE_REMOVE_WITH_ITEM"
+               description="JBZOO_JBIMAGE_REMOVE_WITH_ITEM_DESC"/>
+
     </params>
     <params group="render">
         <param name="separated_by" type="zoolist" default="Space" label="Separated by"

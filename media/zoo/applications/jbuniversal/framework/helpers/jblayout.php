@@ -312,6 +312,8 @@ class JBLayoutHelper extends AppHelper
     {
         $this->app->jbdebug->mark('jblayout::renderItem (' . $item->id . ')::start');
 
+        //$this->app->event->dispatcher->notify($this->app->event->create($item, 'item:beforeRenderLayout', array('layout' => &$defaultLayout, 'render' => &$renderer)));
+
         $itemLayout = $this->_getItemLayout($item, $defaultLayout);
 
         $htmlItem = null;
@@ -342,6 +344,12 @@ class JBLayoutHelper extends AppHelper
             $htmlItem = '<' . $wrapperTag . ' class="' . implode(' ', $class) . '">' . $htmlItem . '</' . $wrapperTag . '>';
         }
 
+        $this->app->event->dispatcher->notify($this->app->event->create($item, 'item:afterRenderLayout', array(
+            'layout'   => &$defaultLayout,
+            'render'   => &$renderer,
+            'htmlItem' => &$htmlItem,
+        )));
+
         $this->app->jbdebug->mark('jblayout::itemRender (' . $item->id . ')::finish');
 
         return $htmlItem;
@@ -357,7 +365,7 @@ class JBLayoutHelper extends AppHelper
 
         $layout = $this->_getItemLayout($item, $layout);
 
-        if($layout == 'item.teaser'){
+        if ($layout == 'item.teaser') {
             return false;
         }
         return true;

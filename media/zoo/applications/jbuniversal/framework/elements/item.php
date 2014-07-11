@@ -57,6 +57,26 @@ class JBCSVItem
     protected $_autoType = 'string';
 
     /**
+     * @var JBModelConfig
+     */
+    protected $_config;
+
+    /**
+     * @var JSonData
+     */
+    protected $_exportParams;
+
+    /**
+     * @var JSonData
+     */
+    protected $_importParams;
+
+    /**
+     * @var JSonData
+     */
+    protected $_lastImportParams;
+
+    /**
      * Constructor
      * @param Element|String $element
      * @param Item $item
@@ -100,6 +120,11 @@ class JBCSVItem
             $this->_value = $this->_item->elements[$this->_identifier];
         }
 
+        $this->_config = JBModelConfig::model();
+
+        $this->_exportParams     = $this->_config->getGroup('export.items', array());
+        $this->_importParams     = $this->_config->getGroup('import.items', array());
+        $this->_lastImportParams = $this->_config->getGroup('import.last.items', array());
     }
 
     /**
@@ -111,8 +136,6 @@ class JBCSVItem
         if ($this->_element) {
             if ($this->_isRepeatable) {
 
-                $params = $this->app->jbuser->getParam('export-items', array());
-
                 // for repeatable objects
                 $result = array();
                 foreach ($this->_item->elements[$this->_identifier] as $self) {
@@ -120,9 +143,9 @@ class JBCSVItem
                     $result[] = isset($self['value']) ? $self['value'] : null;
                 }
 
-                if ((int)$params->merge_repeatable) {
+                if ((int)$this->_exportParams->get('merge_repeatable')) {
                     return implode(JBCSVItem::SEP_ROWS, array_filter($result));
-                }else{
+                } else {
                     return $result;
                 }
 
@@ -152,20 +175,34 @@ class JBCSVItem
             if ($this->_isRepeatable) {
                 // for repeatable objects
 
-                if(strpos($value, JBCSVItem::SEP_ROWS)){
+                if (strpos($value, JBCSVItem::SEP_ROWS)) {
                     $tmpData = $this->_getArray($value, JBCSVItem::SEP_ROWS);
                     foreach ($tmpData as $val) {
+
+                        if($val === '') {
+                            return $this->_item;
+                        }
+
                         $data[] = array('value' => $val);
                     }
-                    $this->_element->bindData($data);
-                }else{
-                    $data = ($position == 1) ? array() : $data = $this->_element->data();
 
-                    $data[] = array('value' => $value);
+                    $this->_element->bindData($data);
+                } else {
+
+                    if ($value === '') {
+                        return $this->_item;
+                    }
+
+                    $data   = ($position == 1) ? array() : $data = $this->_element->data();
+                    $data[] = array('value' => JString::trim($value));
+
                     $this->_element->bindData($data);
                 }
-
             } else {
+
+                if ($value === '') {
+                    return $this->_item;
+                }
                 // for no repeatable objects
                 $this->_element->bindData(array('value' => $value));
             }
@@ -219,7 +256,7 @@ class JBCSVItem
     {
         $value = JString::strtolower(JString::trim($value));
 
-        if (in_array($value, array('1', 'y', 'yes', 'on'))) {
+        if (in_array($value, $this->app->jbcsv->getTrueValues())) {
             return 1;
         }
 
@@ -238,6 +275,17 @@ class JBCSVItem
     protected function _getInt($value)
     {
         return (int)$this->_getString($value);
+    }
+
+    /**
+     * Get int value
+     * @param string $value
+     * @return int
+     */
+    protected function _getFloat($value)
+    {
+        $value = (float)$this->app->jbmoney->clearValue($value);
+        return $value;
     }
 
     /**
@@ -297,20 +345,23 @@ class JBCSVItem
         if ($toType) {
             foreach ($options as $key => $option) {
 
-                if ($toType == 'string') {
-                    $options[$key] = $this->_getString($option);
-
-                } else if ($toType == 'bool') {
+                if ($toType == 'bool') {
                     $options[$key] = $this->_getBool($option);
 
                 } else if ($toType == 'int') {
                     $options[$key] = $this->_getInt($option);
+
+                } else if ($toType == 'float') {
+                    $options[$key] = $this->_getFloat($option);
 
                 } else if ($toType == 'alias') {
                     $options[$key] = $this->_getAlias($option);
 
                 } else if ($toType == 'date') {
                     $options[$key] = $this->_getDate($option);
+
+                } else {
+                    $options[$key] = $this->_getString($option);
                 }
 
             }
@@ -334,6 +385,7 @@ class JBCSVItem
             $to   = array('%col%', '%sem%');
 
             foreach ($data as $key => $value) {
+                $key = JString::strtolower($key);
                 if ($nullElement) {
                     $result[] = $key . ':' . JString::str_ireplace($from, $to, $value);
                 } else {
@@ -363,6 +415,7 @@ class JBCSVItem
             $list = explode(';', $string);
             foreach ($list as $item) {
                 list($key, $value) = explode(':', $item);
+                $key          = JString::strtolower($key);
                 $result[$key] = JString::str_ireplace($from, $to, $value);
             }
         }

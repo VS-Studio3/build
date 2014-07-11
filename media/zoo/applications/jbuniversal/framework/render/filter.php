@@ -25,6 +25,7 @@ class FilterRenderer extends AppRenderer
     protected $_application = null;
     protected $_config_file = 'positions.config';
     protected $_xml_file = 'positions.xml';
+    protected $_moduleParams = null;
 
     /**
      * Render element
@@ -83,9 +84,7 @@ class FilterRenderer extends AppRenderer
             $element = $this->app->jbfilter->getElement($data['element']);
 
             if ($element && $element->canAccess()) {
-
                 $i++;
-
                 $params = array_merge(
                     array(
                         'first'               => ($i == 1),
@@ -93,6 +92,7 @@ class FilterRenderer extends AppRenderer
                         'item_type'           => $this->_type,
                         'item_template'       => $this->_template,
                         'item_application_id' => $this->_application->id,
+                        'moduleParams'        => $this->_moduleParams,
                     ),
                     $data,
                     $args
@@ -108,6 +108,9 @@ class FilterRenderer extends AppRenderer
 
                 $value       = $this->_getRequest($element->identifier);
                 $elementHTML = $this->app->jbfilter->elementRender($element->identifier, $value, $params, $attrs);
+                if (empty($elementHTML)) {
+                    continue;
+                }
 
                 if ($style) {
                     $output[$i] = parent::render($style, array(
@@ -119,7 +122,6 @@ class FilterRenderer extends AppRenderer
                             'elementHTML' => $elementHTML
                         )
                     );
-
                 } else {
                     $output[$i] = $elementHTML;
 
@@ -142,13 +144,10 @@ class FilterRenderer extends AppRenderer
         $value = $this->app->jbrequest->get($identifier);
 
         if (!$value) {
-
             $elements = $this->app->jbrequest->get('e');
-
             if (is_array($elements)) {
                 return (isset($elements[$identifier]) ? $elements[$identifier] : null);
             }
-
         }
 
         return $value;
@@ -183,6 +182,17 @@ class FilterRenderer extends AppRenderer
     public function pathExists($dir)
     {
         return (bool)$this->_getPath($dir);
+    }
+
+    /**
+     * Set Joomla module params
+     * @param $params
+     * @return $this
+     */
+    public function setModuleParams($params)
+    {
+        $this->_moduleParams = $params;
+        return $this;
     }
 
     /**

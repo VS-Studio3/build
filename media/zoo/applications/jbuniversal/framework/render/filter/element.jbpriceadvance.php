@@ -156,8 +156,8 @@ class JBFilterElementJBPriceAdvance extends JBFilterElement
                 $from = $this->_config->get('currency_default', 'EUR');
                 $to   = $this->_params->get('jbzoo_filter_currency_default', 'EUR');
 
-                $ranges['min'] = round($this->app->jbmoney->convert($from, $to, $ranges['min']), 0);
-                $ranges['max'] = round($this->app->jbmoney->convert($from, $to, $ranges['max']), 0);
+                $ranges['min'] = floor($this->app->jbmoney->convert($from, $to, $ranges['min']));
+                $ranges['max'] = ceil($this->app->jbmoney->convert($from, $to, $ranges['max']));
 
                 $params = array_merge($params, array('min' => $ranges['min'], 'max' => $ranges['max']));
             }

@@ -31,7 +31,7 @@
                description="JBZOO_CURRENCY_DESC"/>
 
         <param name="element-image" type="jbelementlist" default="" label="JBZOO_CART_IMAGE_ELEMENT"
-               description="JBZOO_CART_IMAGE_ELEMENT_DESC" types="jbimage,image" multiple="1"/>
+               description="JBZOO_CART_IMAGE_ELEMENT_DESC" types="jbimage,image,imagepro" multiple="1"/>
 
         <param name="minimal-summa" type="text" default="" label="JBZOO_CART_MINIMAL_SUMMA"
                description="JBZOO_CART_MINIMAL_SUMMA_DESC"/>
@@ -75,6 +75,24 @@
         <param name="payment-enabled" type="jbbool" default="0" label="JBZOO_PAYMENT_ENABLED"
                description="JBZOO_PAYMENT_ENABLED_DESC"/>
 
+        <param name="payment-page-success" type="text" default="" label="JBZOO_PAYMENT_PAGE_SUCCESS"
+               description="JBZOO_PAYMENT_PAGE_SUCCESS_DESC"/>
+
+        <param name="payment-page-fail" type="text" default="" label="JBZOO_PAYMENT_PAGE_FAIL"
+               description="JBZOO_PAYMENT_PAGE_FAIL_DESC"/>
+
+        <!-- PayPal -->
+        <param name="@spacer-paypal" type="jbspacer" default="JBZOO_PAYPAL_CONFIG_TITLE"/>
+
+        <param name="paypal-enabled" type="jbbool" default="0" label="JBZOO_PAYPAL_ENABLED"
+               description="JBZOO_PAYPAL_ENABLED_DESC"/>
+
+        <param name="paypal-debug" type="jbbool" default="0" label="JBZOO_PAYPAL_DEBUG"
+               description="JBZOO_PAYPAL_DEBUG_DESC"/>
+
+        <param name="paypal-email" type="text" default="" label="JBZOO_PAYPAL_EMAIL"
+               description="JBZOO_PAYPAL_EMAIL_DESC"/>
+
         <!-- Robox -->
         <param name="@spacer-robox" type="jbspacer" default="JBZOO_ROBOX_CONFIG_TITLE"/>
 
@@ -87,22 +105,27 @@
         <param name="robox-login" type="text" default="" label="JBZOO_ROBOX_LOGIN"
                description="JBZOO_ROBOX_LOGIN_DESC"/>
 
-        <param name="robox-password1" type="text" default="" label="JBZOO_ROBOX_PASSWORD_1"
+        <param name="robox-password1" type="jbpassword" default="" label="JBZOO_ROBOX_PASSWORD_1"
                description="JBZOO_ROBOX_PASSWORD_1_DESC"/>
 
-        <param name="robox-password2" type="text" default="" label="JBZOO_ROBOX_PASSWORD_2"
+        <param name="robox-password2" type="jbpassword" default="" label="JBZOO_ROBOX_PASSWORD_2"
                description="JBZOO_ROBOX_PASSWORD_2_DESC"/>
 
         <!-- IKassa -->
         <param name="@spacer-ikassa" type="jbspacer" default="JBZOO_IKASSA_CONFIG_TITLE"/>
 
         <param name="ikassa-enabled" type="jbbool" default="0" label="JBZOO_IKASSA_ENABLED"
-               description="JBZOO_IKASSA_ENABLED_DESC"/>
+               description="JBZOO_IKASSA_ENABLED_DESC"/>        
+        
+        <param name="ikassa-new" type="jbbool" default="0" label="JBZOO_IKASSA_NEW"
+               description="JBZOO_IKASSA_NEW_DESC"/>
 
         <param name="ikassa-shopid" type="text" default="" label="JBZOO_IKASSA_SHOPID"
                description="JBZOO_IKASSA_SHOPID_DESC"/>
 
-        <param name="ikassa-key" type="text" default="" label="JBZOO_IKASSA_KEY" description="JBZOO_IKASSA_KEY_DESC"/>
+        <param name="ikassa-key" type="jbpassword" default="" label="JBZOO_IKASSA_KEY" description="JBZOO_IKASSA_KEY_DESC"/>
+
+        <param name="ikassa-key-test" type="jbpassword" default="" label="JBZOO_IKASSA_KEY_TEST" description="JBZOO_IKASSA_KEY_TEST_DESC"/>        
 
         <!-- Manual -->
         <param name="@spacer-manual" type="jbspacer" default="JBZOO_MANUAL_CONFIG_TITLE"/>

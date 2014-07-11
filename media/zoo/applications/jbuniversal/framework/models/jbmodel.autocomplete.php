@@ -200,4 +200,31 @@ Class JBModelAutocomplete extends JBModel
 
         return $this->fetchAll($select);
     }
+
+    /**
+     * @param $query
+     * @param null $type
+     * @param null $applicationId
+     * @param int $limit
+     * @return array|JObject
+     */
+    public function comments($query, $type = null, $applicationId = null, $limit = 10)
+    {
+        if (empty($query)) {
+            return array();
+        }
+
+        $select = $this->_getSelect()
+            ->select(array('content AS value'))
+            ->from(ZOO_TABLE_COMMENT . '  AS tComm')
+            ->innerJoin(ZOO_TABLE_ITEM . ' AS tItem ON tItem.id = tComm.item_id')
+            ->where('tItem.application_id = ?', (int)$applicationId)
+            ->where('tItem.type = ?', $type)
+            ->where($this->_buildLikeBySpaces($query, 'tComm.content'))
+            ->group('tComm.item_id')
+            ->order('tComm.item_id ASC')
+            ->limit($limit);
+
+        return $this->fetchAll($select);
+    }
 }

@@ -29,7 +29,7 @@ $iniqId = uniqid('jbprice-adv-');
             'mainHash': "<?php echo $this->_getHash();?>",
             'itemId': <?php echo $this->getItem()->id;?>,
             'identifier': "<?php echo $this->identifier;?>",
-
+            'isInCart': <?php echo $isInCart;?>,
             'addToCartUrl': "<?php echo $addToCartUrl; ?>",
             'removeFromCartUrl': "<?php echo $removeFromCartUrl; ?>",
             'modalUrl': "<?php echo $modalUrl; ?>",

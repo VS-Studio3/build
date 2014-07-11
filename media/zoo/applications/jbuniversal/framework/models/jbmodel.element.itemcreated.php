@@ -15,9 +15,9 @@ defined('_JEXEC') or die('Restricted access');
 
 
 /**
- * Class JBModelElementItemcreated
+ * Class JBModelElementItemCreated
  */
-class JBModelElementItemcreated extends JBModelElementItemDate
+class JBModelElementItemCreated extends JBModelElementItemDate
 {
 
     protected $_fieldname = 'created';

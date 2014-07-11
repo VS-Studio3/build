@@ -30,13 +30,7 @@ class JBModelElementJBSelectCascade extends JBModelElement
      */
     public function conditionAND(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        $idList = $this->_getItemList($elementId, $value, $exact);
-
-        if (empty($idList)) {
-            $idList = array(0);
-        }
-
-        return array('tItem.id IN (' . implode(',', $idList) . ')');
+        return $this->_getWhere($elementId, $value, $exact);
     }
 
     /**
@@ -49,13 +43,7 @@ class JBModelElementJBSelectCascade extends JBModelElement
      */
     public function conditionOR(JBDatabaseQuery $select, $elementId, $value, $i = 0, $exact = false)
     {
-        $idList = $this->_getItemList($elementId, $value, $exact);
-
-        if (empty($idList)) {
-            $idList = array(0);
-        }
-
-        return array('tItem.id IN (' . implode(',', $idList) . ')');
+        return $this->_getWhere($elementId, $value, $exact);
     }
 
     /**
@@ -92,7 +80,12 @@ class JBModelElementJBSelectCascade extends JBModelElement
             $field      = $this->_jbtables->getFieldName($elementId);
 
             $i = 0;
+
             foreach ($values as $valueItem) {
+
+                if(is_array($valueItem)) {
+                    $valueItem = $valueItem[$i];
+                }
 
                 $innerSelect = $this->_getSelect()
                     ->select('DISTINCT tInnerIndex.item_id as id')
@@ -105,17 +98,36 @@ class JBModelElementJBSelectCascade extends JBModelElement
                     if ($i == 0) {
                         $result = $tmpRes;
                     } else {
-                        $result = array_intersect($result, $tmpRes);
+                        $result = array_intersect($tmpRes, $result);
                     }
 
                 } else {
                     $result = array_merge($result, $tmpRes);
                 }
+
+                $i++;
             }
         }
 
         $result = array_unique($result);
-
         return $result;
     }
+
+    /**
+     * @param $elementId
+     * @param $value
+     * @param $exact
+     * @return array
+     */
+    protected function _getWhere($elementId, $value, $exact)
+    {
+        $idList = $this->_getItemList($elementId, $value, $exact);
+
+        if (!empty($idList)) {
+            return array('tItem.id IN (' . implode(',', $idList) . ')');
+        }
+
+        return array('tItem.id IN (0)');
+    }
+
 }
