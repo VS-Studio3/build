@@ -132,7 +132,7 @@ $j(function () {
         scrolling: 'no',
         autoScale: false
     });
-
+    $j('.jsSubmit.button.rborder').attr('value', '');
     /**Выводит список доступных городов**/
     $j('.btn_city').click(function () {
         $j('#list_of_cities_div').toggle();

@@ -214,6 +214,10 @@ fieldset{
             width: 227px;
           }
         }
+        a.gray{
+          color: #4d4b4b;
+          font-weight: normal;
+        }
         a{
           font-size: 15px;
           display: block;
@@ -401,6 +405,31 @@ fieldset{
   border-width: 1px 1px;
   height: 68px;
 }
+#search_wrapper{
+  position: relative;
+  input[type='text']{
+    height: 36px!important;
+    padding-right: 61px;
+    width: 280px!important;
+    box-shadow: inset 0px 0px 8px rgba(185, 171, 171, 0.6)!important;
+    border-radius: 0px!important;
+    border: 1px solid #c6c6c6!important;
+    font-size: 17px;
+    margin-top: 35px;
+  }
+  input[type='submit']{
+    height: 33px!important;
+    position: absolute;
+    background: url("../images/search.png") no-repeat 0px 0px;
+    overflow: hidden;
+    border: none;
+    top: 36px;
+    padding: 0px;
+    right: -2px;
+    min-width: 65px;
+  }
+}
+
 .header .moduletable .menu > li:first-child > a:after{
   position: absolute;
   left: 0px;
