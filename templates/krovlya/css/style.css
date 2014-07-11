@@ -1103,6 +1103,12 @@ fieldset {
   display: inline-block;
   float: left;
 }
+#joomla_template_dostavka {
+  margin-top: 35px;
+}
+#joomla_template_dostavka div {
+  padding-left: 200px;
+}
 #yoo-zoo .un_active {
   background: #4d4a4a;
   box-shadow: inset 0px 0px 10px rgba(14, 4, 4, 0.5);

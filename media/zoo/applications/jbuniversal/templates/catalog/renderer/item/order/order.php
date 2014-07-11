@@ -4,7 +4,7 @@
     <?php echo $this->renderPosition("telephone"); ?>
     <?php echo $this->renderPosition("email"); ?>
 
-    <div id="joomla_template_dostavka">
+    <div id="joomla_template_samovuvoz">
         <?php echo $this->renderPosition("sposob_dostavki"); ?>
     </div>
 
