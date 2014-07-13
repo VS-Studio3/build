@@ -1137,7 +1137,7 @@ fieldset{
     width: 530px!important;
   }
   .element-radio{
-    padding-left: 400px;
+    padding-left: 370px;
     strong{
       font-size: 29px;
       display: inline-block;
@@ -1167,6 +1167,7 @@ fieldset{
       box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.6)!important;
       border: 1px solid #000000!important;
       resize: none;
+      border-radius: 0px;
     }
   }
 }
@@ -1178,7 +1179,7 @@ fieldset{
     color: #000000;
   }
   label{
-    padding-left: 40px;
+    padding-left: 0px;
   }
 }
 #yoo-zoo{
@@ -1260,4 +1261,27 @@ fieldset{
 }
 .jbzoo-filter .filter-element{
  margin-bottom: 0px!important;
+}
+.jbbasket-submission{
+  .submit-button{
+    input{
+      display: none!important;
+    }
+  }
+input[type="radio"] {
+  display:none;
+}
+  input[type="radio"] + label:before {
+    display:inline-block;
+    width:26px;
+    height:26px;
+    margin: -5px 15px 0px 0px;
+    vertical-align:middle;
+    background:url(../images/checkbox.png) 0px 0px no-repeat;
+    cursor:pointer;
+    content: '';
+  }
+  input[type="radio"]:checked + label:before {
+    background:url(../images/checkbox.png) 0px -26px no-repeat;
+  }
 }
