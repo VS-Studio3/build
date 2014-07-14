@@ -1149,7 +1149,7 @@ fieldset {
 }
 #joomla_template_dostavka input[type=text] {
   width: 530px!important;
-  height: 47px!important;
+  height: 46px!important;
   font-size: 29px;
 }
 #joomla_template_dostavka strong {
@@ -1423,14 +1423,8 @@ fieldset {
   position: relative;
   width: 220px!important;
 }
-#joomla_template_dostavka #current_date_form .element-text:before {
-  content: "";
-  position: absolute;
-  right: 132px;
-  top: 2px;
-  height: 43px;
-  width: 50px;
-  background: url("../images/calendar.png") 0px 0px no-repeat;
+#joomla_template_dostavka #current_date_form input {
+  background: url("../images/calendar.png") 168px 0px no-repeat;
   z-index: 10;
 }
 #joomla_template_dostavka #current_date_form #current_date {
