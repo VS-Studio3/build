@@ -1,5 +1,17 @@
 $j = jQuery.noConflict();
 
+var setSamovivozContent = function(currentCity, data){
+    $j('.samovivoz_description').html('<div class="notice">Вы можете самостоятельно забрать продукцию со склада в г.' + currentCity + '</div><div class="city">' + 'г.' + currentCity + "</div>");
+    $j(data).find('.city_val').each(function() {
+        if ($j.trim($j(this).text()) == currentCity) {
+            $j('.samovivoz_description').html($j('.samovivoz_description').html() + 
+                    '<div class="city_address_text">' + $j.trim($j(this).next('.address_val').text()) + '</div><div class="city_telephones_text">' + 
+                    $j.trim($j(this).next('.address_val').next('.telephones_val').html()) + '</div>' +
+                    '<div class="notice_bottom">ВНИМАНИЕ!Бесплатная погрузка в автомобили с открытым верхом(кузов без тента).<br />Длина кузова автомобиля должна быть не менее длины листов!<br />Возможна погрузка крытых автомобилей за дополнительную плату.</div>');
+        }
+    });
+}
+
 citiesData = null;
 /**
  * Объект для работы с cookie'сами
@@ -104,12 +116,14 @@ var onCityClick = function(e) {
     $j('.btn_city, .current_city').html(city);
     $j('#list_of_cities_div, #modal_cities').hide();
     $j('#current_city_form input:text').val(city);
-    $j('.samovivoz_description').html('Вы можете самостоятельно забрать продукцию со склада в г.' + city + '<div class="city">' + 'г.' + city + "</div>");
+    
+    //Динамический контент для самовывоза
+    setSamovivozContent(city, citiesData);
 }
 
 
 $j(function() {
-    
+
     /**
      * FANCY BOX -> вывод модальных окон для заказа завяки и звонка
      * **/

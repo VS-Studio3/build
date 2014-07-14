@@ -31,11 +31,13 @@
 
     <?php echo $this->renderPosition("comments"); ?>
 
+    <div id="go_back_products">Назад</div>
     <div id="go_to_paying">Продолжить</div>
 </div>
 
 <div class="pay_for_products">
     <?php echo $this->renderPosition("sposob_oplati"); ?>
+    <div id="go_back_paying">Назад</div>
 </div>
 
 <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
@@ -126,13 +128,8 @@
         else
             alert('Заполните поля, отмеченные *');
     });
-    $j('.samovivoz_description').html('Вы можете самостоятельно забрать продукцию со склада в г.' + CookieObject.find('city') + '<div class="city">' + 'г.' + CookieObject.find('city') + "</div>");
     
     var citiesList = $j('#cities_module_wrapper');
-    $j(citiesList).find('.city_val').each(function(){
-        if($j.trim($j(this).text()) == CookieObject.find('city')){
-            //$j('.samovivoz_description').html($j('.samovivoz_description').html() + '<div class="city_address_description">' + $j.trim($j(this).next('div').text()) + '</div>');
-            $j('.samovivoz_description .city').after('<div>' + $j.trim($j(this).next('.address_val').text()) + '</div>');
-        }
-    });
+    
+    setSamovivozContent(CookieObject.find('city'), citiesData);
 </script>
