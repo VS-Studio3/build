@@ -16,32 +16,21 @@ defined('_JEXEC') or die('Restricted access');
 
 ?>
 <div class="wrapper-item-desc">
-    <?php if ($this->checkPosition('image')) : ?>
-        <div class="item-image align-<?php echo $params->get('items_image_align', 'left') ?>">
-            <?php echo $this->renderPosition('image'); ?>
-        </div>
+    <div class="city_val">
+    <?php if ($this->checkPosition('name')) : ?>
+        <?php echo $this->renderPosition('name'); ?>
     <?php endif; ?>
-
-    <?php if ($this->checkPosition('description') || $this->checkPosition('title')) : ?>
-        <div class="item-wrapper-desc">
-            <?php if ($this->checkPosition('title')) : ?>
-                <div class="item-title"><?php echo $this->renderPosition('title'); ?></div>
-            <?php endif; ?>
-
-            <?php if ($this->checkPosition('description')) : ?>
-                <div class="item-description"><?php echo $this->renderPosition('description'); ?></div>
-            <?php endif; ?>
-        </div>
+    </div>
+    
+    <div class="address_val">
+    <?php if ($this->checkPosition('address')) : ?>
+        <?php echo $this->renderPosition('address'); ?>
     <?php endif; ?>
-
-    <?php if ($this->checkPosition('properties')) : ?>
-        <div class="product-props">
-            <ul>
-                <?php echo $this->renderPosition('properties', array('style' => 'list')); ?>
-            </ul>
-        </div>
+    </div>
+    
+    <div class="telephones_val">
+    <?php if ($this->checkPosition('telephones')) : ?>
+        <?php echo $this->renderPosition('telephones'); ?>
     <?php endif; ?>
+    </div>
 </div>
-<div class="item-links"><?php echo $this->renderPosition('links', array('style' => 'pipe')); ?></div>
-
-<div class="clear clr"></div>

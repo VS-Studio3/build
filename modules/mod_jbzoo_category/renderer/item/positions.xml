@@ -10,19 +10,9 @@
     @coder       Vitaliy Yanovskiy <joejoker@jbzoo.com>
 -->
 <renderer>
-    <positions layout="example">
-        <position name="title">Title</position>
-        <position name="description">Description</position>
-        <position name="image">Image</position>
-        <position name="properties">Properties</position>
-        <position name="links">Links</position>
-    </positions>
-
     <positions layout="default">
-        <position name="title">Title</position>
-        <position name="description">Description</position>
-        <position name="image">Image</position>
-        <position name="properties">Properties</position>
-        <position name="links">Links</position>
+        <position name="name">Город</position>
+        <position name="address">Адрес</position>
+        <position name="telephones">Телефоны</position>
     </positions>
 </renderer>

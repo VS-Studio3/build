@@ -34,12 +34,9 @@ $classes = array('yoo-zoo', 'jbzoo', 'jbzoo-category-module', 'jbcategory-layout
                     <?php endif; ?>
 
                     <div class="jbcategory-link">
-                        <a href="<?php echo $category['cat_link'] ?>" title="<?php echo $category['category_name'] ?>">
+                       
                             <?php echo $category['category_name'];
-                            if (!empty($category['item_count'])) {
-                                echo ' (' . $category['item_count'] . ')';
-                            }
-                            ?></a>
+                            ?>
                     </div>
 
                     <?php if (!empty($category['desc'])): ?>

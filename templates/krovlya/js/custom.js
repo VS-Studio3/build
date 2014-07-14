@@ -1,59 +1,38 @@
+$j = jQuery.noConflict();
+
+citiesData = null;
 /**
  * Объект для работы с cookie'сами
  **/
 CookieObject = {
-    findAll: function () {
+    findAll: function() {
         var cookies = {};
         _(document.cookie.split(';'))
-            .chain()
-            .map(function (m) {
-                return m.replace(/^\s+/, '').replace(/\s+$/, '');
-            })
-            .each(function (c) {
-                var arr = c.split('='),
-                    key = arr[0],
-                    value = null;
-                var size = _.size(arr);
-                if (size > 1) {
-                    value = arr.slice(1).join('');
-                }
-                cookies[key] = value;
-            });
+                .chain()
+                .map(function(m) {
+                    return m.replace(/^\s+/, '').replace(/\s+$/, '');
+                })
+                .each(function(c) {
+                    var arr = c.split('='),
+                            key = arr[0],
+                            value = null;
+                    var size = _.size(arr);
+                    if (size > 1) {
+                        value = arr.slice(1).join('');
+                    }
+                    cookies[key] = value;
+                });
         return cookies;
     },
-
-    find: function (name) {
+    find: function(name) {
         var cookie = null,
-            list = this.findAll();
+                list = this.findAll();
 
-        _.each(list, function (value, key) {
-            if (key === name) cookie = value;
+        _.each(list, function(value, key) {
+            if (key === name)
+                cookie = value;
         });
         return cookie;
-    },
-
-    create: function (name, value, time) {
-        var today = new Date(),
-            offset = (typeof time == 'undefined') ? (1000 * 60 * 60 * 24) : (time * 1000),
-            expires_at = new Date(today.getTime() + offset);
-
-        var cookie = _.map({
-            name: value,
-            expires: expires_at.toGMTString(),
-            path: '/'
-        },function (value, key) {
-            return [(key == 'name') ? name : key, value].join('=');
-        }).join(';');
-
-        document.cookie = cookie;
-        return this;
-    },
-
-    destroy: function (name, cookie) {
-        if (cookie = this.find(name)) {
-            this.create(name, null, -1000000);
-        }
-        return this;
     }
 };
 
@@ -61,7 +40,7 @@ CookieObject = {
  * Возврат 3 списков для певого пунка меню
  */
 Get3UlMenu = {
-    getHTMLFirstMenu: function () {
+    getHTMLFirstMenu: function() {
         var subMenu = $j('.krovlya + ul');
         var currentHtmlOfSubMenu = $j(subMenu).html();
         currentHtmlOfSubMenu = currentHtmlOfSubMenu.replace(/<\/ul><\/li>/g, '').replace(/<ul>/g, '</li>');
@@ -69,7 +48,7 @@ Get3UlMenu = {
 
         var reformatedList = '<ul>';
         var count = 0;
-        $j($j('<ul>' + currentHtmlOfSubMenu + '</ul>')).find('li').each(function () {
+        $j($j('<ul>' + currentHtmlOfSubMenu + '</ul>')).find('li').each(function() {
             if (count == 10 || count == 20) {
                 reformatedList += '</ul><ul>';
             }
@@ -85,46 +64,50 @@ Get3UlMenu = {
  * Объект для вывода списка доступных городов
  * **/
 ChangingCity = {
-    getModalWindows: function (data) {
-        var cities = data['elements']['126be91c-d8af-4d0e-807f-6b97e7e42708']['option'];
+    getModalWindows: function(data) {
+        citiesData = $j(data);
         var listOfCities = '<ul>';
-
-        for (field in cities) {
-            if (cities[field].name[0] == '-') {
-                listOfCities += '<li class="second_level" onclick="onCityClick(this);">' + cities[field].name.substring(1) + '</li>';
-            }
-            else {
-                listOfCities += '<li class="first_level">' + cities[field].name + '</li>';
-            }
-        }
+        $j(citiesData).find('.category-wrapper').each(function() {
+            listOfCities += '<li class="first_level">' + $j(this).find('.jbcategory-link').text() + '</li>';
+            $j(this).find('.wrapper-item-desc').each(function() {
+                listOfCities += '<li class="second_level" onclick="onCityClick(this);">' + $j(this).find('.city_val').text() + '</li>';
+            });
+        });
         listOfCities += '</ul>';
-
         $j('#list_of_cities, .cities').html(listOfCities);
-
-        if (CookieObject.find('city') == null) {
-            $j('#modal_cities').show();
-        }
-        else {
-            $j('.btn_city, .current_city').html(CookieObject.find('city'));
-        }
     }
 };
 
 /**
  * Функция обработчик для события изменения города
  * **/
-var onCityClick = function (e) {
-    var city = $j(e).html();
+var onCityClick = function(e) {
+    var city = $j.trim($j(e).html());
 
     //Сохраняем город в cookie
-    CookieObject.create('city', city);
+    var today = new Date();
+    var offset = 1000 * 60 * 60 * 24;
+    var expires_at = new Date(today.getTime() + offset).toGMTString();
+
+    var cookie = "city=value; path=/; expires=" + expires_at;
+    document.cookie = cookie.replace('value', city);
+
+    $j(citiesData).find('.category-wrapper').each(function() {
+        $j(this).find('.wrapper-item-desc').each(function() {
+            if ($j.trim($j(this).find('.city_val').text()) == city) {
+                var currentTelephone = $j(this).find('.telephones_val div:first-child').text();
+                $j('.contact .number').html($j.trim(currentTelephone));
+            }
+        });
+    });
 
     $j('.btn_city, .current_city').html(city);
     $j('#list_of_cities_div, #modal_cities').hide();
 }
 
-$j = jQuery.noConflict();
-$j(function () {
+
+$j(function() {
+    
     /**
      * FANCY BOX -> вывод модальных окон для заказа завяки и звонка
      * **/
@@ -135,13 +118,13 @@ $j(function () {
     $j('.add-to-cart').attr('value', '');
     $j('.jsSubmit.button.rborder').attr('value', '');
     /**Выводит список доступных городов**/
-    $j('.btn_city').click(function () {
+    $j('.btn_city').click(function() {
         $j('#list_of_cities_div').toggle();
         return false;
     });
 
     /**Закрытие окна с выводом списка городов**/
-    $j('.close').click(function () {
+    $j('.close').click(function() {
         $j('#list_of_cities_div').toggle();
     });
 
