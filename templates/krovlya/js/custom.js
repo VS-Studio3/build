@@ -103,7 +103,8 @@ var onCityClick = function(e) {
 
     $j('.btn_city, .current_city').html(city);
     $j('#list_of_cities_div, #modal_cities').hide();
-    $j('#current_city_form input:text').val(CookieObject.find('city'));
+    $j('#current_city_form input:text').val(city);
+    $j('.samovivoz_description').html('Вы можете самостоятельно забрать продукцию со склада в г.' + city + '<div class="city">' + 'г.' + city + "</div>");
 }
 
 

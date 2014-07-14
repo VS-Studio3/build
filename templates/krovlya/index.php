@@ -39,6 +39,8 @@ if (is_object($pmenu)) {
         <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template; ?>/js/custom.js"></script>
         <script type="text/javascript">
             $j(document).ready(function() {
+                $j('input[value="dostavka-kurerom"]').before('<div class="samovivoz_description"></div>');
+                
                 Get3UlMenu.getHTMLFirstMenu();
                 ChangingCity.getModalWindows($j('#cities_module_wrapper').clone().html());
                 $j('#cities_module_wrapper').hide();
@@ -49,6 +51,8 @@ if (is_object($pmenu)) {
                 else {
                     $j('.btn_city, .current_city').html(CookieObject.find('city'));
                     $j('#current_city_form input:text').val(CookieObject.find('city'));
+                    $j('.samovivoz_description').html('Вы можете самостоятельно забрать продукцию со склада в г.' + CookieObject.find('city') + '<div class="city">' + 'г.' + CookieObject.find('city') + "</div>");
+                    
 
                     $j(citiesData).find('.category-wrapper').each(function() {
                         $j(this).find('.wrapper-item-desc').each(function() {
