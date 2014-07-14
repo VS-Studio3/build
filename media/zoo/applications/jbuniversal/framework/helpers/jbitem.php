@@ -80,8 +80,8 @@ class JBItemHelper extends AppHelper
         } else if (JString::strtolower(get_class($element)) == 'elementimage') {
 
             return $element->render(array(
-                'width'  => 75,
-                'height' => 75,
+                'width'  => 287,
+                'height' => 287,
             ));
             
         } else if (JString::strtolower(get_class($element)) == 'elementimagepro') {
