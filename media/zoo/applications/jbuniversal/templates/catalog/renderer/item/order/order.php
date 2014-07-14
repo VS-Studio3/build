@@ -14,7 +14,10 @@
     <?php echo $this->renderPosition("street"); ?>
     <?php echo $this->renderPosition("house"); ?>
     <?php echo $this->renderPosition("data_dostavki"); ?>
+    <div id="current_date"></div>
     <?php echo $this->renderPosition("vremya_dostavki"); ?>
+    </div>
+    
     <?php echo $this->renderPosition("comments"); ?>
 
     <div id="go_to_paying">Продолжить</div>
