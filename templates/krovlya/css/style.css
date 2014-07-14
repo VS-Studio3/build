@@ -27,7 +27,7 @@ body {
   background-color: #ffffff;
   width: 1000px;
   margin: 0 auto;
-  height: auto!important;
+  height: auto !important;
 }
 *,
 *:before,
@@ -172,7 +172,7 @@ fieldset {
   margin-bottom: 20px;
 }
 .header .contact .online .btn {
-  padding: 10px 50px!important;
+  padding: 10px 50px !important;
 }
 .header .contact .btn {
   text-transform: uppercase;
@@ -262,7 +262,7 @@ fieldset {
 }
 .header .moduletable .menu li div ul {
   margin-top: 0px;
-  padding: 20px 20px 20px 30px ;
+  padding: 20px 20px 20px 30px;
   display: none;
   left: 250px;
   width: 250px;
@@ -419,17 +419,17 @@ fieldset {
   position: relative;
 }
 #search_wrapper input[type='text'] {
-  height: 36px!important;
+  height: 36px !important;
   padding-right: 61px;
-  width: 280px!important;
+  width: 280px !important;
   box-shadow: inset 0px 0px 8px rgba(185, 171, 171, 0.6) !important;
-  border-radius: 0px!important;
-  border: 1px solid #c6c6c6!important;
+  border-radius: 0px !important;
+  border: 1px solid #c6c6c6 !important;
   font-size: 17px;
   margin-top: 35px;
 }
 #search_wrapper input[type='submit'] {
-  height: 33px!important;
+  height: 33px !important;
   position: absolute;
   background: url("../images/search.png") no-repeat 0px 0px;
   overflow: hidden;
@@ -522,7 +522,7 @@ fieldset {
 .newss .junewsultra .news {
   width: 250px;
   display: inline-block;
-  margin-top: 0px!important;
+  margin-top: 0px !important;
 }
 #jbzoo .clear.clr {
   display: none;
@@ -538,8 +538,8 @@ fieldset {
   margin: 0px -36px;
 }
 .items .rborder {
-  margin: 0px 36px 20px!important;
-  width: 248px!important;
+  margin: 0px 36px 20px !important;
+  width: 248px !important;
 }
 .items .rborder .jbzoo-item {
   margin: 0px;
@@ -612,7 +612,7 @@ fieldset {
   font-style: italic;
 }
 .jbzoo-view-item .item-image {
-  margin: 0px!important;
+  margin: 0px !important;
 }
 .jbzoo-view-item .item-image img {
   margin: 0px;
@@ -623,9 +623,9 @@ fieldset {
   margin-top: 15px;
   font-size: 16px;
   color: #000000;
-  text-decoration: none!important;
-  font-weight: normal!important;
-  font-style: normal!important;
+  text-decoration: none !important;
+  font-weight: normal !important;
+  font-style: normal !important;
 }
 .jbzoo-view-item .description div {
   padding: 10px 0px;
@@ -637,9 +637,9 @@ fieldset {
 .jbzoo-view-item .description .text_about {
   font-size: 16px;
   color: #000000;
-  text-decoration: none!important;
-  font-weight: normal!important;
-  font-style: normal!important;
+  text-decoration: none !important;
+  font-weight: normal !important;
+  font-style: normal !important;
 }
 .jbzoo-view-item .description .text_about p {
   margin: 0px;
@@ -815,12 +815,12 @@ fieldset {
   overflow: hidden;
   margin: 0px -30px;
   /* div:hover{
-    cursor: pointer;
-    a{
-      text-decoration: underline;
-    }
-  }
-*/
+     cursor: pointer;
+     a{
+       text-decoration: underline;
+     }
+   }
+ */
 }
 .others div {
   width: 242px;
@@ -828,8 +828,8 @@ fieldset {
   display: inline-block;
 }
 .others div .item-image {
-  float: none!important;
-  margin-bottom: 30px!important;
+  float: none !important;
+  margin-bottom: 30px !important;
 }
 .others div .item-image img {
   width: 142px;
@@ -857,44 +857,44 @@ fieldset {
   display: none;
 }
 .fancybox-inner {
-  width: auto!important;
-  height: auto!important;
+  width: auto !important;
+  height: auto !important;
 }
 #zayavka {
   padding-top: 50px;
 }
 .for_buttom {
-  text-align: right!important;
+  text-align: right !important;
 }
 .for_buttom button {
   float: right;
-  background: none!important;
-  padding: 5px 10px!important;
+  background: none !important;
+  padding: 5px 10px !important;
 }
 .for_buttom button span {
-  color: #4d4b4b!important;
+  color: #4d4b4b !important;
 }
 .for_buttom button:first-child {
   float: none;
   background: url("../images/button.png") no-repeat !important;
-  background-size: cover!important;
-  padding: 8px 31px 6px!important;
+  background-size: cover !important;
+  padding: 8px 31px 6px !important;
 }
 .for_buttom button:first-child span {
-  color: #ffffff!important;
+  color: #ffffff !important;
 }
 .qq-upload-button {
   background: url("../images/button.png") no-repeat;
   background-size: cover;
   float: left;
-  padding: 0px!important;
+  padding: 0px !important;
   border: none;
   box-shadow: none;
   border-radius: 0px;
   text-shadow: none;
   width: 264px;
   height: 40px;
-  margin: 10px 0px!important;
+  margin: 10px 0px !important;
 }
 .qq-upload-button span {
   font-size: 18px;
@@ -919,7 +919,7 @@ fieldset {
   text-decoration: none;
   font-weight: bold;
   position: relative;
-  margin: 14px 0px 0px!important;
+  margin: 14px 0px 0px !important;
   border: none;
   padding: 8px 31px 6px;
   background: url("../images/button.png") no-repeat;
@@ -932,9 +932,9 @@ fieldset {
   padding: 0px;
 }
 .fancybox-skin {
-  border: 5px solid #393185!important;
-  border-radius: 20px!important;
-  padding: 0px 15px!important;
+  border: 5px solid #393185 !important;
+  border-radius: 20px !important;
+  padding: 0px 15px !important;
 }
 .foxform .fox_little_text label {
   text-transform: none;
@@ -956,8 +956,8 @@ fieldset {
   float: left;
 }
 .foxfield {
-  margin-bottom: 0px!important;
-  padding-left: 4px!important;
+  margin-bottom: 0px !important;
+  padding-left: 4px !important;
   text-align: center;
 }
 .foxfield input {
@@ -965,7 +965,7 @@ fieldset {
   border-color: #535151;
   border-width: 2px;
   height: 48px;
-  margin-bottom: 20px!important;
+  margin-bottom: 20px !important;
 }
 .foxfield textarea {
   border-radius: 0px;
@@ -973,8 +973,8 @@ fieldset {
   border-width: 2px;
   height: 105px;
   resize: none;
-  margin-top: 10px!important;
-  margin-bottom: 10px!important;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
 }
 .foxfield input:hover,
 .foxfield input:focus,
@@ -986,10 +986,10 @@ fieldset {
   background-color: none;
 }
 .fancybox-wrap {
-  width: 620px!important;
+  width: 620px !important;
 }
 .foxform {
-  margin-bottom: 0px!important;
+  margin-bottom: 0px !important;
   padding: 0px 8px 0px 11px;
 }
 .subcategories .rborder.column:hover .subcategory-title a {
@@ -1001,7 +1001,7 @@ fieldset {
   margin-left: 10px;
   position: relative;
   margin-bottom: 47px;
-  margin-right: 0px!important;
+  margin-right: 0px !important;
   display: inline-block;
 }
 .subcategories .rborder.column .subcategory {
@@ -1108,7 +1108,7 @@ fieldset {
   height: 305px;
   min-height: 305px;
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.6) !important;
-  border: 1px solid #000000!important;
+  border: 1px solid #000000 !important;
   resize: none;
   border-radius: 0px;
 }
@@ -1122,12 +1122,12 @@ fieldset {
   color: #000000;
 }
 .order_form div input[type=text] {
-  border-radius: 0px!important;
+  border-radius: 0px !important;
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.6) !important;
-  width: 357px!important;
-  height: 30px!important;
-  margin: 0px!important;
-  border: 1px solid #000000!important;
+  width: 357px !important;
+  height: 30px !important;
+  margin: 0px !important;
+  border: 1px solid #000000 !important;
 }
 .order_form .element-radio {
   margin-top: 50px;
@@ -1148,12 +1148,12 @@ fieldset {
   padding-left: 250px;
 }
 #joomla_template_dostavka input[type=text] {
-  width: 530px!important;
-  height: 46px!important;
+  width: 530px !important;
+  height: 46px !important;
   font-size: 29px;
 }
 #joomla_template_dostavka strong {
-  font-size: 29px!important;
+  font-size: 29px !important;
   font-weight: normal;
   margin-bottom: 10px;
 }
@@ -1221,14 +1221,14 @@ fieldset {
   margin-bottom: 0px;
 }
 .jsEmptyCart.empty-cart {
-  display: none!important;
+  display: none !important;
 }
 .add-to-cart {
   background: url("../images/price.png") no-repeat 0px -267px !important;
   display: inline-block !important;
   height: 40px;
   width: 40px;
-  border: none!important;
+  border: none !important;
   text-indent: -999999px !important;
   overflow: hidden;
   text-align: left;
@@ -1251,16 +1251,16 @@ fieldset {
   color: #ffffff;
   background-size: cover;
   padding: 4px 9px;
-  font-weight: normal!important;
+  font-weight: normal !important;
 }
 .jsJBZooModuleBasket .basket-link {
-  padding: 0px!important;
+  padding: 0px !important;
 }
 .jbzoo-filter .filter-element {
-  margin-bottom: 0px!important;
+  margin-bottom: 0px !important;
 }
 .jbbasket-submission .submit-button input {
-  display: none!important;
+  display: none !important;
 }
 .jbbasket-submission input[type="radio"] {
   display: none;
@@ -1333,9 +1333,9 @@ fieldset {
 }
 .about_buy_product .jsPricevalue {
   position: relative;
-  border-radius: 0px!important;
+  border-radius: 0px !important;
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.6) !important;
-  border: 1px solid #000000!important;
+  border: 1px solid #000000 !important;
   height: 50px;
   text-align: center;
   font-size: 29px;
@@ -1357,11 +1357,11 @@ fieldset {
   float: left;
 }
 .about_buy_product .how_march_product input {
-  border-radius: 0px!important;
+  border-radius: 0px !important;
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.6) !important;
-  border: 1px solid #000000!important;
-  width: 78px!important;
-  height: 50px!important;
+  border: 1px solid #000000 !important;
+  width: 78px !important;
+  height: 50px !important;
   text-align: center;
   font-size: 29px;
   color: #4d4a4a;
@@ -1385,7 +1385,7 @@ fieldset {
   display: inline-block;
 }
 .summa_products div strong {
-  font-weight: normal!important;
+  font-weight: normal !important;
 }
 .summa_products .delete_all {
   display: none;
@@ -1394,14 +1394,14 @@ fieldset {
   display: none;
 }
 .border_for_products {
-  border-top: none!important;
+  border-top: none !important;
   border: 3px solid #000000;
   position: relative;
   padding: 27px 26px 45px 60px;
 }
 .border_for_products:first-child {
   margin-top: 35px;
-  border-top: 3px solid #000000!important;
+  border-top: 3px solid #000000 !important;
 }
 #joomla_template_dostavka #current_date_form {
   position: relative;
@@ -1421,11 +1421,12 @@ fieldset {
 #joomla_template_dostavka #current_date_form .element-text input[type='text'] {
   padding-right: 50px;
   position: relative;
-  width: 220px!important;
-}
-#joomla_template_dostavka #current_date_form input {
   background: url("../images/calendar.png") 168px 0px no-repeat;
   z-index: 10;
+  width: 220px !important;
+}
+#joomla_template_dostavka #current_date_form input:hover {
+  cursor: pointer;
 }
 #joomla_template_dostavka #current_date_form #current_date {
   position: absolute;
@@ -1437,4 +1438,28 @@ fieldset {
   color: #42357f;
   width: 20px;
   text-align: center;
+}
+.notice,
+.notice_bottom,
+.attention {
+  color: #4d4a4a;
+  line-height: 22px;
+  font-style: normal;
+  font-size: 20px;
+  margin: 20px 0px 25px 0px!important;
+}
+#go_back_products:hover {
+  cursor: pointer;
+}
+#go_back_products {
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: bold;
+  background: #392d89;
+  box-shadow: inset 0px 0px 10px rgba(14, 4, 4, 0.5);
+  width: 190px;
+  text-align: center;
+  float: left;
+  padding: 10px;
+  border-radius: 5px;
 }
