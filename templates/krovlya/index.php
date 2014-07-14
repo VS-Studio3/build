@@ -21,7 +21,7 @@ if (is_object($pmenu)) {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" >
     <head>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+        
         <jdoc:include type="head" />
         <meta charset="utf-8" />
         <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/system/css/system.css" type="text/css" />
@@ -48,6 +48,7 @@ if (is_object($pmenu)) {
                 }
                 else {
                     $j('.btn_city, .current_city').html(CookieObject.find('city'));
+                    $j('#current_city_form input:text').val(CookieObject.find('city'));
 
                     $j(citiesData).find('.category-wrapper').each(function() {
                         $j(this).find('.wrapper-item-desc').each(function() {
