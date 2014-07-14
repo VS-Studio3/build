@@ -61,18 +61,19 @@ $this->app->jbassets->initJBPrice();
 <div id="pay_for_products">Оплата</div>
 
 <div class="basket">
-    <table class="jbbasket-table jsJBZooBasket">
+    <div class="jbbasket-table jsJBZooBasket">
+	<div>
     <thead>
-    <tr>
-        <th>#</th>
-        <th><?php echo JText::_('JBZOO_CART_ITEM_SKU'); ?></th>
-        <th></th>
-        <th><?php echo JText::_('JBZOO_CART_ITEM_NAME'); ?></th>
-        <th style="min-width: 70px;"><?php echo JText::_('JBZOO_CART_ITEM_PRICE'); ?></th>
-        <th><?php echo JText::_('JBZOO_CART_ITEM_QUANTITY'); ?></th>
-        <th><?php echo JText::_('JBZOO_CART_ITEM_SUBTOTAL'); ?></th>
-        <th></th>
-    </tr>
+   <!--<div>
+        <div>#</div>
+        <div><?php echo JText::_('JBZOO_CART_ITEM_SKU'); ?></div>
+        <div></div>
+        <div><?php echo JText::_('JBZOO_CART_ITEM_NAME'); ?></div>
+        <div style="min-width: 70px;"><?php echo JText::_('JBZOO_CART_ITEM_PRICE'); ?></div>
+        <div><?php echo JText::_('JBZOO_CART_ITEM_QUANTITY'); ?></div>
+        <div><?php echo JText::_('JBZOO_CART_ITEM_SUBTOTAL'); ?></div>
+        <div></div>
+    </div>-->
     </thead>
 
     <tbody>
@@ -97,12 +98,12 @@ $this->app->jbassets->initJBPrice();
 
         $image = $this->app->jbitem->renderImageFromItem($item, $imageElementId, true);
 
-        echo '<tr class="row-' . $hash . '" data-itemId="' . $item->id . '" data-hash="' . $hash . '">';
-        echo '<td>' . ++$i . '</td>';
-        echo '<td>' . $basketItem['sku'] . '</td>';
-        echo '<td>' . $image . '</td>';
-
-        echo '<td>';
+        echo '<div class="row-' . $hash . ' border_for_products" data-itemId="' . $item->id . '" data-hash="' . $hash . '">';
+     //   echo '<td>' . ++$i . '</td>';
+       // echo '<td>' . $basketItem['sku'] . '</td>';
+        echo '<div class="for_image_product">' . $image . '</div>';
+echo '<div class="about_buy_product">';
+        echo '<div class="name_product">';
         echo '<a href="' . $this->app->route->item($item) . '" title="' . $item->name . '">' . $item->name . '</a>';
 
         if (isset($basketItem['priceParams']) && !empty($basketItem['priceParams'])) {
@@ -117,45 +118,43 @@ $this->app->jbassets->initJBPrice();
             echo '<br/><span class="price-description">' . $basketItem['priceDesc'] . '</span>';
         }
 
-        echo '</td>';
-
+        echo '</div>';
+ echo '<div class="kolichestvo">';
         if ($basketItem['price']) {
-            echo '<td class="jsPricevalue" price="' . $basketItem['price'] . '">'
+            echo '<div class="jsPricevalue" price="' . $basketItem['price'] . '">'
                 . $this->app->jbmoney->toFormat($basketItem['price'], $currencyConvert)
-                . ' </td>';
+                . ' <span>*стоимость</span></div>';
         } else {
-            echo '<td> - </td>';
+            echo '<div> - </div>';
         }
 
-        echo '<td><input type="text" class="jsQuantity input-quantity" value="' . $basketItem['quantity'] . '" /></td>';
-
+        echo '<div class="how_march_product"><input type="text" class="jsQuantity input-quantity" value="' . $basketItem['quantity'] . '" /><span>*количество</span></div>';
+ echo '</div>';
         if ($basketItem['price']) {
-            echo '<td class="jsSubtotal">' . $this->app->jbmoney->toFormat($subtotal, $currencyConvert) . '</td>';
+            echo '<div class="jsSubtotal">' . $this->app->jbmoney->toFormat($subtotal, $currencyConvert) . '</div>';
         } else {
-            echo '<td> - </td>';
+            echo '<div> - </div>';
         }
 
-        echo '<td><input type="button" class="jbbutton jsDelete" itemid="' . $item->id . '" value="' . JText::_('JBZOO_CART_DELETE') . '" /></td>';
-        echo "</tr>\n";
+        echo '<div class="deleted_product jbbutton jsDelete" itemid="' . $item->id . '" ></div>';
+        echo "</div>\n";
+		 echo '</div>';
     }
     ?>
-    </tbody>
-
-    <tfoot>
-    <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td><strong><?php echo JText::_('JBZOO_CART_TOTAL'); ?>:</strong></td>
-        <td class="jsTotalCount"><?php echo $count; ?></td>
-        <td class="jsTotalPrice"><?php echo $this->app->jbmoney->toFormat($summa, $currencyConvert); ?></td>
-        <td>
+	 <div class="summa_products">
+        <div><strong><?php echo JText::_('JBZOO_CART_TOTAL'); ?>:</strong></div>
+        <div class="jsTotalCount"><?php echo $count; ?></div>
+        <div class="jsTotalPrice"><?php echo $this->app->jbmoney->toFormat($summa, $currencyConvert); ?></div>
+        <div class="delete_all">
             <input type="button" class="jbbutton jsDeleteAll" value="<?php echo JText::_('JBZOO_CART_REMOVE_ALL'); ?>"/>
-        </td>
-    </tr>
+        </div>
+    </div>
+    </tbody>
+</div>
+    <tfoot>
+   
     </tfoot>
-</table>
+</div>
     <div id="go_to_order">Продолжить</div>
 </div>
 
