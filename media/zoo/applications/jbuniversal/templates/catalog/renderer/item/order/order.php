@@ -129,6 +129,24 @@
             alert('Заполните поля, отмеченные *');
     });
     
+    //Назад к товарам
+    $j('#go_back_products').click(function() {
+        $j('#basket').addClass('active').removeClass('un_active');
+            $j('#order_form').removeClass('active').addClass('un_active');
+
+            $j('.order_form').hide();
+            $j('.basket').show();
+    });
+    
+    //Назад к оформлению
+    $j('#go_back_paying').click(function() {
+        $j('#order_form').addClass('active').removeClass('un_active');
+            $j('#pay_for_products').removeClass('active').addClass('un_active');
+
+            $j('.pay_for_products').hide();
+            $j('.order_form').show();
+    });
+    
     var citiesList = $j('#cities_module_wrapper');
     
     setSamovivozContent(CookieObject.find('city'), citiesData);
