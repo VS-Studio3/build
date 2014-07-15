@@ -44,6 +44,9 @@
 <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <script type="text/javascript">
     $j(function() {
+        $j('.pay_for_products input:radio:eq(0) + label').after('<div class="option">Вы можете оплатить Ваш заказ в ближайшем офисе продаж.</div><div class="print_order">Распечатать заказ</div>');
+        $j('.pay_for_products input:radio:eq(1) + label').after('<div class="option">Вы можете оплатить заказ банковской картой.</div><div class="pay">Оплатить</div>');
+        $j('.pay_for_products input:radio:eq(2) + label').after('<div class="option">Вы можете оплатить свой счет через любое отделение банка.</div><div class="get_bill">Выставить счет</div>');
         $j('.order_form strong').each(function(number){
             var strongNumbersList = "0, 2, 3, 5, 6, 7";
             if(strongNumbersList.indexOf(number.toString()) != -1){
