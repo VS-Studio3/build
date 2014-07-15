@@ -48,8 +48,11 @@
         $j('.pay_for_products input:radio:eq(1) + label').after('<div class="option">Вы можете оплатить заказ банковской картой.</div><div class="pay">Оплатить</div>');
         $j('.pay_for_products input:radio:eq(2) + label').after('<div class="option">Вы можете оплатить свой счет через любое отделение банка.</div><div class="get_bill">Выставить счет</div>');
 
+        //Распечатать заказ
         $j('.print_order').click(function() {
-
+            $j.post('/genaratingPDF.php', {order_id : '<?php echo uniqid(); ?>'}, function(data){
+                window.location.href = "/printPDF.php";
+            });
         });
 
         $j('.order_form strong').each(function(number) {
@@ -121,7 +124,7 @@
 
         //Переход на способ оплаты
         $j('#go_to_paying').click(function() {
-            var isDataValid = true;
+            /*var isDataValid = true;
             var isEmailValid = true;
 
             if ($j('.order_form input:text').eq(0).val().length == 0
@@ -145,19 +148,19 @@
                 });
             }
 
-            if (isDataValid && isEmailValid) {
+            if (isDataValid && isEmailValid) {*/
                 $j('#pay_for_products').addClass('active').removeClass('un_active');
                 $j('#order_form').removeClass('active').addClass('un_active');
 
                 $j('.order_form').hide();
                 $j('.pay_for_products').show();
-            }
+            /*}
             else if (!isDataValid && isEmailValid) {
                 alert('Заполните поля, отмеченные *');
             }
             else if (!isEmailValid && isDataValid) {
                 alert('Введите корректный E-mail');
-            }
+            }*/
         });
 
         //Назад к товарам
