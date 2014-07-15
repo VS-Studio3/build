@@ -62,7 +62,7 @@ if (!empty($basketItems)) {
     }
 
 } else {
-    echo '<p>' . JText::_('JBZOO_CART_ITEMS_NOT_FOUND') . '</p>';
+    echo '<p class="emty-car-basket">' . JText::_('JBZOO_CART_ITEMS_NOT_FOUND') . '</p>';
 }
 
 echo '<div class="clr"></div>';
