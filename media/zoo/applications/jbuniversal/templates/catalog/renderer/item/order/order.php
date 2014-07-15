@@ -103,11 +103,19 @@
     //Переход на способ оплаты
     $j('#go_to_paying').click(function() {
         var isDataValid = true;
+        var isEmailValid = true;
 
         if ($j('.order_form input:text').eq(0).val().length == 0
                 || $j('.order_form input:text').eq(2).val().length == 0
                 || $j('.order_form input:text').eq(3).val().length == 0) {
             isDataValid = false;
+        }
+        
+        if($j('.order_form input:text').eq(3).val().length != 0){
+            var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
+            if(!pattern.test($j('.order_form input:text').eq(3).val())){
+                isEmailValid = false;
+            }
         }
 
         if (isDostavkaKureromChecked) {
@@ -118,15 +126,19 @@
             });
         }
 
-        if (isDataValid) {
+        if (isDataValid && isEmailValid) {
             $j('#pay_for_products').addClass('active').removeClass('un_active');
             $j('#order_form').removeClass('active').addClass('un_active');
 
             $j('.order_form').hide();
             $j('.pay_for_products').show();
         }
-        else
+        else if(!isDataValid && isEmailValid){
             alert('Заполните поля, отмеченные *');
+        }
+        else if(!isEmailValid && isDataValid){
+            alert('Введите корректный E-mail');
+        }
     });
     
     //Назад к товарам
