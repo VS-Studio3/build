@@ -18,9 +18,9 @@ $view = $this->getView();
 $this->app->jbassets->basket();
 $this->app->jbassets->initJBPrice();
 ?>
-<div id="basket">Покупки</div>
-<div id="order_form">Оформление заказа</div>
-<div id="pay_for_products">Оплата</div>
+<div id="basket">Покупки&gt;</div>
+<div id="order_form">Оформление заказа&gt;</div>
+<div id="pay_for_products">Оплата&gt;</div>
 
 <div class="basket">
     <div id="basket_title">Перед оформлением заказа проверьте Ваш список покупок</div>

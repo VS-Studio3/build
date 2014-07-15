@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 defined('_JEXEC') or die;
 
 /* The following line gets the application object for things like displaying the site name */
