@@ -134,7 +134,7 @@ $j(function() {
     $j('.add-to-cart').attr('value', '');
     $j('.jsSubmit.button.rborder').attr('value', '');
     /**Выводит список доступных городов**/
-    $j('.btn_city').click(function() {
+    $j('.only_for_btn').click(function() {
         $j('#list_of_cities_div').toggle();
         return false;
     });
