@@ -1463,3 +1463,18 @@ fieldset {
   padding: 10px;
   border-radius: 5px;
 }
+#go_back_paying:hover {
+  cursor: pointer;
+}
+#go_back_paying {
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: bold;
+  background: #392d89;
+  box-shadow: inset 0px 0px 10px rgba(14, 4, 4, 0.5);
+  width: 190px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
