@@ -1529,3 +1529,6 @@ fieldset {
   background: url("../images/buy.png") 0px 0px no-repeat;
   border: none;
 }
+.jsRemoveFromCart {
+  display: none!important;
+}
