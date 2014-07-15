@@ -23,6 +23,7 @@ $this->app->jbassets->initJBPrice();
 <div id="pay_for_products">Оплата</div>
 
 <div class="basket">
+    <div id="basket_title">Перед оформлением заказа проверьте Ваш список покупок</div>
     <div class="jbbasket-table jsJBZooBasket">
 	<div>
     <thead>
