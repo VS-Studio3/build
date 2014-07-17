@@ -72,6 +72,12 @@ fieldset {
 .items.items-col-3 {
   overflow: hidden;
 }
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
 /* Header
 -----------------------------------------------------------------------------*/
 .header {
@@ -436,6 +442,7 @@ fieldset {
   border: 1px solid #c6c6c6 !important;
   font-size: 17px;
   margin-top: 35px;
+  background-position: 180px 9px;
 }
 #search_wrapper input[type='submit'] {
   height: 33px !important;
@@ -1290,12 +1297,22 @@ fieldset {
   vertical-align: top;
   margin-right: 17px;
 }
+table.jsJBZooBasket {
+  border-collapse: collapse;
+}
 .about_buy_product {
   display: inline-block;
   vertical-align: top;
 }
 .about_buy_product div {
   display: inline-block;
+}
+.about_buy_product .product-param {
+  display: block;
+  font-size: 18px;
+  margin-right: 10px;
+  width: 216px;
+  margin-bottom: 5px;
 }
 .about_buy_product .deleted_product {
   background: url("../images/delet.png") 0px 0px no-repeat;
@@ -1368,6 +1385,7 @@ fieldset {
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.6) !important;
   border: 1px solid #000000 !important;
   width: 78px !important;
+  min-width: 78px !important;
   height: 50px !important;
   text-align: center;
   font-size: 29px;
@@ -1382,7 +1400,7 @@ fieldset {
 }
 .summa_products {
   margin: 10px 0px;
-  padding-left: 63px;
+  text-align: center;
 }
 .summa_products div {
   color: #382c88;
@@ -1405,6 +1423,9 @@ fieldset {
   border: 3px solid #000000;
   position: relative;
   padding: 27px 26px 45px 60px;
+}
+.basket .border_for_products {
+  margin-top: -5px;
 }
 .border_for_products:first-child {
   border-top: 3px solid #000000 !important;

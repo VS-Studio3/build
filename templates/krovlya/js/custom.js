@@ -75,9 +75,9 @@ Get3UlMenu = {
 /**
  * Объект для вывода списка доступных городов
  * **/
-ChangingCity = {
+var ChangingCity = {
     getModalWindows: function(data) {
-        citiesData = $j(data);
+        var citiesData = $j(data);
         var listOfCities = '<ul>';
         $j(citiesData).find('.category-wrapper').each(function() {
             listOfCities += '<li class="first_level">' + $j(this).find('.jbcategory-link').text() + '</li>';
