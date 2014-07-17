@@ -871,10 +871,6 @@ fieldset {
 .fox-copyright {
   display: none;
 }
-.fancybox-inner {
-  width: auto !important;
-  height: auto !important;
-}
 #zayavka {
   padding-top: 50px;
 }
@@ -999,9 +995,6 @@ fieldset {
   border-color: #535151;
   border-width: 2px;
   background-color: none;
-}
-.fancybox-wrap {
-  width: 620px !important;
 }
 .foxform {
   margin-bottom: 0px !important;
