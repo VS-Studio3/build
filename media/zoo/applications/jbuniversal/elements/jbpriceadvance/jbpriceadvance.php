@@ -164,7 +164,7 @@ class ElementJBPriceAdvance extends Element implements iSubmittable
      * Get variation list
      * @return array
      */
-    protected function _getVariations()
+    public function _getVariations()
     {
         $result = array();
 
@@ -733,7 +733,6 @@ class ElementJBPriceAdvance extends Element implements iSubmittable
                 if (self::PARAMS_TMPL_SELECT == $paramsTmpl) {
                     $html[$i] = $jbhtml->select($paramsList, uniqid('jbprice-'), 'class="jsParam" data-index="p' . $i . '-"', $default);
                     $html[$i] = '<div class="jbprice-param-select jbprice-param-list jbprice-param-list-' . $i . '">' . $html[$i] . '</div>';
-
                 } else if (self::PARAMS_TMPL_RADIO == $paramsTmpl) {
 
                     $html[$i] = $jbhtml->radio($paramsList, uniqid('jbprice-'), '', $default);

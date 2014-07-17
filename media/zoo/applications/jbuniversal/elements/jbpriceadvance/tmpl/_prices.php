@@ -9,36 +9,40 @@
  * @license     http://jbzoo.com/license-pro.php JBZoo Licence
  * @coder       Denis Smetannikov <denis@jbzoo.com>
  */
-
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
 
-if (count($currencyList) > 1) : ?>
+if (count($currencyList) > 1) :
+    ?>
     <div class="jbprice-currency-list not-paid-box">
         <?php foreach ($currencyList as $currency) : ?>
             <span class="jbprice-currency jsPriceCurrency jbcurrency jbcurrency-<?php echo strtolower($currency); ?>"
                   data-currency="<?php echo $currency; ?>"
                   title="<?php echo JText::_('JBZOO_JBCURRENCY_' . $currency); ?>"><?php echo $currency; ?></span>
-        <?php endforeach; ?>
+              <?php endforeach; ?>
         <div class="clear clr"></div>
     </div>
 <?php endif; ?>
 
-<?php 
-	$min_price = array();
-	foreach ($prices as $value) { 
+<?php
+echo '<div class="prices_list">';
+$min_price = array();
+foreach ($prices as $value) {
+    foreach ($value["prices"] as $valarr) {
+        array_push($min_price, (int) $valarr["totalNoFormat"]);
+    }
+}
 
-		foreach ($value["prices"] as $valarr) { 
-		 array_push($min_price, (int)$valarr["totalNoFormat"]);
-		//echo $valarr["totalNoFormat"].'<br>';
-			
-		}
-	}
-	
-	?>
-	
-	Цена от <?php echo min($min_price); ?> р
+$text = 'Цена ';
+if (count($min_price) == 1) {
+    $text = $text . $min_price[0] . ' р.';
+} else {
+    $text = $text . 'oт ' . min($min_price) . ' р.';
+}
+echo $text;
+echo '</div>';
+?> 
 
 <div class="jbprice-price">
     <?php if ($discount['value'] == 0) : ?>
@@ -106,11 +110,11 @@ if (count($currencyList) > 1) : ?>
 
 </div>
 
-<?php if ((int)$params->get('description_show', 0)) : ?>
+<?php if ((int) $params->get('description_show', 0)) : ?>
     <div class="jbprice-description jsDescription"></div>
 <?php endif; ?>
 
-<?php if ((int)$params->get('params_tmpl', 1)) : ?>
+<?php if ((int) $params->get('params_tmpl', 1)) : ?>
     <div class="jbprice-selects">
         <?php echo $selects; ?>
         <div class="clr"></div>
