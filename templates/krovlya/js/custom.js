@@ -127,10 +127,7 @@ $j(function() {
     /**
      * FANCY BOX -> вывод модальных окон для заказа завяки и звонка
      * **/
-    $j('a.btn_zayavka, a.btn_zvonok').fancybox({
-        scrolling: 'no',
-        autoScale: false
-    });
+    $j('a.btn_zayavka, a.btn_zvonok').fancybox();
     $j('.add-to-cart').attr('value', '');
     $j('.jsSubmit.button.rborder').attr('value', '');
     /**Выводит список доступных городов**/

@@ -25,6 +25,21 @@ if (count($currencyList) > 1) : ?>
     </div>
 <?php endif; ?>
 
+<?php 
+	$min_price = array();
+	foreach ($prices as $value) { 
+
+		foreach ($value["prices"] as $valarr) { 
+		 array_push($min_price, (int)$valarr["totalNoFormat"]);
+		//echo $valarr["totalNoFormat"].'<br>';
+			
+		}
+	}
+	
+	?>
+	
+	Цена от <?php echo min($min_price); ?> р
+
 <div class="jbprice-price">
     <?php if ($discount['value'] == 0) : ?>
         <table cellpadding="0" cellspacing="0" border="0" class="no-border">

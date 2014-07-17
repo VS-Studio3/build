@@ -22,6 +22,21 @@ $iniqId = uniqid('jbprice-adv-');
 <div class="jsJBPriceAdvance jbprice-advance <?php echo $uniqClass; ?>" id="<?php echo $iniqId; ?>">    
     <?php echo $skuTmpl; ?>
     <?php echo $balanceTmpl; ?>
+	
+	<?php 
+	foreach ($prices as $value) { 
+
+		foreach ($value["prices"] as $valarr) { 
+		 //array_push($min_price, (int)$valarr["totalNoFormat"]);
+		echo $valarr["totalNoFormat"].'<br>';
+			
+		}
+	}
+	
+	?>
+	
+
+	
     <?php echo $pricesTmpl; ?>
     <?php echo $countTmpl; ?>
     <?php echo $buttonsTmpl; ?>

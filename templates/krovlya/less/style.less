@@ -81,7 +81,7 @@ fieldset {
     height: 199px;
     text-align: right;
     display: inline-block;
-    width: 360px;
+    width: 347px;
     padding: 25px 40px 0px 40px;
     .twitter {
       width: 24px;
@@ -153,7 +153,7 @@ fieldset {
     position: relative;
     vertical-align: top;
     height: 199px;
-    width: 250px;
+    width: 263px;
     display: inline-block;
     .number {
       font-size: 27px;
@@ -202,24 +202,28 @@ fieldset {
   }
   .moduletable {
     text-align: justify;
+    .menu > li{
+      padding: 5px 9px 3px!important;
+    }
     .menu {
       background-color: #4d4b4b;
       margin: 0px;
       -webkit-box-shadow: 0px 1px 4px rgba(15, 8, 8, 1);
       -moz-box-shadow: 0px 1px 4px rgba(15, 8, 8, 1);
       box-shadow: 0px 1px 4px rgba(15, 8, 8, 1);
-      padding: 0px 5px 0px;
+      padding: 0px 20px 0px;
       clear: both;
       width: 100%;
-      display: table;
+      display: block;
+      height: 87px;
       li {
-        height: 87px;
+        height: 100px;
         z-index: 25;
         vertical-align: bottom;
         position: relative;
-        display: table-cell;
+        display: inline-block;
         min-width: 123px;
-        padding: 0px 0px;
+        padding: 0px 5px;
         text-align: center;
         list-style-type: none;
         .house {
@@ -236,28 +240,31 @@ fieldset {
           font-size: 15px;
           display: block;
           font-weight: bold;
-          margin: 0px 5px;
-          height: 80px;
+          margin: 0px;
+          height: 78px;
           text-align: center;
           color: #ffffff;
           padding-top: 5px;
+          border-radius: 3px;
           text-align: center;
           text-decoration: none;
           text-transform: uppercase;
           span {
             position: absolute;
-            bottom: 6px;
-            width: 92%;
+            bottom: 20px;
+            width: 90%;
             text-align: center;
             display: block;
           }
+        }
+        div > ul{
+          margin-top: -83px;
         }
         div {
           position: relative;
           z-index: 9;
           top: 0px;
           ul {
-            margin-top: 0px;
             padding: 20px 20px 20px 30px;
             display: none;
             left: 250px;
@@ -315,6 +322,7 @@ fieldset {
           box-shadow: 0px 0px 5px rgba(196, 196, 196, 0.95);
           padding: 20px;
           position: absolute;
+          top: 91px;
           border-radius: 5px;
           z-index: 15;
           li {
@@ -334,9 +342,9 @@ fieldset {
       }
       li:hover {
         a {
-          -webkit-box-shadow: 1px 1px 8px 0px rgba(0, 0, 0, 0.75);
-          -moz-box-shadow: 1px 1px 8px 0px rgba(0, 0, 0, 0.75);
-          box-shadow: 1px 1px 8px 0px rgba(0, 0, 0, 0.75);
+          -webkit-box-shadow: inset -2px -1px 7px 0px #000000, inset 0px -1px 6px 0px #cccccc;
+          -moz-box-shadow: inset -2px -1px 7px 0px #000000, inset 0px -1px 6px 0px #cccccc;
+          box-shadow: inset -2px -1px 7px 0px #000000, inset 0px -1px 6px 0px #cccccc;
           background-color: #383085;
           padding-top: 5px;
         }
@@ -416,9 +424,10 @@ fieldset {
   content: "";
   position: absolute;
   right: 0px;
-  border-style: dotted;
+  border-style: dashed;
   border-width: 1px 1px;
   height: 68px;
+  border-color: #b8b7b7;
 }
 
 #search_wrapper {
@@ -426,7 +435,7 @@ fieldset {
   input[type='text'] {
     height: 36px !important;
     padding-right: 61px;
-    width: 280px !important;
+    width: 267px !important;
     box-shadow: inset 0px 0px 8px rgba(185, 171, 171, 0.6) !important;
     border-radius: 0px !important;
     border: 1px solid #c6c6c6 !important;
@@ -450,9 +459,10 @@ fieldset {
   position: absolute;
   left: 0px;
   content: "";
-  border-style: dotted;
+  border-style: dashed;
   border-width: 1px 1px;
   height: 68px;
+  border-color: #b8b7b7;
 }
 
 .header .moduletable .menu > li:hover > a + * {
@@ -818,7 +828,7 @@ fieldset {
     color: #4d4b4b;
     text-align: right;
     position: relative;
-    margin-right: 35px;
+    margin-right: 46px;
     display: inline-block;
     border-bottom: 1px dashed #4d4b4b;
   }
@@ -838,22 +848,22 @@ fieldset {
   display: none;
   background: #ffffff;
   position: absolute;
-  padding: 15px;
+  padding: 15px 38px;
   z-index: 40;
-  right: 0px;
-  top: 100px;
+  right: 20px;
+  top: 90px;
   width: 435px;
-  border: 5px solid #383085;
+  border: 3px solid #383085;
   border-radius: 10px;
   a {
     font-size: 16px;
     color: #4d4b4b;
     line-height: 16px;
     float: right;
-
+    text-decoration: none;
   }
   ul {
-    padding: 25px 0px 0px 0px;
+    padding: 30px 0px 20px 0px;
     margin: 0px;
     li {
       list-style-type: none;
@@ -866,7 +876,11 @@ fieldset {
     }
     li.first_level {
       color: #4d4b4b;
-      margin-bottom: 20px;
+      margin-bottom: 13px;
+      margin-top: 30px;
+    }
+    li.first_level:first-child{
+      margin-top: 0px;
     }
   }
 }
@@ -930,8 +944,7 @@ fieldset {
 }
 
 .fancybox-inner {
-  width: auto !important;
-  height: auto !important;
+
 }
 
 #zayavka {
@@ -963,7 +976,7 @@ fieldset {
   background: url("../images/button.png") no-repeat;
   background-size: cover;
   float: left;
-  padding: 0px !important;
+  padding: 10px !important;
   border: none;
   box-shadow: none;
   border-radius: 0px;
@@ -1061,9 +1074,6 @@ fieldset {
   }
 }
 
-.fancybox-wrap {
-  width: 620px !important;
-}
 
 .foxform {
   margin-bottom: 0px !important;
@@ -1111,7 +1121,7 @@ fieldset {
 }
 
 .item-111 {
-  width: 200px;
+  width: 220px;
 }
 
 .subcategories {
@@ -1647,4 +1657,9 @@ fieldset {
 
 .jsRemoveFromCart{
   display: none!important;
+}
+.emty-car-basket{
+  position: relative;
+  background: url("../images/price.png")  no-repeat 150px -262px !important;
+  padding-right: 45px!important;
 }
