@@ -1193,7 +1193,7 @@ function Output($name='', $dest='')
 	{
 		if($name=='')
 		{
-			$name = 'doc.pdf';
+			$name = 'order.pdf';
 			$dest = 'I';
 		}
 		else

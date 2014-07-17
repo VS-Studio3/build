@@ -101,7 +101,7 @@ if (is_object($pmenu)) {
                 <div class="contact">
                     <p class="number">+7 (000) 000 00 00</p>
 
-                    <div class="only_for_btn"> <div class="btn_city" style="margin-bottom: 20px;"></div></div>
+                    <div class="only_for_btn"> <div class="btn_city" style="margin-bottom: 20px;">Выбрать город</div></div>
                     <div id="list_of_cities_div">
                         <a href="#" class="close">ЗАКРЫТЬ X</a>
                         <div class="current_city"></div>
