@@ -1332,7 +1332,7 @@ table.jsJBZooBasket {
   width: 100%;
   margin-bottom: 30px;
 }
-.about_buy_product .jsSubtotal {
+.about_buy_product .cart-sub-totalprice {
   font-size: 29px;
   line-height: 19px;
   color: #000000;

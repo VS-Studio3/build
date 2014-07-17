@@ -91,7 +91,7 @@ echo '<div class="about_buy_product">';
         echo '<div class="how_march_product"><input type="text" class="jsQuantity input-quantity" value="' . $basketItem['quantity'] . '" /><span>*количество</span></div>';
  echo '</div>';
         if ($basketItem['price']) {
-            echo '<div class="jsSubtotal">Итого: ' . $this->app->jbmoney->toFormat($subtotal, $currencyConvert) . '</div>';
+            echo '<div class="cart-sub-totalprice">Итого: <span class="jsSubtotal">' . $this->app->jbmoney->toFormat($subtotal, $currencyConvert) . '</span></div>';
         } else {
             echo '<div> - </div>';
         }
