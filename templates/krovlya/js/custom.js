@@ -119,6 +119,8 @@ var onCityClick = function(e) {
     
     //Динамический контент для самовывоза
     setSamovivozContent(city, citiesData);
+    
+    location.reload();
 }
 
 

@@ -39,6 +39,7 @@ if (is_object($pmenu)) {
         <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template; ?>/js/custom.js"></script>
         <script type="text/javascript">
             $j(document).ready(function() {
+                $j('.jsTotal').hide();
                 $j('input[value="dostavka-kurerom"]').before('<div class="samovivoz_description"></div>');
                 $j('input[value="dostavka-kurerom"]').next('label').after('<div class="attention">ВНИМАНИЕ!Стоимость доставки Вашего Заказа будет рассчитана индивидуально<br />с учетом характеристик товара и адреса доставки!<br/>Менеджер свяжется с Вами в самое ближайшее время для согласования вопросов по доставке Заказа.</div>');
                 

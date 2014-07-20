@@ -34,11 +34,14 @@ foreach ($prices as $value) {
     }
 }
 
-$text = 'Цена ';
+//var_dump($min_price);
+
+$text = '';
 if (count($min_price) == 1) {
     $text = $text . $min_price[0] . ' р.';
 } else {
-    $text = $text . 'oт ' . min($min_price) . ' р.';
+    array_shift($min_price);
+    $text = $text . 'от ' .  min($min_price) . ' р.';
 }
 echo $text;
 echo '</div>';
