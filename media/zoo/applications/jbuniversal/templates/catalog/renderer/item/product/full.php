@@ -11,15 +11,27 @@ defined('_JEXEC') or die('Restricted access');
 
 $align = $this->app->jbitem->getMediaAlign($item, $layout);
 $tabsId = uniqid('jbzoo-tabs-');
+
+$elements = $item->elements;
 ?>
 <script type="text/javascript">
     $j(function(){
-        $j('.little_img img').attr({'width' : 50, 'height' : 50});
-        $j('.little_img .preview_img').click(function(){
-            $j('.prev_img_container').show();
-            $j('.img_sourse').html($j('.first_img img').clone().attr({'width' : 500, 'height' : 500}));
+        
+});
+</script>
+<script type="text/javascript">
+    $j(function() {
+        console.log("<?php echo $this->app->jbrouter->basket(); ?>");
+        $j('a[href="#less_price_wrapper"]').click(function(){
+            $j('input[value="Наименования товара"]').val($j('h1').text());
         });
-        $j('.close_img').click(function(){
+        $j('a[href="#less_price_wrapper"]').fancybox();
+        $j('.little_img img').attr({'width': 50, 'height': 50});
+        $j('.little_img .preview_img').click(function() {
+            $j('.prev_img_container').show();
+            $j('.img_sourse').html($j('.first_img img').clone().attr({'width': 500, 'height': 500}));
+        });
+        $j('.close_img').click(function() {
             $j('.prev_img_container').hide();
         });
     });
@@ -43,6 +55,11 @@ $tabsId = uniqid('jbzoo-tabs-');
     <div class="clear clr"></div>
 
     <div class="rborder item-body">
+        <div class="item-current-price"></div>
+        <div class="less-price"><a href="#less_price_wrapper">Нашли дешевле? Поторгуемся!</a></div>
+        <div class="current_city_price_wrapper">* Цена со склада в</div>
+        <a href="#" id="select-city">Выбрать город</a>
+        <a href="#zayavka" class="btn btn_zayavka">Отправить заявку</a>
         <?php if ($this->checkPosition('price')) : ?>
             <div class="item-price-position">
                 <?php echo $this->renderPosition('price'); ?>
@@ -50,11 +67,7 @@ $tabsId = uniqid('jbzoo-tabs-');
         <?php endif; ?>
 
         <div class="color_cart">Карта цветов</div>
-        <?php if ($this->checkPosition('color')) : ?>
-            <div class="item-color-position">
-                <?php echo $this->renderPosition('color'); ?>
-            </div>
-        <?php endif; ?>
+        <div class="item-color-position"></div>
     </div>
 
     <?php if ($this->checkPosition('description')) : ?>
@@ -75,27 +88,90 @@ $tabsId = uniqid('jbzoo-tabs-');
 </div>
 
 <script type="text/javascript">
-    $j = jQuery.noConflict();
-
-    $j(function () {
-        var colorsList = {red: 'Красный', orange: 'Оранжевый'};
-
-        var currentColorsListString = $j('.item-color-position').html();
-        console.log(currentColorsListString);
-        $j('.item-color-position').empty();
-
-        var insertColorsDOMElement = '';
-
-        for (field in colorsList) {
-            var valueOfField = colorsList[field];
-
-            if (currentColorsListString.indexOf(valueOfField) != -1) {
-                insertColorsDOMElement += '<div class="' + field + '"></div>';
+    $j(function(){
+        $j('.prices_list').remove();
+        $j('#select-city').click(function(){
+            var listOfCities = $j('#list_of_cities_div').clone().wrap('<div id="list_of_cities_div">');
+            $j('#modal_cities').show();
+        });
+        /*Вывод цены по вариациям*/
+        var elementsJSON = JSON.stringify(<?php echo $elements; ?>);
+        var variations = JSON.parse(elementsJSON);
+        
+        function getCookie(name) {
+                var cookie = " " + document.cookie;
+                var search = " " + name + "=";
+                var setStr = null;
+                var offset = 0;
+                var end = 0;
+                if (cookie.length > 0) {
+                    offset = cookie.indexOf(search);
+                    if (offset != -1) {
+                        offset += search.length;
+                        end = cookie.indexOf(";", offset)
+                        if (end == -1) {
+                            end = cookie.length;
+                        }
+                        setStr = unescape(cookie.substring(offset, end));
+                    }
+                }
+                return(setStr);
             }
+            
+        $j('.current_city_price_wrapper').html($j('.current_city_price_wrapper').html() + ' ' + getCookie('city'));
+        
+        var currentUserCity = getCookie('city');
+        var translitCokieValueOfCity = null;
+        
+        var variationsObjects = [];
+        if ('variations' in variations['888260d0-e4b7-49ca-949a-063f17dedab1']){
+            $j('.jbprice-selects select:eq(0) option').each(function() {
+                    if ($j.trim($j(this).text()).indexOf(currentUserCity) != -1) {
+                        translitCokieValueOfCity = $j(this).val();
+                    }
+            });
+            
+            var varioationsInJSONFromTable = variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations'];
+            for (var field in varioationsInJSONFromTable) {
+                    if (varioationsInJSONFromTable[field]['param1'] == translitCokieValueOfCity || varioationsInJSONFromTable[field]['param1'] == '') {
+                        var varionObject = {variation: varioationsInJSONFromTable[field]['param3'],
+                            price: varioationsInJSONFromTable[field]['value'],
+                            color: varioationsInJSONFromTable[field]['param2'],
+                             city: varioationsInJSONFromTable[field]['param1'],
+                            id: varioationsInJSONFromTable[field]['param3'] + '|' + varioationsInJSONFromTable[field]['value']
+                        }
+                        variationsObjects.push(varionObject);
+                    }
+            }
+            
+            var minPrice = parseFloat(variationsObjects[0]['price']);
+            for(var i = 0; i < variationsObjects.length; i++){
+                if(parseFloat(variationsObjects[i]['price']) < minPrice){
+                    minPrice = parseFloat(variationsObjects[i]['price']);
+                }
+            }
+            $j('.item-current-price').html('Цена от ' + minPrice + ' р.');
         }
-
-        $j('.item-color-position').html(insertColorsDOMElement);
-    })
+        else{
+            //Если вариаций нет
+            $j('.item-current-price').html('Цена ' + variations['888260d0-e4b7-49ca-949a-063f17dedab1']['basic']['value'] + ' р.');
+        }
+        
+        var colorsList = {
+            '1014' : '#d0c66d', '1015' : '#e3d99b', '3003' : '#610709',
+            '3005' : '#350b0f', '3009' : '#491915', '3011' : '#5b0c11',
+            '5002' : '#10246d', '5005' : '#0f3283', '5021' : '#22546b',
+            '6002' : '#214c14', '6005' : '#092b1a', '7004' : '#7b8386',
+            '7005' : '#4b564e', '7024' : '#2e3339', '8017' : '#2b1b0c',
+            '9002' : '#dad9c4', '9003' : '#f6f5f3', '9006' : '#f6f5f3'
+        }
+        
+        $j('.jbprice-selects select:eq(1) option').each(function(number){
+            if(number != 0){
+                $j('.item-color-position').append('<div class="color" style="background-color:' + colorsList[$j(this).val()] + '"></div>');
+            }
+        });
+    });
 </script>
 
 

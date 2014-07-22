@@ -1566,4 +1566,12 @@ table.jsJBZooBasket {
   background: url("../images/price.png") no-repeat 150px -262px !important;
   padding-right: 45px!important;
 }
-
+#less_price_wrapper{
+    display:none;
+}
+.color{
+    width:40px;
+    height:40px;
+    margin-left:5px;
+    float:left;
+}

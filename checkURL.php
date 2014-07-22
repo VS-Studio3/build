@@ -252,6 +252,7 @@ function printDocument($pdfParameters){
     $productsList = explode('|', $pdfParameters['productList']);
     $countProductList = explode('|', $pdfParameters['countProductList']);
     $priceProductList = explode('|', $pdfParameters['priceProductList']);
+    $elementsParameters = explode('|', $pdfParameters['elementsParameters']);
     
     $pdf->SetFont('DejaVu', '', 9);
     
@@ -266,11 +267,14 @@ function printDocument($pdfParameters){
         $pdf->SetXY(100, $pdf->GetY());
         $pdf->Write(5, $countProductList[$i]);
         
+        $pdf->SetXY(120, $pdf->GetY());
+        $pdf->Write(5, $elementsParameters[$i]);
+        
         $pdf->SetXY(130, $pdf->GetY());
         $pdf->Write(5, $priceProductList[$i]);
         
         $pdf->SetXY(165, $pdf->GetY());
-        $pdf->Write(5, doubleval(str_replace(',', '.', str_replace(' ', '', $priceProductList[$i]))) * $countProductList[$i]);        
+        $pdf->Write(5, doubleval(str_replace(',', '.', str_replace(' ', '', $priceProductList[$i]))) * $countProductList[$i] . ' р.');        
         
         $pdf->SetXY(20, $pdf->GetY());
         $pdf->MultiCell(80, 5, $productsList[$i], 1);
@@ -286,12 +290,12 @@ function printDocument($pdfParameters){
     $pdf->Line(165, $leftLinePointY, 165, $Y);
     
     $pdf->SetFont('DejaVu', '', 12);
-    $pdf->SetXY(145, $pdf->GetY() + 2);
+    $pdf->SetXY(145, $pdf->GetY() + 5);
     $pdf->Write(5, 'Итого :   ' . substr($pdfParameters['total_price'], 0, strlen($pdfParameters['total_price']) - 3));
-    $pdf->SetXY(145, $pdf->GetY() - 5);
+    $pdf->SetXY(145, $pdf->GetY());
     $pdf->Write(5, 'Итого :   ' . substr($pdfParameters['total_price'], 0, strlen($pdfParameters['total_price']) - 3));
     
-    $pdf->SetXY(125, $pdf->GetY());
+    $pdf->SetXY(125, $pdf->GetY()+5);
     $pdf->Write(5, 'Без налога(НДС)');
     $pdf->SetXY(125, $pdf->GetY());
     $pdf->Write(5, 'Без налога(НДС)');
@@ -300,7 +304,7 @@ function printDocument($pdfParameters){
    
     $pdf->SetXY(127, $pdf->GetY() + 5);
     $pdf->Write(5, 'Всего к оплате :   ' . substr($pdfParameters['total_price'], 0, strlen($pdfParameters['total_price']) - 3));
-    $pdf->SetXY(127, $pdf->GetY() - 5);
+    $pdf->SetXY(127, $pdf->GetY());
     $pdf->Write(5, 'Всего к оплате :   ' . substr($pdfParameters['total_price'], 0, strlen($pdfParameters['total_price']) - 3));
     
     $pdf->SetXY(10, $pdf->GetY() + 5);
@@ -310,8 +314,6 @@ function printDocument($pdfParameters){
     $pdf->SetMargins(10, 0);
     
     $pdf->SetXY(10, $pdf->GetY() + 5);
-    $pdf->Write(5, $summaVSlovah);
-    $pdf->SetXY(10, $pdf->GetY() - 5);
     $pdf->Write(5, $summaVSlovah);
     
     $pdf->SetLineWidth(0.1);
@@ -355,6 +357,15 @@ function printDocument($pdfParameters){
     $pdf->SetFont('DejaVu', '', 10);
     $pdf->SetXY(50, $pdf->GetY() - 1);
     $pdf->Write(5, 'Белова Наталья Викторовна');
+    
+    $pdf->SetFont('DejaVu', '', 12);
+    $pdf->SetXY(10, $pdf->GetY() + 12);
+    $pdf->Write(5, 'С условием поставки ознакомлен, с комплектацией согласен');
+    $pdf->SetXY(10, $pdf->GetY());
+    $pdf->Write(5, 'С условием поставки ознакомлен, с комплектацией согласен');
+    
+    $pdf->SetLineWidth(0.1);
+    $pdf->Line(138, $pdf->GetY() + 4, 200, $pdf->GetY() + 4);
     
     $pdf->Output();
 }

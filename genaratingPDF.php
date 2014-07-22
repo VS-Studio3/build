@@ -14,6 +14,7 @@ if($_POST['order_id']){
     setcookie('productList', $_POST['productList']);
     setcookie('countProductList', $_POST['countProductList']);
     setcookie('priceProductList', $_POST['priceProductList']);
+    setcookie('elementsParameters', $_POST['elementsParameters']);
 }
 else {
     echo getMessage();

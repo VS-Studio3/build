@@ -3,7 +3,12 @@
     <jdoc:include type="modules" name="cities_module" style="xhtml"/>
 </div>
 <!---->
-
+<div class="link_to_order">
+    <?php echo $this->renderPosition("link_to_order"); ?>
+</div>
+<div class="total_price_for_upakovka">
+    <?php echo $this->renderPosition("upakovka"); ?>
+</div>
 <div class="order_form">
     <div id="order_title">Просим обязательно заполнять поля, отмеченные *.</div>
     <?php echo $this->renderPosition("fio"); ?>
@@ -46,6 +51,26 @@
 <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <script type="text/javascript">
     $j(function() {
+        //Подсчет суммарной суммы за упаковку
+        var priceForOneMeter = 4;
+        var totalPrice = 0;
+        
+        $j('.jsJBZooBasket tbody tr').each(function(){
+            var boxAttribute = $j(this).attr('box');
+            if(boxAttribute == 'true'){
+                var sizeOfProduct = $j(this).find('.product-param:last').text().substr(8);
+                var width = 0, height = 0;
+                width = parseFloat(sizeOfProduct.substr(0, sizeOfProduct.indexOf('x')));
+                height = parseFloat(sizeOfProduct.substr(sizeOfProduct.indexOf('x') + 1));
+                var meters = parseInt($j(this).find('input.jsQuantity').val()) * (width * height) * priceForOneMeter;
+                totalPrice+= meters;
+            }
+        });
+        
+        totalPrice = Math.ceil(totalPrice);
+        
+        $j('.total_price_for_upakovka input').val(totalPrice + 'р.');
+        
         $j('.pay_for_products input:radio:eq(0) + label').after('<div class="option">Вы можете оплатить Ваш заказ в ближайшем офисе продаж.</div><div class="print_order">Распечатать заказ</div>');
         $j('.pay_for_products input:radio:eq(1) + label').after('<div class="option">Вы можете оплатить заказ банковской картой.</div><div class="pay">Оплатить</div>');
         $j('.pay_for_products input:radio:eq(2) + label').after('<div class="option">Вы можете оплатить свой счет через любое отделение банка.</div><div class="get_bill">Выставить счет</div>');
@@ -201,14 +226,29 @@
             var productList = '';
             var countProductList = '';
             var priceProductList = '';
+            var elementsParameters = '';
             $j('.about_buy_product').each(function() {
-                productList += $j(this).find('.name_product').text() + '|';
+                if($j(this).find('.product-param').size() > 0){
+                    productList += $j(this).find('.name_product').text() + '(' + $j(this).find('.product-param:first').text().substr(7) + ') ' + $j(this).find('.product-param:last').text().substr(8) + '|';
+                }
+                else{
+                    productList += $j(this).find('.name_product').text() + '|';
+                }
+                elementsParameters += $j(this).parent().parent().parent().attr('type') + '|';
                 countProductList += $j(this).find('.how_march_product input:text').val() + '|';
                 var priceValue = $j(this).find('.jsPricevalue').clone();
                 $j(priceValue).find('span').remove();
                 priceProductList += $j(priceValue).text() + '|';
             });
-
+            
+            if(totalPrice > 0){
+                productList += 'Упаковка|';
+                countProductList += '1|';
+                elementsParameters += 'м|';
+                priceProductList += totalPrice + ' р.|';
+            }
+            
+            elementsParameters = elementsParameters.substr(0, elementsParameters.length - 1);
             productList = productList.substr(0, productList.length - 1);
             countProductList = countProductList.substr(0, countProductList.length - 1);
             priceProductList = priceProductList.substr(0, priceProductList.length - 1);
@@ -216,8 +256,9 @@
             $j.post('/genaratingPDF.php', {order_id: order_id, order_date: order_date, fio: fio, telephone: telephone,
                 firm_telephones: firm_telephones, firm_city: firm_city, firm_city_address: firm_city_address,
                 total_price: total_price, productList: productList, countProductList: countProductList,
-                priceProductList: priceProductList}, function(data) {
-                window.location.href = "/printPDF.php";
+                priceProductList: priceProductList, elementsParameters: elementsParameters}, function(data) {
+                    $j('.link_to_order input').val(window.location.protocol + "//" + window.location.host + "/printPDF.php?order_id=" + order_id);
+                    window.location.href = "/printPDF.php";
             });
         });
     });

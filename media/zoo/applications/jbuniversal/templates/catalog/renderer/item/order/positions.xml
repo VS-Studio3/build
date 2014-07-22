@@ -17,5 +17,8 @@
         <position name="comments">Комментарий к заказу</position>
 
         <position name="sposob_oplati">Способ оплаты</position>
+        
+        <position name="upakovka">Суммарный счет за упаковку</position>
+        <position name="link_to_order">Ссылка на заказ</position>
     </positions>
 </renderer>

@@ -130,6 +130,10 @@ if (is_object($pmenu)) {
                 <div id="zvonok">
                     <jdoc:include type="modules" name="zvonok_module" style="xhtml"/>
                 </div>
+                
+                <div id="less_price_wrapper">
+                    <jdoc:include type="modules" name="less_price_wrapper_module" style="xhtml"/>
+                </div>
 
                 <div id="container">
                     <jdoc:include type="modules" name="slider_module" style="xhtml"/>

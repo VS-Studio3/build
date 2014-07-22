@@ -50,7 +50,7 @@ $pasword = '';
 $dbName = 'build';
 
 $connection = new mysqli($host, $user, $pasword, $dbName);
-$query = "SELECT elements FROM bzrnp_zoo_item WHERE id = '" . $itemId . "'";
+$query = "SELECT name,elements FROM bzrnp_zoo_item WHERE id = '" . $itemId . "'";
 
 $result = $connection->query($query);
 
@@ -87,17 +87,15 @@ $row = $result->fetch_assoc();
                 'modalUrl': "<?php echo $modalUrl; ?>",
                 'basketUrl': "<?php echo $basketUrl; ?>"
             });
+            
+            console.log()
 
             $('.jsTotal').hide();
 
             var elementsJSON = JSON.stringify(<?php echo $row['elements']; ?>);
             var variations = JSON.parse(elementsJSON);
 
-            /*
-             * 
-             * !!! СПИСОК ВАРИАЦИЙ ПО ПРОДУКТУ !!!
-             * 
-             */
+            //СПИСОК ВАРИАЦИЙ ПО ПРОДУКТУ
             var variationsObjects = [];
             //Если существуют вариации
             if ('variations' in variations['888260d0-e4b7-49ca-949a-063f17dedab1']) {
@@ -121,7 +119,8 @@ $row = $result->fetch_assoc();
                             var varionObject = {variation: varioationsInJSONFromTable[field]['param3'],
                                 price: varioationsInJSONFromTable[field]['value'],
                                 color: varioationsInJSONFromTable[field]['param2'],
-                                city: varioationsInJSONFromTable[field]['param1']
+                                city: varioationsInJSONFromTable[field]['param1'],
+                                id: varioationsInJSONFromTable[field]['param3'] + '|' + varioationsInJSONFromTable[field]['value']
                             }
                             variationsObjects.push(varionObject);
                         }
@@ -135,7 +134,7 @@ $row = $result->fetch_assoc();
                     for (var i = 0; i < variationsObjects.length; i++) {
                         var currentlyVariationName = '';
                         appendVariationsDIVSText = '';
-                        appendVariationsDIVSText += '<div id="' + variationsObjects[i]['variation'] + '" class="variation_object"><span class="item_name">';
+                        appendVariationsDIVSText += '<div id="' + variationsObjects[i]['variation'] + '" class="variation_object" title="' + variationsObjects[i]['id'] + '"><span class="item_name">';
 
                         $('.jsCartModal fieldset:eq(2) label').each(function() {
                             if ($(this).find('input').val() == variationsObjects[i]['variation']) {
@@ -150,42 +149,49 @@ $row = $result->fetch_assoc();
                             }
                         });
 
-                        appendVariationsDIVSText += '</span> <span class="item_price">' + variationsObjects[i]['price'] + ' р.</span><input type="text" class="set_count"><input type="text" class="summary_count" readonly></div>';
+                        appendVariationsDIVSText += '</span> <span class="item_price">' + variationsObjects[i]['price'] + ' р./м<sup>2</sup></span><input type="text" class="set_count"><input type="text" class="summary_count" readonly></div>';
                         summaryVariationsDIVS += appendVariationsDIVSText;
                     }
+                    
+                    summaryVariationsDIVS += '<div class="itogo">Итого:<input type="text" class="total_price">';
 
-                    $('.jsCartModal').prepend(summaryVariationsDIVS + '<button id="buy_submit">Купить</button');
+                    $('.jsCartModal').prepend(summaryVariationsDIVS + '<button id="buy_submit">Добавить в корзину</button><button class="get_basket">Оформить заказ</button><button class="close_iframe">Продолжить покупки</button>');
 
                     //Вывод суммарной цены по вариации
                     $('.set_count').keyup(function() {
                         if (!isNaN($(this).val())) {
 
-                            var parentId = $(this).parent().attr('id');
+                            var parentTitle = $(this).parent().attr('title');
 
                             var priceInCurrentVariation = 0;
                             for (var i = 0; i < variationsObjects.length; i++) {
-                                if (variationsObjects[i]['variation'] == parentId.toString()) {
+                                if (variationsObjects[i]['id'] == parentTitle.toString()) {
                                     priceInCurrentVariation = parseFloat(variationsObjects[i]['price']);
                                 }
                             }
 
                             $(this).next('input').val(priceInCurrentVariation * parseFloat($(this).val()));
+                            var total_price = 0;
+                            $('.variation_object .summary_count').each(function(){
+                                if($(this).val().length > 0 && $(this).val() != 'NaN'){
+                                    total_price += parseFloat($(this).val());
+                                }
+                            });
+                            $('.total_price').val(total_price);
                         }
                         else {
                             $(this).next('input').empty();
                         }
                     });
 
-                    $('.jbprice-selects, .jbprice-count, .jbprice-buttons').hide();
+                    $('.jbprice-selects, .jbprice-count, .jbprice-buttons, .jbprice-price').hide();
 
                     $('#buy_submit').click(function() {
-                        var isAjax = false;
                         $('.variation_object.active').each(function() {
-                            while (isAjax != false) {
-                            }
                             var count = $(this).find('.set_count').val();
                             if ($.isNumeric(count) && parseFloat(count) > 0) {
                                 var variationNamaValue = $(this).find('.set_count').parent().attr('id');
+
                                 $('.jsCartModal fieldset:eq(2) label').each(function() {
                                     if ($(this).find('input').val() == variationNamaValue) {
                                         $(this).find('input').prop('checked', true);
@@ -195,7 +201,7 @@ $row = $result->fetch_assoc();
                                 var colorValue = '';
                                 var cityValue = '';
                                 for (var i = 0; i < variationsObjects.length; i++) {
-                                    if (variationsObjects[i]['variation'] == variationNamaValue) {
+                                    if (variationsObjects[i]['id'] == $(this).attr('title')) {
                                         colorValue = variationsObjects[i]['color'];
                                         cityValue = variationsObjects[i]['city'];
                                     }
@@ -214,32 +220,68 @@ $row = $result->fetch_assoc();
                                 });
 
                                 $('.jsCount').val(count);
-                                isAjax = true;
-                                $.when($('a[href="#add-to-cart"]').trigger('click')).done(function() {
-                                    isAjax = false;
-                                });
+                                $('a[href="#add-to-cart"]').trigger('click');
+                                var productNameVariation = $('.variation_object.active .item_name').text();
+                                alert('"<?php echo $this->getItem()->name; ?>"' + ' ' + productNameVariation + ' добавлен в корзину');
                             }
                         });
                     });
                     
+                    $('.get_basket').click(function(){
+                        window.top.location.href = "/index.php/2014-06-27-07-33-20?controller=basket&task=index&app_id=2&nocache=1197400854"; 
+                    });
+                    
+                    $('.close_iframe').click(function(){
+                        parent.jQuery.fancybox.close();
+                    });
+                    
                     $('.variation_object').each(function(){
                         $(this).addClass('unactive');
+                        $(this).find('.set_count').attr('disabled',true);
                     });
                     
                     $('.variation_object:eq(0)').removeClass('unactive').addClass('active');
+                    $('.variation_object:eq(0)').find('.set_count').attr('disabled',false);
                     
-                    $('.variation_object .set_count').click(function(){
+                    $('.variation_object').click(function(){
                         $('.variation_object').each(function(){
                             $(this).removeClass('active').addClass('unactive');
+                            $(this).find('.set_count').attr('disabled',true);
                         });
                         
-                        $(this).parent().removeClass('unactive').addClass('active');
+                        $(this).removeClass('unactive').addClass('active');
+                        $(this).find('.set_count').attr('disabled',false);
                     });
                 }
             }
             else {
                 //Если продукт без вариаций
-
+                $('.prices_list').after('<input type="text" class="count"><input type="text" class="summary"><button class="buy">Добавить в корзину</button><button class="to_basket">Оформить заказ</button><button class="close_iframe">Продолжить покупки</button>');
+                $('.count').keyup(function() {
+                        if (!isNaN($(this).val())) {
+                            var price = parseFloat($('.prices_list').text().substr(0, $('.prices_list').text().indexOf('р')));
+                            console.log(price)
+                            $('.summary').val(price * parseInt($(this).val()));
+                        }
+                        else {
+                            $('.summary').val('');
+                        }
+                });
+                
+                $('.to_basket').click(function(){
+                    window.top.location.href = "/index.php/2014-06-27-07-33-20?controller=basket&task=index&app_id=2&nocache=1197400854"; 
+                });
+                
+                $('.close_iframe').click(function(){
+                    parent.jQuery.fancybox.close();
+                });
+                
+                $('.buy').click(function(){
+                    if (!isNaN($('.count').val()) && $('.count').val().length > 0) {
+                        $('.jsCount').val($('.count').val());
+                        $('a[href="#add-to-cart"]').trigger('click');
+                    }
+                });
             }
         });
     })(jQuery);

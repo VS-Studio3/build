@@ -77,7 +77,7 @@ Get3UlMenu = {
  * **/
 var ChangingCity = {
     getModalWindows: function(data) {
-        var citiesData = $j(data);
+        citiesData = $j(data);
         var listOfCities = '<ul>';
         $j(citiesData).find('.category-wrapper').each(function() {
             listOfCities += '<li class="first_level">' + $j(this).find('.jbcategory-link').text() + '</li>';
@@ -103,12 +103,14 @@ var onCityClick = function(e) {
 
     var cookie = "city=value; path=/; expires=" + expires_at;
     document.cookie = cookie.replace('value', city);
-
+    
     $j(citiesData).find('.category-wrapper').each(function() {
         $j(this).find('.wrapper-item-desc').each(function() {
+            console.log($j(this).find('.city_val').text())
             if ($j.trim($j(this).find('.city_val').text()) == city) {
                 var currentTelephone = $j(this).find('.telephones_val div:first-child').text();
                 $j('.contact .number').html($j.trim(currentTelephone));
+                console.log(currentTelephone);
             }
         });
     });

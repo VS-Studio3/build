@@ -38,10 +38,10 @@ foreach ($prices as $value) {
 
 $text = '';
 if (count($min_price) == 1) {
-    $text = $text . $min_price[0] . ' р.';
+    $text = $text . $min_price[0] . ' р./м<sup>2</sup>';
 } else {
     array_shift($min_price);
-    $text = $text . 'от ' .  min($min_price) . ' р.';
+    $text = $text . 'от ' .  min($min_price) . ' р./м<sup>2</sup>';
 }
 echo $text;
 echo '</div>';
