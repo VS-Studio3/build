@@ -44,6 +44,16 @@
 .jbzoo a:hover > img {
     opacity: 0.8;
 }
+.jbcart-modal-body{
+    margin-bottom: 30px;
+}
+.jbcart-modal-body .jbzoo.jsCartModal{
+    padding-top: 10px;}
+.jsCartModal .variation_object .item_name{
+    display: block;
+    font-size: 25px;
+    color: #000000;
+}
 
 /************************************* inputs */
 .jbzoo textarea,
@@ -719,8 +729,9 @@
 }
 
 .jbcart-modal-body {
-    margin: 0;
+    margin: 23px;
     padding: 0;
+
 }
 
 .jbzoo .jbbasket-table .input-quantity {
