@@ -193,7 +193,7 @@ fieldset {
       }
       .icon_two {
         display: inline-block;
-        width: 33px;
+        width: 34px;
         height: 33px;
         background: url("../images/price.png") 0px -210px no-repeat;
         position: absolute;
@@ -629,6 +629,12 @@ fieldset {
     line-height: 34px;
     font-style: italic;
   }
+  .color{
+    width: 36px;
+    height: 36px;
+    display: inline-block;
+    margin-right: 22px;
+  }
   .red {
     width: 36px;
     height: 36px;
@@ -687,6 +693,8 @@ fieldset {
     }
   }
   .description {
+    clear: both;
+    padding-top: 20px;
     margin-top: 15px;
     font-size: 16px;
     color: #000000;
@@ -1005,7 +1013,6 @@ fieldset {
     line-height: 18px;
     color: #ffffff;
     font-weight: bold;
-    vertical-align: bottom;
   }
 }
 
@@ -1374,8 +1381,12 @@ fieldset {
       border-radius: 50%;
       color: #ffffff;
       background-size: cover;
-      padding: 4px 9px;
+      padding: 5%;
       font-weight: normal !important;
+      min-width: 30px;
+      display: inline-block;
+      text-align: center;
+      margin-top: -5px;
     }
   }
   .basket-link {
@@ -1696,20 +1707,26 @@ table.jsJBZooBasket {
     #container{
       #jbzoo{
         #full_product_description{
+
           .first_img.item-image.align-left{
             margin-right: 85px !important;
           }
           .rborder.item-body{
             overflow: hidden;
+            .items_price_less{
+              background: #b3b3b3;
+              display: inline-block;
+              margin-bottom: 5px;
+              padding: 15px;
+            }
             .item-current-price{
               font-family: 'Arial', 'sans-serif';
               font-size: 29px;
               color: #382c88;
               line-height: 24px;
-              background: #b3b3b3;
-              display: inline-block;
-              padding: 10px;
               font-weight: bold;
+              margin-bottom: 15px;
+              text-align: center;
             }
           }
           .less-price{
@@ -1721,6 +1738,11 @@ table.jsJBZooBasket {
               padding-left: 25px;
             }
           }
+          .less-price:hover{
+            a{
+              text-decoration: underline;
+            }
+          }
           .less-price:before{
             content: '';
             position: absolute;
@@ -1728,7 +1750,7 @@ table.jsJBZooBasket {
             width: 19px;
             height: 19px;
             left: 0px;
-            top: 0px;
+            top: -2px;
           }
           .current_city_price_wrapper{
             font-size: 12px;
@@ -1763,7 +1785,9 @@ table.jsJBZooBasket {
     }
   }
 }
-
+#less_price_wrapper{
+  display: none;
+}
     .jsCartModal{
       padding-top: 10px;
       .item_name{

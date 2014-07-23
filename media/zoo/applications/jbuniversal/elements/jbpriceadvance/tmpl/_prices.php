@@ -34,8 +34,6 @@ foreach ($prices as $value) {
     }
 }
 
-//var_dump($min_price);
-
 $text = '';
 if (count($min_price) == 1) {
     $text = $text . $min_price[0] . ' р./м<sup>2</sup>';

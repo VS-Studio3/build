@@ -55,8 +55,10 @@ $elements = $item->elements;
     <div class="clear clr"></div>
 
     <div class="rborder item-body">
+        <div class="items_price_less">
         <div class="item-current-price"></div>
         <div class="less-price"><a href="#less_price_wrapper">Нашли дешевле? Поторгуемся!</a></div>
+        </div>
         <div class="current_city_price_wrapper">* Цена со склада в</div>
         <a href="#" id="select-city">Выбрать город</a>
         <a href="#zayavka" class="btn btn_zayavka">Отправить заявку</a>
