@@ -172,11 +172,14 @@ $iniqId = uniqid('jbprice-adv-');
 
                     ?>
                     appendVariationsDIVSText += '</span> <span class="item_price">' + variationsObjects[i]['price'] +
-                     ' ' + 'р./<?php echo $countType; ?>' +  '</span><input type="text" ' +
-                        'class="set_count"><input' +
+                     ' ' + 'р./<?php echo $countType; ?>' +  '</span><span ' +
+                        'class="relative"><span class="how">*количество</span><input ' +
+                        'type="text"' +
+                        ' ' +
+                        'class="set_count"></span><span class="relative"><span class="how">*стоимость</span><input' +
                         ' ' +
                         'type="text" ' +
-                    'class="summary_count" readonly></div>';
+                    'class="summary_count" readonly></span></div>';
                     summaryVariationsDIVS += appendVariationsDIVSText;
                 }
 
@@ -288,7 +291,10 @@ $iniqId = uniqid('jbprice-adv-');
         }
         else {
             //Если продукт без вариаций
-            $('.prices_list').after('<input type="text" class="count"><input type="text" class="summary"><div ' +
+            $('.prices_list').after('<span class="relative"><span class="how">*количество</span><input type="text" class="count"></span><span ' +
+                'class="relative"><span class="how">*стоимость</span><input ' +
+                'type="text" ' +
+                'class="summary"></span><div ' +
                 'class="for_but" ' +
                 '><button' +
                 ' class="buy">Добавить в корзину</button><button class="to_basket">Оформить заказ</button><button ' +
@@ -328,9 +334,11 @@ $iniqId = uniqid('jbprice-adv-');
         margin: 0;
         padding: 0;
     }
-
+    .jbcart-modal-body .hit-icon-simple{
+        display: none !important;
+    }
     .item_name {
-        width: 178px;
+        width: 197px;
         margin-right: 10px;
     }
     .prices_list{
@@ -339,9 +347,20 @@ $iniqId = uniqid('jbprice-adv-');
         white-space: nowrap;
     }
     .item_price    {
-        width: 145px;
+        width: 127px;
         margin-right: 10px;
         white-space: nowrap;
+    }
+    .how{
+        position: absolute;
+        font-size: 12px;
+        line-height: 18px;
+        font-family: 'Arial', 'sans-serif';
+        color: #000000;
+        bottom: -28px;
+    }
+    .relative{
+        position: relative;
     }
     .prices_list{
         height: 100%;
@@ -355,7 +374,7 @@ $iniqId = uniqid('jbprice-adv-');
         height: 100%;
         display: table-cell;
         vertical-align: middle;
-        font-size: 18px;
+        font-size: 18px !important;
         color: #000000;
     }
     .jbzoo .jbprice-advance .jsCount{
@@ -365,7 +384,7 @@ $iniqId = uniqid('jbprice-adv-');
     .jbzoo .jbprice-advance .count,
     .jbzoo .jbprice-advance .count:hover,
     .jbzoo .jbprice-advance .jsCount{
-        width: 75px;
+        width: 64px;
         min-width: 50px !important;
         height: 42px !important;
         border-radius: 0px;
@@ -378,6 +397,7 @@ $iniqId = uniqid('jbprice-adv-');
         text-align: center;
         margin-right: 10px;
         border-color: #535151;
+        margin-bottom: 15px;
     }
     .for_but{
         position: absolute;
@@ -406,7 +426,7 @@ $iniqId = uniqid('jbprice-adv-');
         color: #000000;
         text-align: center;
         border-color: #535151 !important;
-        margin-bottom: 0px;
+        margin-bottom: 15px;
     }
     .variation_object.unactive input[readonly]{
         background: rgb(235, 235, 228);
@@ -430,6 +450,7 @@ $iniqId = uniqid('jbprice-adv-');
         display: inline-table;
         width: 96%;
         margin-bottom: 10px;
+        transition: 0.3s;
     }
 
     .jsCartModal {
@@ -463,6 +484,7 @@ $iniqId = uniqid('jbprice-adv-');
         margin-right: 10px !important;
         margin-left: 20px !important;
         border-color: #535151 !important;
+
     }
 
     #buy_submit,

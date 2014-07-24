@@ -259,6 +259,9 @@ fieldset {
             display: block;
           }
         }
+        a:hover{
+          text-decoration: underline;
+        }
         div > ul{
           margin-top: -83px;
         }
@@ -577,12 +580,17 @@ fieldset {
     margin-bottom: 5px;
   }
 }
-
+.category{
+  .jbzoo .jbprice-advance .hit-icon-simple{
+    left: 167px!important;
+  }
+}
 .items {
   margin: 0px -36px;
   .rborder {
     margin: 0px 36px 20px !important;
     width: 248px !important;
+    position: relative;
     .jbzoo-item {
       margin: 0px;
       .item {
@@ -700,7 +708,9 @@ fieldset {
     font-weight: normal !important;
     font-style: normal !important;
     div {
+      margin-left: -28px;
       padding: 10px 0px;
+      margin-bottom: 12px;
       font-size: 31px;
       font-style: italic;
       line-height: 18px;
@@ -713,8 +723,9 @@ fieldset {
     .text_about{
       position: relative;
       width: 1000px;
-      left: -45px;
+      left: -17px;
       font-size: 16px;
+      padding: 35px 0px;
       color: #000000;
       text-decoration: none !important;
       font-weight: normal !important;
@@ -732,18 +743,6 @@ fieldset {
         font-weight: normal !important;
         font-style: normal !important;
       }
-     /* p:first-child{
-        border-top: 12px solid #b4b4b4;
-        -webkit-box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75) !important;
-        -moz-box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75) !important;
-        box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75) !important;
-      }
-      p:last-child{
-        border-bottom: 12px solid #b4b4b4;
-        -webkit-box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75);
-        -moz-box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75);
-        box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75);
-      }*/
     }
 
   }
@@ -755,7 +754,11 @@ fieldset {
     }
   }
 }
-
+.jbcart-modal-body{
+  .hit-icon-simple{
+    display: none;
+  }
+}
 #modal_cities {
   position: absolute;
   left: 50%;
@@ -932,9 +935,18 @@ fieldset {
 
 .others {
   overflow: hidden;
-  padding-top: 30px;
-  display: table;
+  padding-top: 20px;
+  //display: table;
   margin: 0px -30px;
+  h3{
+    font-size: 31px;
+    line-height: 18px;
+    margin-bottom: 50px;
+    padding-left: 5px;
+    color: #4d4a4a;
+    font-style: italic;
+    font-family: 'Arial', 'sans-serif';
+  }
   div {
     width: 242px;
     text-align: center;
@@ -1710,8 +1722,8 @@ table.jsJBZooBasket {
     border: none;
     height: 34px;
   }
-  .jsAddToCartModal.jbzoo-button.green,
-  .jsAddToCartModal.jbzoo-button.green:hover{
+  .item-price-position .jsAddToCartModal.jbzoo-button.green,
+  .item-price-position .jsAddToCartModal.jbzoo-button.green:hover{
     background-color: #302767 !important;
     border-radius: 5px;
     background: none;
@@ -1732,7 +1744,7 @@ table.jsJBZooBasket {
     display: table;
     margin: 10px 0px;
   }
-.jsAddToCartModal.jbzoo-button.green:before{
+.item-price-position .jsAddToCartModal.jbzoo-button.green:before{
   position: absolute;
   content: '';
   width: 102%;
@@ -1757,12 +1769,21 @@ table.jsJBZooBasket {
   background: url("../images/price.png")  no-repeat 150px -262px !important;
   padding-right: 45px!important;
 }
+.jbzoo .jbprice-advance .hit-icon-simple {
+  width: 127px;
+  height: 64px;
+  display: inline-block;
+  background: url('../images/xit_prodaj.png');
+  position: absolute;
+  left: 359px;
+  top: 40px;
+}
 .com_zoo{
   #middle{
     #container{
       #jbzoo{
         #full_product_description{
-
+          position: relative;
           .first_img.item-image.align-left{
             margin-right: 85px !important;
           }
@@ -1871,7 +1892,7 @@ table.jsJBZooBasket {
       padding-top: 10px;
       .item_name{
         display: block;
-        font-size: 25px;
+        font-size: 18px;
         color: #000000;
       }
     }

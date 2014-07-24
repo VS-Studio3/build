@@ -82,6 +82,7 @@ $elements = $item->elements;
 
     <?php if ($this->checkPosition('related')) : ?>
         <div class="others">
+            <h3>С этим товаром покупают:</h3>
             <?php echo $this->renderPosition('related'); ?>
         </div>
     <?php endif; ?>
