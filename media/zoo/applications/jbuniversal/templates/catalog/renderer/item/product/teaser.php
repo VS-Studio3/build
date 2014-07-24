@@ -24,22 +24,30 @@ $query = "SELECT elements FROM bzrnp_zoo_item WHERE id = '" . $item->id . "'";
 $result = $connection->query($query);
 $row = $result->fetch_assoc();
 
-$countType = substr($row['elements'], 0, strpos($row['elements'], '62ec77b4-9f86-4749-ad11-32353efe3f92'));
+$countType = substr($row['elements'], 0, strpos($row['elements'], '888260d0-e4b7-49ca-949a-063f17dedab1'));
 $countType = substr($countType, strpos($countType, 'value'));
 $countType = substr($countType, 9);
 $countType = substr($countType, 0, strpos($countType, '}'));
 $countType = preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", json_encode($countType));
-$countType =  str_replace('\"\n\t\t"', '', $countType);
-$countType =  str_replace('"', '', $countType);
-$countType =  str_replace('\\', '', $countType);
+$countType = str_replace('\"\n\t\t"', '', $countType);
+$countType = str_replace('"', '', $countType);
+$countType = str_replace('\\', '', $countType);
 $result->free();
 $connection->close();
 ?>
 
-<div class="item price" item="<?php echo $item->id; ?>">
-    <?php if ($this->checkPosition('image')) : ?>
+<div class="item price isset_<?php
+if ($this->checkPosition('isset')) {
+    echo 'true';
+} else {
+    echo 'false';
+}
+?>" item="<?php echo $item->id; ?>">
+
+
+        <?php if ($this->checkPosition('image')) : ?>
         <div class="span3 item-image align-<?php echo $align; ?>">
-            <?php echo $this->renderPosition('image'); ?>
+        <?php echo $this->renderPosition('image'); ?>
         </div>
     <?php endif; ?>
 
@@ -52,10 +60,17 @@ $connection->close();
             <?php echo $this->renderPosition('price'); ?>
         </div>
     <?php endif; ?>
+        
+        <span class="isset_class">Есть в наличии</span>
+
+    <?php if (!$this->checkPosition('isset')) : ?>
+        <a rel="nofollow" href="#zayavka" class="show_zayavka" title="Добавить в корзину">Купить</a>
+        <span class="not_isset_class">Нет в наличии</span>
+<?php endif; ?>
 </div>
 
 <script type="text/javascript">
-    $j(function(){
+    $j(function() {
         var elementsJSON = JSON.stringify(<?php echo $row['elements']; ?>);
         var variations = JSON.parse(elementsJSON);
 
@@ -84,11 +99,12 @@ $connection->close();
 
         var variationsObjects = [];
         var count = 0;
-        for (var k in variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations']) if (variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations'].hasOwnProperty(k))
-        {
-            ++count;
-        }
-        if (count != 0){
+        for (var k in variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations'])
+            if (variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations'].hasOwnProperty(k))
+            {
+                ++count;
+            }
+        if (count != 0) {
             $j('.item.price[item="<?php echo $item->id; ?>"] .jbprice-selects select:eq(0) option').each(function() {
                 if ($j.trim($j(this).text()).indexOf(currentUserCity) != -1) {
                     translitCokieValueOfCity = $j(this).val();
@@ -109,8 +125,8 @@ $connection->close();
             }
 
             var minPrice = parseFloat(variationsObjects[0]['price']);
-            for(var i = 0; i < variationsObjects.length; i++){
-                if(parseFloat(variationsObjects[i]['price']) < minPrice){
+            for (var i = 0; i < variationsObjects.length; i++) {
+                if (parseFloat(variationsObjects[i]['price']) < minPrice) {
                     minPrice = parseFloat(variationsObjects[i]['price']);
                 }
             }

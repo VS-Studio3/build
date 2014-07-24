@@ -54,23 +54,23 @@
         //Подсчет суммарной суммы за упаковку
         var priceForOneMeter = 4;
         var totalPrice = 0;
-        
-        $j('.jsJBZooBasket tbody tr').each(function(){
+
+        $j('.jsJBZooBasket tbody tr').each(function() {
             var boxAttribute = $j(this).attr('box');
-            if(boxAttribute == 'true'){
+            if (boxAttribute == 'true') {
                 var sizeOfProduct = $j(this).find('.product-param:last').text().substr(8);
                 var width = 0, height = 0;
                 width = parseFloat(sizeOfProduct.substr(0, sizeOfProduct.indexOf('x')));
                 height = parseFloat(sizeOfProduct.substr(sizeOfProduct.indexOf('x') + 1));
                 var meters = parseInt($j(this).find('input.jsQuantity').val()) * (width * height) * priceForOneMeter;
-                totalPrice+= meters;
+                totalPrice += meters;
             }
         });
-        
+
         totalPrice = Math.ceil(totalPrice);
-        
+
         $j('.total_price_for_upakovka input').val(totalPrice + 'р.');
-        
+
         $j('.pay_for_products input:radio:eq(0) + label').after('<div class="option">Вы можете оплатить Ваш заказ в ближайшем офисе продаж.</div><div class="print_order">Распечатать заказ</div>');
         $j('.pay_for_products input:radio:eq(1) + label').after('<div class="option">Вы можете оплатить заказ банковской картой.</div><div class="pay">Оплатить</div>');
         $j('.pay_for_products input:radio:eq(2) + label').after('<div class="option">Вы можете оплатить свой счет через любое отделение банка.</div><div class="get_bill">Выставить счет</div>');
@@ -144,43 +144,43 @@
 
         //Переход на способ оплаты
         $j('#go_to_paying').click(function() {
-            /*var isDataValid = true;
-             var isEmailValid = true;
-             
-             if ($j('.order_form input:text').eq(0).val().length == 0
-             || $j('.order_form input:text').eq(2).val().length == 0
-             || $j('.order_form input:text').eq(3).val().length == 0) {
-             isDataValid = false;
-             }
-             
-             if ($j('.order_form input:text').eq(3).val().length != 0) {
-             var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
-             if (!pattern.test($j('.order_form input:text').eq(3).val())) {
-             isEmailValid = false;
-             }
-             }
-             
-             if (isDostavkaKureromChecked) {
-             $j('#joomla_template_dostavka input:text').each(function() {
-             if ($j(this).val().length == 0) {
-             isDataValid = false;
-             }
-             });
-             }
-             
-             if (isDataValid && isEmailValid) {*/
-            $j('#pay_for_products').addClass('active').removeClass('un_active');
-            $j('#order_form').removeClass('active').addClass('un_active');
+            var isDataValid = true;
+            var isEmailValid = true;
 
-            $j('.order_form').hide();
-            $j('.pay_for_products').show();
-            /*}
-             else if (!isDataValid && isEmailValid) {
-             alert('Заполните поля, отмеченные *');
-             }
-             else if (!isEmailValid && isDataValid) {
-             alert('Введите корректный E-mail');
-             }*/
+            if ($j('.order_form input:text').eq(0).val().length == 0
+                    || $j('.order_form input:text').eq(2).val().length == 0
+                    || $j('.order_form input:text').eq(3).val().length == 0) {
+                isDataValid = false;
+            }
+
+            if ($j('.order_form input:text').eq(3).val().length != 0) {
+                var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
+                if (!pattern.test($j('.order_form input:text').eq(3).val())) {
+                    isEmailValid = false;
+                }
+            }
+
+            if (isDostavkaKureromChecked) {
+                $j('#joomla_template_dostavka input:text').each(function() {
+                    if ($j(this).val().length == 0) {
+                        isDataValid = false;
+                    }
+                });
+            }
+
+            if (isDataValid && isEmailValid) {
+                $j('#pay_for_products').addClass('active').removeClass('un_active');
+                $j('#order_form').removeClass('active').addClass('un_active');
+
+                $j('.order_form').hide();
+                $j('.pay_for_products').show();
+            }
+            else if (!isDataValid && isEmailValid) {
+                alert('Заполните поля, отмеченные *');
+            }
+            else if (!isEmailValid && isDataValid) {
+                alert('Введите корректный E-mail');
+            }
         });
 
         //Назад к товарам
@@ -210,7 +210,7 @@
             var order_id = '<?php echo uniqid(); ?>';
             var fio = $j('.order_form input:text:eq(0)').val();
             var telephone = $j('.order_form input:text:eq(2)').val();
-            
+
             var order_date = '<?php echo date("d.m.Y H:i"); ?>';
             var firm_telephones = '';
             $j('.city_telephones_text div').each(function() {
@@ -228,10 +228,10 @@
             var priceProductList = '';
             var elementsParameters = '';
             $j('.about_buy_product').each(function() {
-                if($j(this).find('.product-param').size() > 0){
+                if ($j(this).find('.product-param').size() > 0) {
                     productList += $j(this).find('.name_product').text() + '(' + $j(this).find('.product-param:first').text().substr(7) + ') ' + $j(this).find('.product-param:last').text().substr(8) + '|';
                 }
-                else{
+                else {
                     productList += $j(this).find('.name_product').text() + '|';
                 }
                 elementsParameters += $j(this).parent().parent().parent().attr('type') + '|';
@@ -240,14 +240,14 @@
                 $j(priceValue).find('span').remove();
                 priceProductList += $j(priceValue).text() + '|';
             });
-            
-            if(totalPrice > 0){
+
+            if (totalPrice > 0) {
                 productList += 'Упаковка|';
                 countProductList += '1|';
                 elementsParameters += 'м|';
                 priceProductList += totalPrice + ' р.|';
             }
-            
+
             elementsParameters = elementsParameters.substr(0, elementsParameters.length - 1);
             productList = productList.substr(0, productList.length - 1);
             countProductList = countProductList.substr(0, countProductList.length - 1);
@@ -257,8 +257,8 @@
                 firm_telephones: firm_telephones, firm_city: firm_city, firm_city_address: firm_city_address,
                 total_price: total_price, productList: productList, countProductList: countProductList,
                 priceProductList: priceProductList, elementsParameters: elementsParameters}, function(data) {
-                    $j('.link_to_order input').val(window.location.protocol + "//" + window.location.host + "/printPDF.php?order_id=" + order_id);
-                    window.location.href = "/printPDF.php";
+                $j('.link_to_order input').val(window.location.protocol + "//" + window.location.host + "/printPDF.php?order_id=" + order_id);
+                window.location.href = "/printPDF.php";
             });
         });
     });
