@@ -13,6 +13,14 @@ $itemid = JRequest::getVar('Itemid');
 $pmenu = $app->getMenu()->getActive();
 $pageclass = '';
 
+function jsonRemoveUnicodeSequences($struct) {
+    return preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", json_encode($struct));
+}
+$host = 'localhost';
+$user = 'root';
+$pasword = '';
+$dbName = 'build';
+
 if (is_object($pmenu)) {
     $pageclass = $pmenu->params->get('pageclass_sfx');
 }
@@ -39,6 +47,7 @@ if (is_object($pmenu)) {
         <script type="text/javascript" src="<?php echo $this->baseurl ?>/templates/<?php echo $this->template; ?>/js/custom.js"></script>
         <script type="text/javascript">
             $j(document).ready(function() {
+                $j('.jbprice-selects').hide();
                 $j('.jsTotal').hide();
                 $j('input[value="dostavka-kurerom"]').before('<div class="samovivoz_description"></div>');
                 $j('input[value="dostavka-kurerom"]').next('label').after('<div class="attention">ВНИМАНИЕ!Стоимость доставки Вашего Заказа будет рассчитана индивидуально<br />с учетом характеристик товара и адреса доставки!<br/>Менеджер свяжется с Вами в самое ближайшее время для согласования вопросов по доставке Заказа.</div>');

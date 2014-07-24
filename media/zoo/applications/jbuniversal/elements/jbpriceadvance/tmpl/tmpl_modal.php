@@ -27,6 +27,7 @@ $iniqId = uniqid('jbprice-adv-');
 
         foreach ($value["prices"] as $valarr) {
             //array_push($min_price, (int)$valarr["totalNoFormat"]);
+
         }
     }
     ?>
@@ -53,6 +54,7 @@ $iniqId = uniqid('jbprice-adv-');
         $dbName = 'build';
 
         $connection = new mysqli($host, $user, $pasword, $dbName);
+        $connection->query("SET NAMES 'utf8';");
         $query = "SELECT name,elements FROM bzrnp_zoo_item WHERE id = '" . $itemId . "'";
 
         $result = $connection->query($query);
@@ -108,7 +110,12 @@ $iniqId = uniqid('jbprice-adv-');
         //СПИСОК ВАРИАЦИЙ ПО ПРОДУКТУ
         var variationsObjects = [];
         //Если существуют вариации
-        if ('variations' in variations['888260d0-e4b7-49ca-949a-063f17dedab1']) {
+        var count = 0;
+        for (var k in variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations']) if (variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations'].hasOwnProperty(k))
+        {
+            ++count;
+        }
+        if (count != 0) {
             var currentUserCity = getCookie('city');
             var translitCokieValueOfCity = null;
 
@@ -309,6 +316,7 @@ $iniqId = uniqid('jbprice-adv-');
                 if (!isNaN($('.count').val()) && $('.count').val().length > 0) {
                     $('.jsCount').val($('.count').val());
                     $('a[href="#add-to-cart"]').trigger('click');
+                    alert('Товар "<?php echo $row['name']; ?>" добавлен в корзину')
                 }
             });
         }

@@ -11,9 +11,32 @@ defined('_JEXEC') or die('Restricted access');
 
 
 $align = $this->app->jbitem->getMediaAlign($item, $layout);
+
+$host = 'localhost';
+$user = 'root';
+$pasword = '';
+$dbName = 'build';
+
+$connection = new mysqli($host, $user, $pasword, $dbName);
+$connection->query("SET NAMES 'utf8';");
+$query = "SELECT elements FROM bzrnp_zoo_item WHERE id = '" . $item->id . "'";
+
+$result = $connection->query($query);
+$row = $result->fetch_assoc();
+
+$countType = substr($row['elements'], 0, strpos($row['elements'], '62ec77b4-9f86-4749-ad11-32353efe3f92'));
+$countType = substr($countType, strpos($countType, 'value'));
+$countType = substr($countType, 9);
+$countType = substr($countType, 0, strpos($countType, '}'));
+$countType = preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", json_encode($countType));
+$countType =  str_replace('\"\n\t\t"', '', $countType);
+$countType =  str_replace('"', '', $countType);
+$countType =  str_replace('\\', '', $countType);
+$result->free();
+$connection->close();
 ?>
 
-<div class="item price">
+<div class="item price" item="<?php echo $item->id; ?>">
     <?php if ($this->checkPosition('image')) : ?>
         <div class="span3 item-image align-<?php echo $align; ?>">
             <?php echo $this->renderPosition('image'); ?>
@@ -30,3 +53,71 @@ $align = $this->app->jbitem->getMediaAlign($item, $layout);
         </div>
     <?php endif; ?>
 </div>
+
+<script type="text/javascript">
+    $j(function(){
+        var elementsJSON = JSON.stringify(<?php echo $row['elements']; ?>);
+        var variations = JSON.parse(elementsJSON);
+
+        function getCookie(name) {
+            var cookie = " " + document.cookie;
+            var search = " " + name + "=";
+            var setStr = null;
+            var offset = 0;
+            var end = 0;
+            if (cookie.length > 0) {
+                offset = cookie.indexOf(search);
+                if (offset != -1) {
+                    offset += search.length;
+                    end = cookie.indexOf(";", offset)
+                    if (end == -1) {
+                        end = cookie.length;
+                    }
+                    setStr = unescape(cookie.substring(offset, end));
+                }
+            }
+            return(setStr);
+        }
+
+        var currentUserCity = getCookie('city');
+        var translitCokieValueOfCity = null;
+
+        var variationsObjects = [];
+        var count = 0;
+        for (var k in variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations']) if (variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations'].hasOwnProperty(k))
+        {
+            ++count;
+        }
+        if (count != 0){
+            $j('.item.price[item="<?php echo $item->id; ?>"] .jbprice-selects select:eq(0) option').each(function() {
+                if ($j.trim($j(this).text()).indexOf(currentUserCity) != -1) {
+                    translitCokieValueOfCity = $j(this).val();
+                }
+            });
+
+            var varioationsInJSONFromTable = variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations'];
+            for (var field in varioationsInJSONFromTable) {
+                if (varioationsInJSONFromTable[field]['param1'] == translitCokieValueOfCity || varioationsInJSONFromTable[field]['param1'] == '') {
+                    var varionObject = {variation: varioationsInJSONFromTable[field]['param3'],
+                        price: varioationsInJSONFromTable[field]['value'],
+                        color: varioationsInJSONFromTable[field]['param2'],
+                        city: varioationsInJSONFromTable[field]['param1'],
+                        id: varioationsInJSONFromTable[field]['param3'] + '|' + varioationsInJSONFromTable[field]['value']
+                    }
+                    variationsObjects.push(varionObject);
+                }
+            }
+
+            var minPrice = parseFloat(variationsObjects[0]['price']);
+            for(var i = 0; i < variationsObjects.length; i++){
+                if(parseFloat(variationsObjects[i]['price']) < minPrice){
+                    minPrice = parseFloat(variationsObjects[i]['price']);
+                }
+            }
+            $j('.item.price[item="<?php echo $item->id; ?>"] .prices_list').html('от ' + minPrice + ' р./<?php echo $countType; ?>');
+        }
+    });
+</script>
+
+
+

@@ -21,7 +21,6 @@ $elements = $item->elements;
 </script>
 <script type="text/javascript">
     $j(function() {
-        console.log("<?php echo $this->app->jbrouter->basket(); ?>");
         $j('a[href="#less_price_wrapper"]').click(function(){
             $j('input[value="Наименования товара"]').val($j('h1').text());
         });
@@ -126,7 +125,12 @@ $elements = $item->elements;
         var translitCokieValueOfCity = null;
         
         var variationsObjects = [];
-        if ('variations' in variations['888260d0-e4b7-49ca-949a-063f17dedab1']){
+        var count = 0;
+        for (var k in variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations']) if (variations['888260d0-e4b7-49ca-949a-063f17dedab1']['variations'].hasOwnProperty(k))
+        {
+            ++count;
+        }
+        if (count != 0){
             $j('.jbprice-selects select:eq(0) option').each(function() {
                     if ($j.trim($j(this).text()).indexOf(currentUserCity) != -1) {
                         translitCokieValueOfCity = $j(this).val();
@@ -152,11 +156,12 @@ $elements = $item->elements;
                     minPrice = parseFloat(variationsObjects[i]['price']);
                 }
             }
-            $j('.item-current-price').html('Цена от ' + minPrice + ' р.');
+            $j('.item-current-price').html('от ' + minPrice + ' р.');
         }
         else{
             //Если вариаций нет
-            $j('.item-current-price').html('Цена ' + variations['888260d0-e4b7-49ca-949a-063f17dedab1']['basic']['value'] + ' р.');
+            $j('.item-current-price').html(variations['888260d0-e4b7-49ca-949a-063f17dedab1']['basic']['value'] + ' р.');
+            $j('.color_cart').hide();
         }
         
         var colorsList = {

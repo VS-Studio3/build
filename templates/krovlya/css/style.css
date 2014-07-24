@@ -653,8 +653,6 @@ fieldset {
 }
 .jbzoo-view-item .item-image img {
   margin: 0px;
-  width: 346px;
-  height: 346px;
 }
 .jbzoo-view-item .description {
   clear: both;
@@ -674,23 +672,42 @@ fieldset {
   color: #382c88;
 }
 .jbzoo-view-item .description .text_about {
+  position: relative;
+  width: 1000px;
+  left: -45px;
   font-size: 16px;
   color: #000000;
   text-decoration: none !important;
   font-weight: normal !important;
   font-style: normal !important;
-}
-.jbzoo-view-item .description .text_about p {
-  margin: 0px;
   border-bottom: 12px solid #b4b4b4;
   border-top: 12px solid #b4b4b4;
-  -webkit-box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75);
-  -moz-box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75);
-  box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75);
-  padding: 10px 51px;
-  position: relative;
-  width: 1000px;
-  left: -45px;
+  -webkit-box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75), inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75);
+  -moz-box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75), inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75);
+  box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75), inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75);
+  /* p:first-child{
+        border-top: 12px solid #b4b4b4;
+        -webkit-box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75) !important;
+        -moz-box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75) !important;
+        box-shadow: inset 0px 5px 3px 0px rgba(180, 180, 180, 0.75) !important;
+      }
+      p:last-child{
+        border-bottom: 12px solid #b4b4b4;
+        -webkit-box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75);
+        -moz-box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75);
+        box-shadow: inset 0px -5px 3px 0px rgba(180, 180, 180, 0.75);
+      }*/
+}
+.jbzoo-view-item .description .text_about p {
+  font-size: 16px;
+  color: #000000;
+  padding: 0px 45px;
+  text-decoration: none !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+}
+.jbzoo-view-category .items .clear {
+  display: block !important;
 }
 #modal_cities {
   position: absolute;
@@ -766,7 +783,7 @@ fieldset {
   height: 346px;
   position: relative;
   min-width: 50px;
-  margin-right: 10px;
+  margin-right: 45px;
 }
 .little_img img {
   top: 50%;
@@ -857,6 +874,8 @@ fieldset {
 }
 .others {
   overflow: hidden;
+  padding-top: 30px;
+  display: table;
   margin: 0px -30px;
   /* div:hover{
      cursor: pointer;
@@ -869,20 +888,19 @@ fieldset {
 .others div {
   width: 242px;
   text-align: center;
-  display: inline-block;
+  display: table-cell;
 }
 .others div .item-image {
   float: none !important;
   margin-bottom: 30px !important;
 }
 .others div .item-image img {
-  width: 142px;
-  height: 142px;
   float: none;
 }
 .others div .item-title {
-  text-align: left;
-  padding: 0px 10px 0px 0px;
+  text-align: center;
+  padding: 10px 10px 0px 0px;
+  line-height: 21px;
 }
 .others div .item-title a {
   text-decoration: none;
@@ -1579,6 +1597,40 @@ table.jsJBZooBasket {
   border: none;
   height: 34px;
 }
+.jsAddToCartModal.jbzoo-button.green,
+.jsAddToCartModal.jbzoo-button.green:hover {
+  background-color: #302767 !important;
+  border-radius: 5px;
+  background: none;
+  position: relative;
+  text-indent: 0px !important;
+  overflow: hidden;
+  background-image: none !important;
+  font-size: 15px;
+  width: auto;
+  line-height: 34px;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: bold;
+  border: none;
+  padding: 2px 15px;
+  text-decoration: none;
+  clear: left;
+  display: table;
+  margin: 10px 0px;
+}
+.jsAddToCartModal.jbzoo-button.green:before {
+  position: absolute;
+  content: '';
+  width: 102%;
+  height: 51px;
+  left: -2px;
+  top: -18px;
+  -webkit-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0px -3px 27px rgba(253, 253, 253, 0.7);
+  border-radius: 50%;
+}
 .jbzoo .jbzoo-button.green:hover {
   background: url("../images/buy.png") 0px 0px no-repeat;
   border: none;
@@ -1646,10 +1698,34 @@ table.jsJBZooBasket {
   font-style: italic;
 }
 .com_zoo #middle #container #jbzoo #full_product_description .btn_zayavka {
-  font-size: 12px;
-  line-height: 13px;
-  color: #4d4a4a;
-  font-style: italic;
+  background-color: #302767 !important;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  background: none;
+  font-size: 15px;
+  line-height: 34px;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: bold;
+  border: none;
+  padding: 2px 15px;
+  text-decoration: none;
+  clear: left;
+  display: table;
+  margin: 10px 0px 0px;
+}
+.com_zoo #middle #container #jbzoo #full_product_description .btn_zayavka:before {
+  position: absolute;
+  content: '';
+  width: 102%;
+  height: 51px;
+  left: -2px;
+  top: -18px;
+  -webkit-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0px -3px 27px rgba(253, 253, 253, 0.7);
+  border-radius: 50%;
 }
 .com_zoo #middle #container #jbzoo #full_product_description .jsAddToCartModal {
   margin-bottom: 60px;
