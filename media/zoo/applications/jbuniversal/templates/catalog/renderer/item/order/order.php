@@ -52,24 +52,30 @@
 <script type="text/javascript">
     $j(function() {
         //Подсчет суммарной суммы за упаковку
-        var priceForOneMeter = 4;
-        var totalPrice = 0;
+        priceForOneMeter = 4;
+        $j('.link_to_order, .total_price_for_upakovka').hide();
 
-        $j('.jsJBZooBasket tbody tr').each(function() {
-            var boxAttribute = $j(this).attr('box');
-            if (boxAttribute == 'true') {
-                var sizeOfProduct = $j(this).find('.product-param:last').text().substr(8);
-                var width = 0, height = 0;
-                width = parseFloat(sizeOfProduct.substr(0, sizeOfProduct.indexOf('x')));
-                height = parseFloat(sizeOfProduct.substr(sizeOfProduct.indexOf('x') + 1));
-                var meters = parseInt($j(this).find('input.jsQuantity').val()) * (width * height) * priceForOneMeter;
-                totalPrice += meters;
-            }
-        });
+        function getTotalPriceForUpakovka() {
+            var totalPrice = 0;
 
-        totalPrice = Math.ceil(totalPrice);
+            $j('.jsJBZooBasket tbody tr').each(function() {
+                var boxAttribute = $j(this).attr('box');
+                if (boxAttribute == 'true') {
+                    var sizeOfProduct = $j(this).find('.product-param:last').text().substr(8);
+                    var width = 0, height = 0;
+                    width = parseFloat(sizeOfProduct.substr(0, sizeOfProduct.indexOf('x')));
+                    height = parseFloat(sizeOfProduct.substr(sizeOfProduct.indexOf('x') + 1));
+                    var meters = parseInt($j(this).find('input.jsQuantity').val()) * (width * height) * priceForOneMeter;
+                    totalPrice += meters;
+                }
+            });
 
-        $j('.total_price_for_upakovka input').val(totalPrice + 'р.');
+            totalPrice = Math.ceil(totalPrice);
+
+            $j('.total_price_for_upakovka input').val(totalPrice + 'р.');
+        }
+        
+        getTotalPriceForUpakovka();
 
         $j('.pay_for_products input:radio:eq(0) + label').after('<div class="option">Вы можете оплатить Ваш заказ в ближайшем офисе продаж.</div><div class="print_order">Распечатать заказ</div>');
         $j('.pay_for_products input:radio:eq(1) + label').after('<div class="option">Вы можете оплатить заказ банковской картой.</div><div class="pay">Оплатить</div>');
@@ -135,6 +141,7 @@
 
         //Переход на способ доставки
         $j('#go_to_order').click(function() {
+            getTotalPriceForUpakovka();
             $j('#order_form').addClass('active').removeClass('un_active');
             $j('#basket').removeClass('active').addClass('un_active');
 

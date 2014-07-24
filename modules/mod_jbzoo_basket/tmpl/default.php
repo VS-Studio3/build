@@ -23,7 +23,6 @@ $zoo->jbassets->basket();
 
 $basketHelper = new JBZooBasketHelper($params);
 $basketItems  = $basketHelper->getBasketItems();
-
 echo '<!--noindex--><div class="jbzoo">';
 echo '<div class="jbzoo-basket-wraper jsJBZooModuleBasket" appId="' . $basketHelper->getAppId() . '" moduleId="' . $module->id . '">';
 

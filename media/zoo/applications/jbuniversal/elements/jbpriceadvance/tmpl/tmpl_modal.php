@@ -70,6 +70,7 @@ $iniqId = uniqid('jbprice-adv-');
         $countType =  str_replace('"', '', $countType);
         $countType =  str_replace('\\', '', $countType);
         ?>
+
         function getCookie(name) {
             var cookie = " " + document.cookie;
             var search = " " + name + "=";
@@ -189,16 +190,16 @@ $iniqId = uniqid('jbprice-adv-');
                 $('.set_count').keyup(function () {
                     if (!isNaN($(this).val())) {
 
-                        var parentTitle = $(this).parent().attr('title');
+                        var parentTitle = $(this).parent().parent().attr('title');
 
                         var priceInCurrentVariation = 0;
                         for (var i = 0; i < variationsObjects.length; i++) {
-                            if (variationsObjects[i]['id'] == parentTitle.toString()) {
+                            if (variationsObjects[i]['id'] == parentTitle) {
                                 priceInCurrentVariation = parseFloat(variationsObjects[i]['price']);
                             }
                         }
 
-                        $(this).next('input').val(priceInCurrentVariation * parseFloat($(this).val()));
+                        $(this).parent().next('span').find('input').val(priceInCurrentVariation * parseFloat($(this).val()));
                         var total_price = 0;
                         $('.variation_object .summary_count').each(function () {
                             if ($(this).val().length > 0 && $(this).val() != 'NaN') {
@@ -208,7 +209,7 @@ $iniqId = uniqid('jbprice-adv-');
                         $('.total_price').val(total_price);
                     }
                     else {
-                        $(this).next('input').empty();
+                        $(this).parent().next('span').find('input').empty();
                     }
                 });
 
@@ -220,7 +221,6 @@ $iniqId = uniqid('jbprice-adv-');
                         if ($.isNumeric(count) && parseFloat(count) > 0) {
                             var variationNamaValue = $(this).attr('id');
                             
-                            console.log(variationNamaValue)
                             $('.jsCartModal fieldset:eq(2) label').each(function () {
                                 if ($(this).find('input').val() == variationNamaValue) {
                                     $(this).find('input').prop('checked', true);
