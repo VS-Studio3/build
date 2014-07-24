@@ -503,7 +503,7 @@ fieldset {
 /* Middle
 -----------------------------------------------------------------------------*/
 .content {
-  padding: 45px 45px 140px 45px;
+  padding: 45px 45px 40px 45px;
   .blog-featured {
     .items-leading {
       h2 {
@@ -1885,8 +1885,51 @@ table.jsJBZooBasket {
     }
   }
 }
+.com_zoo.category .isset_class{
+  font-weight: bold;
+}
+.com_zoo.item .isset_class{
+  font-weight: bold;
+  font-size: 16px;
+}
 #less_price_wrapper{
   display: none;
+  .foxfield:first-child{
+    font-size: 20px;
+    color: #000000;
+    font-family: 'Arial', 'sans-serif';
+    text-align: left;
+    padding: 60px 0px;
+  }
+  .foxbutton{
+    background-color: #302767 !important;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    background: none;
+    line-height: 34px;
+    border: none;
+    padding: 2px 9px;
+    margin-bottom: 20px;
+    span{
+      color: #ffffff;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 15px;
+    }
+  }
+  .foxbutton:before{
+    position: absolute;
+    content: '';
+    width: 102%;
+    height: 51px;
+    left: -2px;
+    top: -18px;
+     -webkit-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+    box-shadow: inset 0px -3px 27px rgba(253, 253, 253, 0.7);
+    border-radius: 50%;
+  }
 }
     .jsCartModal{
       padding-top: 10px;

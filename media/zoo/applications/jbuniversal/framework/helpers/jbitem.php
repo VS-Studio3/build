@@ -71,8 +71,8 @@ class JBItemHelper extends AppHelper
         if (JString::strtolower(get_class($element)) == 'elementjbimage') {
 
             return $element->render(array(
-                'width'    => 75,
-                'height'   => 75,
+                'width'    => 285,
+                'height'   => 285,
                 'template' => $isLink ? 'itemlink' : 'default',
                 'display'  => 'first',
             ));
@@ -80,15 +80,15 @@ class JBItemHelper extends AppHelper
         } else if (JString::strtolower(get_class($element)) == 'elementimage') {
 
             return $element->render(array(
-                'width'  => 287,
-                'height' => 287,
+                'width'  => 285,
+                'height' => 285,
             ));
             
         } else if (JString::strtolower(get_class($element)) == 'elementimagepro') {
 
             return $element->render(array(
-                'specific._width'  => 75,
-                'specific._height' => 75,
+                'specific._width'  => 285,
+                'specific._height' => 285,
             ));            
             
         }

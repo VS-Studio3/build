@@ -85,7 +85,7 @@ if ($this->checkPosition('isset')) {
         <div class="item-color-position"></div>
         
         <?php if ($this->checkPosition('possible_colors')) : ?>
-            <div class="item-price-position">
+            <div class="possible-colors-position">
                 <?php echo $this->renderPosition('possible_colors'); ?>
             </div>
         <?php endif; ?>
@@ -111,6 +111,7 @@ if ($this->checkPosition('isset')) {
 
 <script type="text/javascript">
     $j(function(){
+        $j('.possible-colors-position a').attr('target', '_blank');
         $j('.prices_list').remove();
         $j('#select-city').click(function(){
             var listOfCities = $j('#list_of_cities_div').clone().wrap('<div id="list_of_cities_div">');
