@@ -77,11 +77,16 @@ if ($this->checkPosition('isset')) {
         
         <?php if (!$this->checkPosition('isset')) : ?>
         <a rel="nofollow" href="#zayavka" class="show_zayavka" title="Добавить в корзину">Купить</a>
-        <span class="not_isset_class">Нет в наличии</span>
 <?php endif; ?>
 
         <div class="color_cart">Карта цветов</div>
         <div class="item-color-position"></div>
+        
+        <?php if ($this->checkPosition('possible_colors')) : ?>
+            <div class="item-price-position">
+                <?php echo $this->renderPosition('possible_colors'); ?>
+            </div>
+        <?php endif; ?>
     </div>
 
     <?php if ($this->checkPosition('description')) : ?>

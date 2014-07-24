@@ -65,7 +65,6 @@ if ($this->checkPosition('isset')) {
 
     <?php if (!$this->checkPosition('isset')) : ?>
         <a rel="nofollow" href="#zayavka" class="show_zayavka" title="Добавить в корзину">Купить</a>
-        <span class="not_isset_class">Нет в наличии</span>
 <?php endif; ?>
 </div>
 
