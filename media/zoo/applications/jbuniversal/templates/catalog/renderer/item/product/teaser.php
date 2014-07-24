@@ -60,12 +60,13 @@ if ($this->checkPosition('isset')) {
             <?php echo $this->renderPosition('price'); ?>
         </div>
     <?php endif; ?>
-        
-        <span class="isset_class">Есть в наличии</span>
 
+
+    <span class="isset_class">Есть на складе</span>
     <?php if (!$this->checkPosition('isset')) : ?>
+       <!--<span class="not_isset_class">Нет в наличии</span>-->
         <a rel="nofollow" href="#zayavka" class="show_zayavka" title="Добавить в корзину">Купить</a>
-        <span class="not_isset_class">Нет в наличии</span>
+
 <?php endif; ?>
 </div>
 
