@@ -60,6 +60,7 @@ if ($this->checkPosition('isset')) {
     <div class="clear clr"></div>
 
     <div class="rborder item-body">
+        <span class="isset_class">Есть на складе</span>
         <div class="items_price_less">
         <div class="item-current-price"></div>
         <div class="less-price"><a href="#less_price_wrapper">Нашли дешевле? Поторгуемся!</a></div>
@@ -67,13 +68,14 @@ if ($this->checkPosition('isset')) {
         <div class="current_city_price_wrapper">* Цена со склада в</div>
         <a href="#" id="select-city">Выбрать город</a>
         <a href="#zayavka" class="btn btn_zayavka">Отправить заявку</a>
+
         <?php if ($this->checkPosition('price')) : ?>
             <div class="item-price-position">
                 <?php echo $this->renderPosition('price'); ?>
             </div>
         <?php endif; ?>
         
-        <span class="isset_class">Есть в наличии</span>
+
         
         <?php if (!$this->checkPosition('isset')) : ?>
         <a rel="nofollow" href="#zayavka" class="show_zayavka" title="Добавить в корзину">Купить</a>
