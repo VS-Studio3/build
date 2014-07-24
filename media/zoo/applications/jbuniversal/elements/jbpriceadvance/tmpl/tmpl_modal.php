@@ -38,7 +38,7 @@ $iniqId = uniqid('jbprice-adv-');
     <?php echo $countTmpl; ?>
     <?php echo $buttonsTmpl; ?>
 </div>
-
+<div id="cart_unique_wrapper"></div>
 <script type="text/javascript">
 (function ($) {
     $(function () {
@@ -70,7 +70,8 @@ $iniqId = uniqid('jbprice-adv-');
         $countType =  str_replace('"', '', $countType);
         $countType =  str_replace('\\', '', $countType);
         ?>
-
+                    
+        $('#cart_unique_wrapper').load('<?php echo JURI::base(); ?> #cart_id_unique');
         function getCookie(name) {
             var cookie = " " + document.cookie;
             var search = " " + name + "=";
@@ -257,7 +258,7 @@ $iniqId = uniqid('jbprice-adv-');
                 });
 
                 $('.get_basket').click(function () {
-                    window.top.location.href = "index.php/2014-06-27-07-33-20?controller=basket&task=index&app_id=2&nocache=1081762493";
+                    window.top.location.href = $('#cart_id_unique').attr('href');
                 });
 
                 $('.close_iframe').click(function () {
@@ -296,7 +297,6 @@ $iniqId = uniqid('jbprice-adv-');
             $('.count').keyup(function () {
                 if (!isNaN($(this).val())) {
                     var price = parseFloat($('.prices_list').text().substr(0, $('.prices_list').text().indexOf('р')));
-                    console.log(price)
                     $('.summary').val(price * parseInt($(this).val()));
                 }
                 else {
@@ -305,7 +305,7 @@ $iniqId = uniqid('jbprice-adv-');
             });
 
             $('.to_basket').click(function () {
-                window.top.location.href = "index.php/2014-06-27-07-33-20?controller=basket&task=index&app_id=2&nocache=1081762493";
+                window.top.location.href = $('#cart_id_unique').attr('href');
             });
 
             $('.close_iframe').click(function () {

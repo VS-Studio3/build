@@ -55,7 +55,7 @@ if (!empty($basketItems)) {
     }
 
     if ((int)$params->get('link_show', 1)) {
-        echo '<a rel="nofollow" class="add-to-cart" style="display:inline-block;" href="' . $basketUrl . '">'
+        echo '<a rel="nofollow" class="add-to-cart" id="cart_id_unique" href="' . $basketUrl . '">'
             . JText::_('JBZOO_CART_GOTO_BASKET') . '</a>
         </p>';
     }
