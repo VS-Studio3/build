@@ -332,7 +332,7 @@ $iniqId = uniqid('jbprice-adv-');
         display: none !important;
     }
     .item_name {
-        width: 197px;
+        width: 195px;
         margin-right: 10px;
     }
     .prices_list{
@@ -341,7 +341,7 @@ $iniqId = uniqid('jbprice-adv-');
         white-space: nowrap;
     }
     .item_price    {
-        width: 127px;
+        width: 115px;
         margin-right: 10px;
         white-space: nowrap;
     }
@@ -386,16 +386,17 @@ $iniqId = uniqid('jbprice-adv-');
         vertical-align: middle;
         position: relative;
         margin-bottom: 0px;
-        font-size: 25px;
         color: #000000;
         text-align: center;
         margin-right: 10px;
         border-color: #535151;
+        font-size: 18px;
         margin-bottom: 15px;
     }
     .for_but{
         position: absolute;
         bottom: 15px;
+        width: 100%;
     }
     .jbprice-adv-inited{
         padding: 10px 0px;
@@ -404,23 +405,45 @@ $iniqId = uniqid('jbprice-adv-');
     .jbprice-buttons{
         display: none;
     }
+    .get_basket{
+        float: right;
+    }
     .jbprice-count td{
         font-size: 17px;
         color: #000000;
     }
+    .buy{
+        background-image: url("<?php echo JURI::base();
+        ?>templates/krovlya/images/price.png");
+        width: 38px;
+        background-position: 0px -268px;
+        background-repeat:  no-repeat;
+        height: 38px;
+        border: none;
+        background-color: #f9f9f9;
+        text-indent: -999999px !important;
+        overflow: hidden;
+        position: relative;
+        top: -7px;
+        text-align: left;
+    }
+    .buy:hover{
+        cursor: pointer;
+    }
     .jbzoo .variation_object .summary_count,
     .jbzoo .jbprice-advance .summary{
-        width: 134px;
+        width: 100px;
         min-width: 50px !important;
         height: 42px !important;
         display: table-cell;
         vertical-align: middle;
         border-radius: 0px !important;
-        font-size: 25px;
+        font-size: 18px;
         color: #000000;
         text-align: center;
         border-color: #535151 !important;
         margin-bottom: 15px;
+        margin-right: 10px;
     }
     .variation_object.unactive input[readonly]{
         background: rgb(235, 235, 228);
@@ -446,7 +469,6 @@ $iniqId = uniqid('jbprice-adv-');
         margin-bottom: 10px;
         transition: 0.3s;
     }
-
     .jsCartModal {
         min-height: 250px;
         font-family: 'Arial', 'sans-serif';
@@ -484,7 +506,6 @@ $iniqId = uniqid('jbprice-adv-');
     #buy_submit,
     .get_basket,
     .close_iframe,
-    .buy,
     .to_basket,
     .jsAddToCart.jbzoo-button.green,
     .jsAddToCart.jbzoo-button.green:hover   {
@@ -504,7 +525,6 @@ $iniqId = uniqid('jbprice-adv-');
     #buy_submit:before,
     .get_basket:before,
     .close_iframe:before,
-    .buy:before,
     .to_basket:before,
     .jsAddToCart.jbzoo-button.green:before{
         position: absolute;
