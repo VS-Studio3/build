@@ -39,7 +39,13 @@ $elements = $item->elements;
     <div class="close_img">Закрыть</div>
     <div class="img_sourse"></div>
 </div>
-<div id="full_product_description">
+<div id="full_product_description" class="isset_<?php
+if ($this->checkPosition('isset')) {
+    echo 'true';
+} else {
+    echo 'false';
+}
+?>">
     <?php if ($this->checkPosition('image')) : ?>
         <div class="little_img">
             <?php echo $this->renderPosition('image'); ?>
@@ -66,6 +72,13 @@ $elements = $item->elements;
                 <?php echo $this->renderPosition('price'); ?>
             </div>
         <?php endif; ?>
+        
+        <span class="isset_class">Есть в наличии</span>
+        
+        <?php if (!$this->checkPosition('isset')) : ?>
+        <a rel="nofollow" href="#zayavka" class="show_zayavka" title="Добавить в корзину">Купить</a>
+        <span class="not_isset_class">Нет в наличии</span>
+<?php endif; ?>
 
         <div class="color_cart">Карта цветов</div>
         <div class="item-color-position"></div>

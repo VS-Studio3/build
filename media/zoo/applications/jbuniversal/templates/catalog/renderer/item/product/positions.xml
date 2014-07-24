@@ -11,6 +11,7 @@
         <position name="color">Цвет</position>
         <position name="description">Характеристики</position>
         <position name="related">Похожие</position>
+        <position name="isset">Есть в наличие?</position>
     </positions>
 
     <positions layout="teaser">
