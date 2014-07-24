@@ -292,7 +292,7 @@ $iniqId = uniqid('jbprice-adv-');
                 'class="summary"></span><div ' +
                 'class="for_but" ' +
                 '><button' +
-                ' class="buy">Добавить в корзину</button><button class="to_basket">Оформить заказ</button><button ' +
+                ' id="buy_submit">Добавить в корзину</button><button class="to_basket">Оформить заказ</button><button ' +
                 'class="close_iframe">Продолжить покупки</button></div>');
             $('.count').keyup(function () {
                 if (!isNaN($(this).val())) {
@@ -312,7 +312,7 @@ $iniqId = uniqid('jbprice-adv-');
                 parent.jQuery.fancybox.close();
             });
 
-            $('.buy').click(function () {
+            $('#buy_submit').click(function () {
                 if (!isNaN($('.count').val()) && $('.count').val().length > 0) {
                     $('.jsCount').val($('.count').val());
                     $('a[href="#add-to-cart"]').trigger('click');
