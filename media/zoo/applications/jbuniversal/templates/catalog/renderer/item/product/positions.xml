@@ -12,6 +12,7 @@
         <position name="description">Характеристики</position>
         <position name="related">Похожие</position>
         <position name="isset">Есть в наличие?</position>
+        <position name="possible_colors">Варианты цветов</position>
     </positions>
 
     <positions layout="teaser">
