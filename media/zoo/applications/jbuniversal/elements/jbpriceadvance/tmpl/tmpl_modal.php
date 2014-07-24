@@ -174,7 +174,7 @@ $iniqId = uniqid('jbprice-adv-');
                         'class="set_count"></span><span class="relative"><span class="how">*стоимость</span><input' +
                         ' ' +
                         'type="text" ' +
-                    'class="summary_count" readonly></span></div>';
+                    'class="summary_count" readonly></span><button class="buy">Купить</button></div>';
                     summaryVariationsDIVS += appendVariationsDIVSText;
                 }
 
@@ -182,9 +182,7 @@ $iniqId = uniqid('jbprice-adv-');
                     'type="text" ' +
                     'class="total_price"></div>';
 
-                $('.jsCartModal').prepend(summaryVariationsDIVS + '<div class="for_but"><button ' +
-                    'id="buy_submit">Добавить в ' +
-                    'корзину</button><button class="get_basket">Оформить заказ</button><button ' +
+                $('.jsCartModal').prepend(summaryVariationsDIVS + '<div class="for_but"><button class="get_basket">Оформить заказ</button><button ' +
                     'class="close_iframe">Продолжить покупки</button></div>');
 
                 //Вывод суммарной цены по вариации
@@ -216,7 +214,7 @@ $iniqId = uniqid('jbprice-adv-');
 
                 $('.jbprice-selects, .jbprice-count, .jbprice-buttons, .jbprice-price').hide();
 
-                $('#buy_submit').click(function () {
+                $('.buy').click(function () {
                     $('.variation_object.active').each(function () {
                         var count = $(this).find('.set_count').val();
                         if ($.isNumeric(count) && parseFloat(count) > 0) {
@@ -259,7 +257,7 @@ $iniqId = uniqid('jbprice-adv-');
                 });
 
                 $('.get_basket').click(function () {
-                    window.top.location.href = "/index.php/2014-06-27-07-33-20?controller=basket&task=index&app_id=2&nocache=1197400854";
+                    window.top.location.href = "index.php/2014-06-27-07-33-20?controller=basket&task=index&app_id=2&nocache=1081762493";
                 });
 
                 $('.close_iframe').click(function () {
@@ -307,7 +305,7 @@ $iniqId = uniqid('jbprice-adv-');
             });
 
             $('.to_basket').click(function () {
-                window.top.location.href = "/index.php/2014-06-27-07-33-20?controller=basket&task=index&app_id=2&nocache=1197400854";
+                window.top.location.href = "index.php/2014-06-27-07-33-20?controller=basket&task=index&app_id=2&nocache=1081762493";
             });
 
             $('.close_iframe').click(function () {

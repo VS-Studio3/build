@@ -131,8 +131,11 @@ $j(function() {
     /**
      * FANCY BOX -> вывод модальных окон для заказа завяки и звонка
      * **/
-    $j('.show_zayavka').click(function(){
-        $j('.foxcontainer_zayavka textarea').text('Я хочу заказать "' + $j('.item.price').has($(this)).find('h3').find('a').text()+ '"');
+    $j('.item.price .show_zayavka').click(function(){
+        $j('.foxcontainer_zayavka textarea').text('Меня интересует "' + $j('.item.price').has($(this)).find('h3').find('a').text()+ '"');
+    });
+    $j('#full_product_description .show_zayavka').click(function(){
+        $j('.foxcontainer_zayavka textarea').text('Меня интересует "' + $j.trim($j('#full_product_description h1').text()) + '"');
     });
     $j('a.btn_zayavka, a.btn_zvonok, .show_zayavka').fancybox();
     $j('.add-to-cart').attr('value', '');

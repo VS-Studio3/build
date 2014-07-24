@@ -15,11 +15,6 @@ $tabsId = uniqid('jbzoo-tabs-');
 $elements = $item->elements;
 ?>
 <script type="text/javascript">
-    $j(function(){
-        
-});
-</script>
-<script type="text/javascript">
     $j(function() {
         $j('a[href="#less_price_wrapper"]').click(function(){
             $j('input[value="Наименования товара"]').val($j('h1').text());
@@ -27,18 +22,10 @@ $elements = $item->elements;
         $j('a[href="#less_price_wrapper"]').fancybox();
         $j('.little_img img').attr({'width': 50, 'height': 50});
         $j('.little_img .preview_img').click(function() {
-            $j('.prev_img_container').show();
-            $j('.img_sourse').html($j('.first_img img').clone().attr({'width': 500, 'height': 500}));
-        });
-        $j('.close_img').click(function() {
-            $j('.prev_img_container').hide();
+            $j('.little_img img').trigger('click');
         });
     });
 </script>
-<div class="prev_img_container">
-    <div class="close_img">Закрыть</div>
-    <div class="img_sourse"></div>
-</div>
 <div id="full_product_description" class="isset_<?php
 if ($this->checkPosition('isset')) {
     echo 'true';
@@ -109,6 +96,7 @@ if ($this->checkPosition('isset')) {
 
 <script type="text/javascript">
     $j(function(){
+        $j('.jbprice-buttons a[href="#add-to-cart-modal"]').html('Купить со склада');
         $j('.prices_list').remove();
         $j('#select-city').click(function(){
             var listOfCities = $j('#list_of_cities_div').clone().wrap('<div id="list_of_cities_div">');
