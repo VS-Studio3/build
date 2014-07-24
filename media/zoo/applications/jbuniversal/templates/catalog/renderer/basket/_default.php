@@ -1,18 +1,7 @@
 <?php
-/**
- * JBZoo App is universal Joomla CCK, application for YooTheme Zoo component
- *
- * @package     jbzoo
- * @version     2.x Pro
- * @author      JBZoo App http://jbzoo.com
- * @copyright   Copyright (C) JBZoo.com,  All rights reserved.
- * @license     http://jbzoo.com/license-pro.php JBZoo Licence
- * @coder       Denis Smetannikov <denis@jbzoo.com>
- */
-// no direct access
 defined('_JEXEC') or die('Restricted access');
 
-function jsonRemoveUnicodeSequences($struct) {
+function jsonRemoveUnicodeSequences_2($struct) {
    return preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", json_encode($struct));
 }
 
@@ -50,11 +39,11 @@ $this->app->jbassets->initJBPrice();
                     $isBoxNeeded = 'true';
                 }
                 
-                $countType = substr($checkBoxElement, 0, strpos($checkBoxElement, '62ec77b4-9f86-4749-ad11-32353efe3f92'));
+                $countType = substr($checkBoxElement, 0, strpos($checkBoxElement, '888260d0-e4b7-49ca-949a-063f17dedab1'));
                 $countType = substr($countType, strpos($countType, 'value'));
                 $countType = substr($countType, 9);
                 $countType = substr($countType, 0, strpos($countType, '}'));
-                $countType = jsonRemoveUnicodeSequences($countType);
+                $countType = jsonRemoveUnicodeSequences_2($countType);
                 
                 $countType =  str_replace('\"\n\t\t"', '', $countType);
                 $countType =  str_replace('"', '', $countType);

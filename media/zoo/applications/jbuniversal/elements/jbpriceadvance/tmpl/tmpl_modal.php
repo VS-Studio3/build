@@ -61,7 +61,7 @@ $iniqId = uniqid('jbprice-adv-');
 
         $row = $result->fetch_assoc();
 
-        $countType = substr($row['elements'], 0, strpos($row['elements'], '62ec77b4-9f86-4749-ad11-32353efe3f92'));
+        $countType = substr($row['elements'], 0, strpos($row['elements'], '888260d0-e4b7-49ca-949a-063f17dedab1'));
         $countType = substr($countType, strpos($countType, 'value'));
         $countType = substr($countType, 9);
         $countType = substr($countType, 0, strpos($countType, '}'));
@@ -166,11 +166,6 @@ $iniqId = uniqid('jbprice-adv-');
                         }
                     });
 
-                    <?php
-
-
-
-                    ?>
                     appendVariationsDIVSText += '</span> <span class="item_price">' + variationsObjects[i]['price'] +
                      ' ' + 'р./<?php echo $countType; ?>' +  '</span><span ' +
                         'class="relative"><span class="how">*количество</span><input ' +
@@ -225,8 +220,9 @@ $iniqId = uniqid('jbprice-adv-');
                     $('.variation_object.active').each(function () {
                         var count = $(this).find('.set_count').val();
                         if ($.isNumeric(count) && parseFloat(count) > 0) {
-                            var variationNamaValue = $(this).find('.set_count').parent().attr('id');
-
+                            var variationNamaValue = $(this).attr('id');
+                            
+                            console.log(variationNamaValue)
                             $('.jsCartModal fieldset:eq(2) label').each(function () {
                                 if ($(this).find('input').val() == variationNamaValue) {
                                     $(this).find('input').prop('checked', true);

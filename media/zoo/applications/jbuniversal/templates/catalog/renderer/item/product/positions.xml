@@ -17,6 +17,7 @@
         <position name="title">Название</position>
         <position name="image">Изображение</position>
         <position name="price">Цена</position>
+        <position name="isset">Есть в наличие?</position>
     </positions>
 
     <positions layout="related">
