@@ -442,7 +442,7 @@ fieldset {
   background: #4d4b4b;
   display: inline-block;
   padding: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 #search_wrapper {
   position: relative;
@@ -1768,25 +1768,12 @@ table.jsJBZooBasket {
   font-size: 18px;
   color: #000000;
 }
-.isset_true .not_isset_class {
-  display: none;
-}
-.isset_true .isset_class {
-  color: #008000;
+.isset_class {
+  color: green;
+  display: block;
   margin-bottom: 10px;
-  display: block;
 }
-.isset_false .jsAddToCartModal.jbzoo-button.green,
-.isset_false .isset_class {
-  display: none;
-}
-.isset_false .not_isset_class {
-  color: red;
-  margin-bottom: 10px;
-  display: block;
-}
-.isset_false .show_zayavka {
-  display: block;
+.show_zayavka {
   background: url("../images/buy.png") 0px 0px no-repeat;
   text-indent: -999999px !important;
   overflow: hidden;
@@ -1794,4 +1781,9 @@ table.jsJBZooBasket {
   width: 132px;
   border: none;
   height: 34px;
+  display: block;
+}
+.isset_false .jsAddToCartModal.jbzoo-button.green,
+.isset_false .isset_class {
+  display: none;
 }
