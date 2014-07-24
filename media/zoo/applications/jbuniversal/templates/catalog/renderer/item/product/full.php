@@ -47,6 +47,7 @@ if ($this->checkPosition('isset')) {
     <div class="clear clr"></div>
 
     <div class="rborder item-body">
+        <span class="isset_class">Есть на складе</span>
         <div class="items_price_less">
         <div class="item-current-price"></div>
         <div class="less-price"><a href="#less_price_wrapper">Нашли дешевле? Поторгуемся!</a></div>
@@ -54,13 +55,14 @@ if ($this->checkPosition('isset')) {
         <div class="current_city_price_wrapper">* Цена со склада в</div>
         <a href="#" id="select-city">Выбрать город</a>
         <a href="#zayavka" class="btn btn_zayavka">Отправить заявку</a>
+
         <?php if ($this->checkPosition('price')) : ?>
             <div class="item-price-position">
                 <?php echo $this->renderPosition('price'); ?>
             </div>
         <?php endif; ?>
         
-        <span class="isset_class">Есть в наличии</span>
+
         
         <?php if (!$this->checkPosition('isset')) : ?>
         <a rel="nofollow" href="#zayavka" class="show_zayavka" title="Добавить в корзину">Купить</a>
@@ -70,7 +72,7 @@ if ($this->checkPosition('isset')) {
         <div class="item-color-position"></div>
         
         <?php if ($this->checkPosition('possible_colors')) : ?>
-            <div class="item-price-position">
+            <div class="possible-colors-position">
                 <?php echo $this->renderPosition('possible_colors'); ?>
             </div>
         <?php endif; ?>
@@ -97,6 +99,7 @@ if ($this->checkPosition('isset')) {
 <script type="text/javascript">
     $j(function(){
         $j('.jbprice-buttons a[href="#add-to-cart-modal"]').html('Купить со склада');
+        $j('.possible-colors-position a').attr('target', '_blank');
         $j('.prices_list').remove();
         $j('#select-city').click(function(){
             var listOfCities = $j('#list_of_cities_div').clone().wrap('<div id="list_of_cities_div">');
